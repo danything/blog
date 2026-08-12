@@ -43,18 +43,28 @@ jobs:
       # so this commit does not re-trigger this workflow.
       - name: Update deployment image tag
         run: |
-          sed -i "s#image: ${REGISTRY}/${IMAGE_NAME}:.*#image: ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA}#" k3s/deployment.yaml
-          if ! git diff --quiet -- k3s/deployment.yaml; then
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 他のジョブ (zenn-sync や連続した push) が先に main を進めていることがある。
+          # 自分のコミットを rebase すると image: の同じ行でほぼ必ず衝突するため、
+          # 毎回 main を取り直して sed をやり直す。この操作は冪等。
+          for _ in 1 2 3; do
+            git fetch --quiet origin main
+            git reset --quiet --hard origin/main
+
+            sed -i "s#image: ${REGISTRY}/${IMAGE_NAME}:.*#image: ${REGISTRY}/${IMAGE_NAME}:${GITHUB_SHA}#" k3s/deployment.yaml
+
+            if git diff --quiet -- k3s/deployment.yaml; then
+              echo "変更なし"
+              exit 0
+            fi
+
             git add k3s/deployment.yaml
-            git commit -m "chore: update blog image to ${GITHUB_SHA}"
-            # zenn-sync も同じ push で main を進めることがあるため、弾かれたら rebase して retry
-            for _ in 1 2 3; do
-              if git push; then
-                exit 0
-              fi
-              git pull --rebase origin main
-            done
-            exit 1
-          fi
+            git commit --quiet -m "chore: update blog image to ${GITHUB_SHA}"
+
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+          done
+          exit 1
