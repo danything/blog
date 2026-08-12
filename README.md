@@ -14,7 +14,6 @@ pnpm dev
 Docker で起動する場合:
 
 ```shell
-cp compose.sample.yml compose.yml
 docker compose up
 ```
 

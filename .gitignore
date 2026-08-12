@@ -31,7 +31,6 @@ yarn.lock
 *.iml
 
 # project
-compose.yml
 .bk-*
 
 # Zenn 連携用の生成物 (zenn ブランチへ CI が push する)
