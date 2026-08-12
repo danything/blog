@@ -63,6 +63,14 @@ Slack / GitHub / GitLab / Backlog / Jira / OpenProject / Redmine の API ログ�
 
 goonews.jp の RSS は日付フィールドが壊れているため、定期的に取得して W3CDTF に直したうえで再配信しています。タイムゾーンの後ろに Unix タイムスタンプが連結されていたり、`17時39分T+09:00` のように日本語の相対日付が ISO8601 のテンプレートに埋まっていたりします。ソースは [GitHub](https://github.com/5ym/fixeed) にあります。
 
+### [svelte-slider](https://5ym.github.io/svelte-slider/)
+
+フリック速度を計算して、スマートフォンの操作感に近づけたスライダーです。もとは jQuery で書いていたものを Svelte 5（runes）のコンポーネントに書き換え、依存を Svelte だけにしました。ソースは [GitHub](https://github.com/5ym/svelte-slider) にあります。
+
+### [helm-mosp](https://github.com/DAnything/helm-mosp)
+
+オープンソースの勤怠管理 [MosP](https://github.com/es-mind/MosP) を Kubernetes で動かすためのイメージと Helm chart です。毎月 1 日に本家の最新コミットを確認して未ビルドならイメージを作り直し、GHCR へ push しています。DB の初期構築は init container が行うので、入れたあとはブラウザで最初のユーザーを登録するだけで使い始められます。
+
 ### [k3s-gitops](https://github.com/DAnything/k3s-gitops)
 
 k3s クラスタで動かしている各アプリのマニフェスト集です。AdGuard Home、ERPNext、Opengist、Portainer、VPN などを ArgoCD で同期しています。
