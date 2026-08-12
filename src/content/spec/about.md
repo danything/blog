@@ -27,38 +27,42 @@
 
 ## Projects
 
-### [cheaper-gs-map](https://github.com/5ym/cheaper-gs-map)
+### [worklog](https://w.doany.io/)
 
-全国のガソリン価格ランキングから各都道府県の上位10店舗を集めて、衛星写真の地図上に表示する静的サイトです。GitHub Actions で定期的に収集し、GitHub Pages で配信しています。
+Slack / GitHub / GitLab / Backlog / Jira / OpenProject / Redmine の API ログを横断し、日別の稼働開始・終了・休憩・実働を推定するサービスです。常駐エージェントを入れる必要がなく、過去の月に遡って稼働表を作れるのが特徴です。SvelteKit と SQLite で構築しています。
 
-### [cash-tabelog](https://github.com/5ym/cash-tabelog)
+### [denpa](https://github.com/DAnything/denpa)
 
-食べログに掲載されている店舗のうち、どれだけがカード決済に対応しているかを集計するツールです。決済まわりの仕事をしていた頃の関心から作りました。
+テレビを録って観るための自作システムです。チューナーを掴んで素の TS を流すエージェントと、番組表・予約・録画・エンコード・配信・ライブ視聴を担う本体の 2 つで完結していて、別途メディアサーバを置きません。TypeScript と Svelte、チューナー側は C# で書いています。Docker と Kubernetes のどちらでも動きます。
 
-### [zero-owner](https://github.com/5ym/zero-owner)
+### [Smart QR Payment](https://github.com/5ym/smart-qr-payment)
 
-[zero.estate](https://zero.estate/) に掲載された0円物件を毎日収集し、衛星写真の地図上に表示する静的サイトです。
-
-### [naltec-reservation-grabber](https://github.com/5ym/naltec-reservation-grabber)
-
-検査レーンの予約を自動で取得するツールです。予約枠が一部事業者に寡占されている状況への対抗として、個人利用の範囲で作りました。
-
-### [fixeed](https://github.com/5ym/fixeed)
-
-goonews.jp の RSS は日付フィールドが壊れているため、定期的に取得して W3CDTF に直したうえで再配信しています。タイムゾーンの後ろに Unix タイムスタンプが連結されていたり、`17時39分T+09:00` のように日本語の相対日付が ISO8601 のテンプレートに埋まっていたりします。
+催事等で使える、事前注文と店頭受け取り、そしてセルフレジ機能をもったウェブアプリです。当初は Django REST Framework と Nuxt で作りましたが、Bun + SvelteKit + SQLite に全面的に書き換え、フロントとバックを 1 つのアプリに統合しました。
 
 ### [𝕏ool](https://x.doany.io/)
 
 𝕏 の OAuth 2.0 を利用し、Webhook からポストを作成できるウェブアプリです。SvelteKit と SQLite で SSR 構成にしてあります。
 
-### [Smart-QR-Payment](https://github.com/5ym/smart-qr-payment)
+### [cheaper-gs-map](https://5ym.github.io/cheaper-gs-map/)
 
-催事等で使える、事前注文と店頭受け取り、そしてセルフレジ機能をもったウェブアプリです。Django と Vue で作成しました。
+全国のガソリン価格ランキングから各都道府県の上位10店舗を集めて、衛星写真の地図上に表示する静的サイトです。GitHub Actions で定期的に収集し、GitHub Pages で配信しています。ソースは [GitHub](https://github.com/5ym/cheaper-gs-map) にあります。
+
+### [cash-tabelog](https://5ym.github.io/cash-tabelog/)
+
+食べログに掲載されている店舗のうち、カード決済に対応している割合を全国と都道府県別に集計して棒グラフで出します。決済まわりの仕事をしていた頃の関心から作りました。ソースは [GitHub](https://github.com/5ym/cash-tabelog) にあります。
+
+### [zero-owner](https://5ym.github.io/zero-owner/)
+
+[zero.estate](https://zero.estate/) に掲載された0円物件を毎日収集し、衛星写真の地図上に表示する静的サイトです。ソースは [GitHub](https://github.com/5ym/zero-owner) にあります。
+
+### [naltec-reservation-grabber](https://github.com/5ym/naltec-reservation-grabber)
+
+検査レーンの予約を自動で取得するツールです。予約枠が一部事業者に寡占されている状況への対抗として、個人利用の範囲で作りました。
+
+### [fixeed](https://5ym.github.io/fixeed/)
+
+goonews.jp の RSS は日付フィールドが壊れているため、定期的に取得して W3CDTF に直したうえで再配信しています。タイムゾーンの後ろに Unix タイムスタンプが連結されていたり、`17時39分T+09:00` のように日本語の相対日付が ISO8601 のテンプレートに埋まっていたりします。ソースは [GitHub](https://github.com/5ym/fixeed) にあります。
 
 ### [k3s-gitops](https://github.com/DAnything/k3s-gitops)
 
 k3s クラスタで動かしている各アプリのマニフェスト集です。AdGuard Home、ERPNext、Opengist、Portainer、VPN などを ArgoCD で同期しています。
-
-### [worklog](https://w.doany.io/)
-
-Slack / GitHub / GitLab / Backlog / Jira / OpenProject / Redmine の API ログを横断し、日別の稼働開始・終了・休憩・実働を推定するサービスです。常駐エージェントを入れる必要がなく、過去の月に遡って稼働表を作れるのが特徴です。SvelteKit と SQLite で構築しています。
