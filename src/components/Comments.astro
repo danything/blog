@@ -67,17 +67,29 @@ function mount() {
 	}
 }
 
+const CSS_ID = "artalk-css";
+
+// swup は updateHead: true で遷移のたびに <head> を差し替えるため、
+// ここで動的に足した <link> は消える。ビルド時に生成される CSS は新しい
+// ページの head にも入っているので残るが、これだけは毎回入れ直す。
+function ensureStylesheet() {
+	if (document.getElementById(CSS_ID)) return;
+
+	const css = document.createElement("link");
+	css.id = CSS_ID;
+	css.rel = "stylesheet";
+	css.href = `${artalkConfig.server}/dist/Artalk.css`;
+	document.head.appendChild(css);
+}
+
 // 初回だけローダーを注入する。読み込み後に window.Artalk が生える。
 function load() {
+	ensureStylesheet();
+
 	if (window.Artalk) {
 		mount();
 		return;
 	}
-
-	const css = document.createElement("link");
-	css.rel = "stylesheet";
-	css.href = `${artalkConfig.server}/dist/Artalk.css`;
-	document.head.appendChild(css);
 
 	const script = document.createElement("script");
 	script.src = `${artalkConfig.server}/dist/Artalk.js`;
