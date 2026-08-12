@@ -67,9 +67,16 @@
         }
     }
 
+    /* main.css の .btn-regular-dark を @apply で参照すると、このファイルが
+       別の PostCSS パスで処理された場合に解決できずビルドが落ちる
+       (上の a:not(.no-styling) と同じ理由)。中身を展開してある。
+       main.css 側を変更したときはここも合わせること。 */
     .copy-btn {
         all: initial;
-        @apply btn-regular-dark opacity-0 shadow-lg shadow-black/50 absolute active:scale-90 h-8 w-8 top-3 right-3 text-sm rounded-lg transition-all ease-in-out z-20 cursor-pointer;
+        @apply flex items-center justify-center
+        bg-[oklch(0.45_0.01_var(--hue))] hover:bg-[oklch(0.50_0.01_var(--hue))] active:bg-[oklch(0.55_0.01_var(--hue))]
+        dark:bg-[oklch(0.30_0.02_var(--hue))] dark:hover:bg-[oklch(0.35_0.03_var(--hue))] dark:active:bg-[oklch(0.40_0.03_var(--hue))]
+        opacity-0 shadow-lg shadow-black/50 absolute active:scale-90 h-8 w-8 top-3 right-3 text-sm rounded-lg transition-all ease-in-out z-20 cursor-pointer;
     }
     .frame:hover .copy-btn {
         opacity: 1;
