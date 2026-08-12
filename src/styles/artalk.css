@@ -70,6 +70,15 @@ body .atk-layer-wrap {
 
 /* 送信ボタンはサイトのボタン (Newsletter の「登録」など) と同じ見た目にする */
 #artalk.artalk .atk-send-btn {
+	/* 元 CSS は height: 30px の固定高 + min-width: 7.3em で作られている。
+	   そこに padding を重ねると行がはみ出して文字が中央からずれるため、
+	   固定寸法を外して flex で中央に置く。 */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: auto;
+	min-width: 0;
+	line-height: 1;
 	padding: 0.5rem 1.25rem;
 	border-radius: 0.5rem;
 	background: var(--btn-regular-bg);
