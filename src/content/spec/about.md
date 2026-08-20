@@ -41,7 +41,7 @@ Slack / GitHub / GitLab / Backlog / Jira / OpenProject / Redmine の API ログ�
 
 ### [𝕏ool](https://x.doany.io/)
 
-𝕏 の OAuth 2.0 を利用し、Webhook からポストを作成できるウェブアプリです。SvelteKit と SQLite で SSR 構成にしてあります。
+𝕏 に OAuth 2.0 で連携し、その日に自分が投稿したポストのいいね・リポスト・インプレッションなどを集計して、通信簿として毎日自動でポストするウェブアプリです。LGTM 画像の生成とホスティングも同じデプロイで兼ねています。SvelteKit と SQLite で SSR 構成にしてあります。
 
 ### [cheaper-gs-map](https://5ym.github.io/cheaper-gs-map/)
 
