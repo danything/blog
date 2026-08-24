@@ -101,6 +101,11 @@ const bannerOffset =
 
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
+
+		<!-- Threads との双方向認証 (プロフィールのリンク横にダブルアローが付く)。
+		     サイドバーの SNS アイコンにも rel="me" は付いているが、サイドバーの
+		     無いページでも検証が通るよう head に置く -->
+		<link rel="me" href="https://www.threads.com/@5yuim" />
 		{favicons.map(favicon => (
 			<link rel="icon"
 				  href={favicon.src.startsWith('/') ? url(favicon.src) : favicon.src}

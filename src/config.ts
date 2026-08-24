@@ -93,6 +93,11 @@ export const profileConfig: ProfileConfig = {
 			url: "https://www.instagram.com/5yuim/",
 		},
 		{
+			name: "Threads",
+			icon: "fa6-brands:threads",
+			url: "https://www.threads.com/@5yuim",
+		},
+		{
 			name: "LinkedIn",
 			icon: "fa6-brands:linkedin",
 			url: "https://www.linkedin.com/in/yui/",
