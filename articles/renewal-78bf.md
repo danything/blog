@@ -86,16 +86,32 @@ ArgoCD 自体も k3s の `HelmChart` CRD でマニフェストとして宣言し
 
 証明書は Traefik が Let's Encrypt から DNS-01 チャレンジで取得しています。前段には Cloudflare を挟んでいます。
 
-### シークレットも Git に置いてある
+### シークレットは Infisical に置き、Git には「どこから取るか」だけ
 
-コメントシステムの署名鍵や管理パスワードといった秘密情報も、**Sealed Secrets** で暗号化した状態で公開リポジトリにコミットしています。
+コメントシステムの署名鍵や管理パスワードといった秘密情報は、クラスタでセルフホストしている **[Infisical](https://infisical.com/)** に置いています。Git 側にあるのは **[External Secrets Operator](https://external-secrets.io/)** の `ExternalSecret` だけで、これが Infisical のフォルダを読んで普通の `Secret` を作ります。
 
-```console
-$ ./bootstrap/kubeseal.sh /tmp/secret.yaml k3s/artalk-secret.yaml
-wrote k3s/artalk-secret.yaml
+```yaml
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: artalk-secrets
+  namespace: blog
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: artalk-secrets
+  dataFrom:
+    - find:
+        path: /blog/artalk-secrets
+        name:
+          regexp: .*
 ```
 
-クラスタ内のコントローラが持つ秘密鍵でしか復号できないので、公開リポジトリに置いても問題ありません。おかげで「Git に全部ある」という状態を崩さずに済んでいます。
+値そのものは平文でも暗号文でもリポジトリに入らないので、公開リポジトリに置いても問題ありません。値を変えるときも Infisical の画面で書き換えるだけで、コミットは要りません。「Git に全部ある」という状態は、秘密の中身だけを Infisical に切り出した形で保っています。
+
+以前は [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets) で暗号化した `SealedSecret` をコミットしていましたが、値を 1 つ変えるたびに全キーを封をし直してコミットする手間と、クラスタ内の鍵に縛られる（名前や名前空間を変えると復号できない）不便さがあったので、Infisical + ESO に乗り換えました。
 
 ## コメントは Artalk をセルフホスト
 
