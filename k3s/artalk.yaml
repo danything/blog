@@ -16,6 +16,9 @@ kind: Deployment
 metadata:
   name: artalk
   namespace: blog
+  annotations:
+    # 参照している Secret を Infisical operator が同期したら、自動でローリング再起動する
+    secrets.infisical.com/auto-reload: "true"
 spec:
   replicas: 1
   # ReadWriteOnce のボリュームを使うため、新旧 Pod の同時起動を避ける
