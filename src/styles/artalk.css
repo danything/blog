@@ -359,6 +359,8 @@ body .atk-layer-wrap {
    (.float-panel) と同じ角丸・影・ホバーに寄せる。 */
 #artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown {
 	min-width: 8rem;
+	/* 見出しとの隙間は margin で空けない。ホバーで開く作りなので、隙間を
+	   通るとホバーが外れて閉じる。見た目の隙間は透明な ::before で橋渡しする */
 	margin-top: 0.35rem;
 	padding: 0.35rem;
 	border: 0;
@@ -397,4 +399,17 @@ body .atk-layer-wrap {
 #artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-arrow-down-icon {
 	border-top-color: var(--at-color-meta);
 	margin-left: 0.5rem;
+}
+
+#artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: -0.6rem;
+	height: 0.6rem;
+}
+/* カードの角丸に合わせて内側の overflow を切っている場合に備え、メニューは前面に */
+#artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown {
+	z-index: 20;
 }
