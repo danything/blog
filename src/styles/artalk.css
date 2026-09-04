@@ -354,3 +354,47 @@ body .atk-layer-wrap {
 #artalk.artalk .atk-copyright a {
 	color: inherit;
 }
+
+/* 並び替えのドロップダウン。既定は白い四角なので、サイトのフロートパネル
+   (.float-panel) と同じ角丸・影・ホバーに寄せる。 */
+#artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown {
+	min-width: 8rem;
+	margin-top: 0.35rem;
+	padding: 0.35rem;
+	border: 0;
+	border-radius: 0.75rem;
+	background: var(--float-panel-bg);
+	box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+	text-align: left;
+}
+:root.dark #artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown {
+	box-shadow: none;
+	border: 1px solid var(--line-divider);
+}
+#artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown-item span,
+#artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown-item a {
+	padding: 0.4rem 0.9rem;
+	border-radius: 0.5rem;
+	line-height: 1.5;
+	color: var(--at-color-font);
+	transition: background 0.15s ease-out, color 0.15s ease-out;
+}
+#artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown-item span:hover,
+#artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown-item a:hover {
+	background: var(--btn-plain-bg-hover);
+	color: var(--primary);
+}
+#artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown-item.active span,
+#artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown-item.active a {
+	background: var(--btn-regular-bg);
+	color: var(--btn-content);
+	font-weight: 700;
+}
+/* 見出し側: 件数の数字はサイトのアクセント、矢印は薄く */
+#artalk.artalk .atk-list-header .atk-comment-count .atk-comment-count-num {
+	font-size: 1.25rem;
+}
+#artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-arrow-down-icon {
+	border-top-color: var(--at-color-meta);
+	margin-left: 0.5rem;
+}
