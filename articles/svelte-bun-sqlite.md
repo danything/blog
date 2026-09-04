@@ -21,8 +21,9 @@ published_at: 2026-09-04
 | [𝕏ool](https://x.doany.io/) | 𝕏の1日分の成績を通信簿として自動ポストするやつ | [ソース](https://github.com/DAnything/xool) |
 | Smart QR Payment | QRを使った事前購入とセルフレジ | [ソース](https://github.com/5ym/smart-qr-payment) |
 | denpa | テレビの番組表、予約、録画、配信 | [ソース](https://github.com/DAnything/denpa) |
+| [tamasagashi](https://ts.doany.io/) | 公的データから作った車両マスター(型式 → 通称名・諸元)の閲覧 | サービスのみ |
 
-4つともpackage.jsonの中身がほぼ同じで、SvelteKit 2 + Svelte 5、adapter-node、Tailwind 4 + daisyUI、bun:sqlite、TypeScript 7、起動は`bun build/index.js`という構成になっています。  
+5つともpackage.jsonの中身がほぼ同じで、SvelteKit 2 + Svelte 5、adapter-node、Tailwind 4 + daisyUI、bun:sqlite、TypeScript 7、起動は`bun build/index.js`という構成になっています。  
 別に最初から揃えようと思っていたわけではなく、1個書き直したら楽だったので以降全部そうなった、というのが正直なところです。
 
 ## 書き直しに至った経緯
@@ -65,6 +66,12 @@ db.exec('PRAGMA journal_mode = WAL;');
 db.exec('PRAGMA foreign_keys = ON;');
 ensureSchema(db);
 ```
+
+### 索引に関して
+
+SQLiteでも索引をちゃんと張れば検索は十分速い、という例がtamasagashiです。国交省の燃費一覧や官報の型式指定、リコール届出といった公的データをJSONLにしたものを、ビルド時にSQLiteへ取り込んでイメージに焼き込み、実行時は読み取り専用で開いています。書き込みが無いので単一ライターの制約は最初から関係ありません。  
+検索のキーになる型式と通称名はひらがな・カタカナ・全角半角・空白・ハイフンの違いを無視したいのですが、これをクエリ側で毎回やると索引が効かなくなるので、取り込み時に正規化した`code_norm`・`name_norm`という列を別に持たせ、そこに索引を張って`LIKE`で引いています。取り込み時と検索時で同じ正規化関数を通すのが要点で、表記揺れの吸収は取り込みの段階で終わらせておく形です。  
+その他にも複合主キーだけで引く表は`WITHOUT ROWID`にする、取り込み中は`PRAGMA synchronous = OFF`で流し込んで最後に`wal_checkpoint(TRUNCATE)`と`VACUUM`で固めてから配る、といった辺りは全部SQLiteの標準機能で済んでいます。この規模で「SQLiteだから遅い」と感じたことは今のところありません。
 
 ### ORMに関して
 
