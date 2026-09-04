@@ -43,17 +43,17 @@ Slack / GitHub / GitLab / Backlog / Jira / OpenProject / Redmine の API ログ�
 
 𝕏 に投稿した 1 日分を集計して、翌日に通信簿として自分のアカウントへ自動ポストするツールです。件数と前日比、いいね・リポスト・返信・ブックマーク、インプレッション、連続投稿日数などをまとめます。一度もポストしなかった日は API の課金対象になるだけなので投稿しません。SvelteKit と SQLite で構築しています。
 
-### [cheaper-gs-map](https://5ym.github.io/cheaper-gs-map/)
+### [cheaper-gs-map](https://github.com/5ym/cheaper-gs-map)
 
-全国のガソリン価格ランキングから各都道府県の上位10店舗を集めて、衛星写真の地図上に表示する静的サイトです。GitHub Actions で定期的に収集し、GitHub Pages で配信しています。ソースは [GitHub](https://github.com/5ym/cheaper-gs-map) にあります。
+全国のガソリン価格ランキングから各都道府県の上位10店舗を集めて、衛星写真の地図上に表示するサイトです。収集元からデータ公開の許可が取れなかったため、サイト自体は非公開にしてソースだけ置いています。
 
 ### [cash-tabelog](https://5ym.github.io/cash-tabelog/)
 
 食べログに掲載されている店舗のうち、カード決済に対応している割合を全国と都道府県別に集計して棒グラフで出します。決済まわりの仕事をしていた頃の関心から作りました。ソースは [GitHub](https://github.com/5ym/cash-tabelog) にあります。
 
-### [zero-owner](https://5ym.github.io/zero-owner/)
+### [yuzuriha（譲葉）](https://y.doany.io/)
 
-[zero.estate](https://zero.estate/) に掲載された0円物件を毎日収集し、衛星写真の地図上に表示する静的サイトです。ソースは [GitHub](https://github.com/5ym/zero-owner) にあります。
+0円物件を掲載サイトから集めて、衛星写真の地図上に表示するサイトです。フィールドマッチング、負動産の掲示板、NISUMEL、家いちば、全国０円不動産の 5 サイトを毎日収集しています。自宅の k3s クラスタで配信していて、ソースは [GitHub](https://github.com/DAnything/yuzuriha) にあります。
 
 ### [naltec-reservation-grabber](https://github.com/5ym/naltec-reservation-grabber)
 
