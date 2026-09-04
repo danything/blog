@@ -62,8 +62,7 @@ body .atk-layer-wrap {
 	background: transparent;
 }
 
-#artalk.artalk .atk-textarea,
-#artalk.artalk .atk-header input {
+#artalk.artalk .atk-textarea {
 	font-family: inherit;
 	background: transparent;
 }
@@ -275,7 +274,9 @@ body .atk-layer-wrap {
 	flex: 1 1 0;
 	margin: 0;
 }
-#artalk.artalk .atk-header .atk-input {
+#artalk.artalk .atk-header input {
+	font-family: inherit;
+	border: 0;
 	width: 100%;
 	padding: 0.45rem 0.75rem;
 	border-radius: 0.5rem;
@@ -284,11 +285,11 @@ body .atk-layer-wrap {
 	font-size: 0.9rem;
 	transition: background 0.15s ease-out;
 }
-#artalk.artalk .atk-header .atk-input:focus {
+#artalk.artalk .atk-header input:focus {
 	background: var(--btn-regular-bg-hover);
 	outline: none;
 }
-#artalk.artalk .atk-header .atk-input::placeholder {
+#artalk.artalk .atk-header input::placeholder {
 	color: var(--at-color-meta);
 }
 
@@ -314,7 +315,10 @@ body .atk-layer-wrap {
 	color: var(--at-color-deep);
 }
 
-/* 空のときは大きく空けない */
+/* 空のときは大きく空けない (既定は .atk-list-body に min-height: 150px がある) */
+#artalk.artalk .atk-list-body {
+	min-height: 0;
+}
 #artalk.artalk .atk-list-no-comment {
 	height: auto;
 	padding: 1.75rem 0;
