@@ -356,22 +356,27 @@ body .atk-layer-wrap {
 }
 
 /* 並び替えのドロップダウン。既定は白い四角なので、サイトのフロートパネル
-   (.float-panel) と同じ角丸・影・ホバーに寄せる。 */
+   (.float-panel) と同じ角丸・影・ホバーに寄せる。
+   ホバーで開く作りなので、見出しとの隙間を margin で空けると隙間を通った
+   ときにホバーが外れて閉じる。隙間は透明な上ボーダーで作る (ボーダーは
+   当たり判定に含まれる)。既定で overflow-y: auto が付いているため、はみ出す
+   擬似要素での橋渡しはクリップされて効かない。 */
 #artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown {
 	min-width: 8rem;
-	/* 見出しとの隙間は margin で空けない。ホバーで開く作りなので、隙間を
-	   通るとホバーが外れて閉じる。見た目の隙間は透明な ::before で橋渡しする */
-	margin-top: 0.35rem;
+	margin: 0;
 	padding: 0.35rem;
 	border: 0;
+	border-top: 0.4rem solid transparent;
 	border-radius: 0.75rem;
 	background: var(--float-panel-bg);
-	box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+	background-clip: padding-box;
+	box-shadow: none;
+	filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.12));
 	text-align: left;
 }
 :root.dark #artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown {
-	box-shadow: none;
-	border: 1px solid var(--line-divider);
+	filter: none;
+	box-shadow: inset 0 0 0 1px var(--line-divider);
 }
 #artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown-item span,
 #artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown-item a {
@@ -401,15 +406,7 @@ body .atk-layer-wrap {
 	margin-left: 0.5rem;
 }
 
-#artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown::before {
-	content: "";
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: -0.6rem;
-	height: 0.6rem;
-}
-/* カードの角丸に合わせて内側の overflow を切っている場合に備え、メニューは前面に */
+/* メニューはカードより前面に */
 #artalk.artalk .atk-list-header .atk-dropdown-wrap .atk-dropdown {
 	z-index: 20;
 }
