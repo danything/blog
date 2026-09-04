@@ -41,7 +41,7 @@ Slack / GitHub / GitLab / Backlog / Jira / OpenProject / Redmine の API ログ�
 
 ### [𝕏ool](https://x.doany.io/)
 
-𝕏 に OAuth 2.0 で連携し、その日に自分が投稿したポストのいいね・リポスト・インプレッションなどを集計して、通信簿として毎日自動でポストするウェブアプリです。LGTM 画像の生成とホスティングも同じデプロイで兼ねています。SvelteKit と SQLite で SSR 構成にしてあります。
+𝕏 に投稿した 1 日分を集計して、翌日に通信簿として自分のアカウントへ自動ポストするツールです。件数と前日比、いいね・リポスト・返信・ブックマーク、インプレッション、連続投稿日数などをまとめます。一度もポストしなかった日は API の課金対象になるだけなので投稿しません。SvelteKit と SQLite で構築しています。
 
 ### [cheaper-gs-map](https://5ym.github.io/cheaper-gs-map/)
 
