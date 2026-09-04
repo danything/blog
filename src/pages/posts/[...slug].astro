@@ -2,6 +2,7 @@
 import path from "node:path";
 import Comments from "@components/Comments.astro";
 import License from "@components/misc/License.astro";
+import Share from "@components/misc/Share.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
@@ -108,6 +109,8 @@ const jsonLd = {
             </Markdown>
 
             {licenseConfig.enable && <License title={entry.data.title} slug={entry.slug} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
+
+            <Share title={entry.data.title} class="mb-6 onload-animation"></Share>
 
         </div>
     </div>

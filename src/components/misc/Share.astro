@@ -1,0 +1,61 @@
+---
+import { Icon } from "astro-icon/components";
+
+// 記事のシェアボタン。外部スクリプトは読まず intent URL へのリンクだけで組む
+// (Ko-fi をただのリンクにしたのと同じ考え方。表示速度にもテーマ切替にも影響しない)。
+interface Props {
+	title: string;
+	class?: string;
+}
+
+const { title } = Astro.props;
+const className = Astro.props.class ?? "";
+const postUrl = Astro.url.toString();
+const text = encodeURIComponent(title);
+const url = encodeURIComponent(postUrl);
+
+const links = [
+	{ name: "X", icon: "fa6-brands:x-twitter", href: `https://x.com/intent/post?text=${text}&url=${url}` },
+	{ name: "Threads", icon: "fa6-brands:threads", href: `https://www.threads.net/intent/post?text=${text}%20${url}` },
+	{ name: "Bluesky", icon: "fa6-brands:bluesky", href: `https://bsky.app/intent/compose?text=${text}%20${url}` },
+];
+// はてなブックマークは URL をそのまま後ろに付ける形式 (https:// は https:/ に縮める慣習だが素のままでも通る)
+const hatena = `https://b.hatena.ne.jp/entry/${postUrl.replace(/^https?:\/\//, "s/")}`;
+---
+<div class={`flex flex-wrap items-center gap-2 ${className}`}>
+    <div class="transition text-black/30 dark:text-white/30 text-sm mr-2">シェア</div>
+    {links.map(l => (
+        <a href={l.href} target="_blank" rel="noopener noreferrer" aria-label={`${l.name} でシェア`} title={l.name}
+           class="btn-regular rounded-lg h-10 w-10 active:scale-90">
+            <Icon name={l.icon} class="text-[1.25rem]"></Icon>
+        </a>
+    ))}
+    <a href={hatena} target="_blank" rel="noopener noreferrer" aria-label="はてなブックマークに追加" title="はてなブックマーク"
+       class="btn-regular rounded-lg h-10 w-10 active:scale-90 font-bold text-[0.95rem] tracking-tight">
+        B!
+    </a>
+    <button type="button" class="share-copy btn-regular rounded-lg h-10 px-3 active:scale-90 flex items-center gap-2 text-sm"
+            data-url={postUrl} aria-label="URL をコピー">
+        <Icon name="fa6-solid:link" class="text-[1rem]"></Icon>
+        <span class="share-copy-label">URL をコピー</span>
+    </button>
+</div>
+
+<script>
+// swup で本文が差し替わっても効くよう、document に 1 回だけ委譲で付ける
+if (!(window as Window & { __shareCopyBound?: boolean }).__shareCopyBound) {
+	(window as Window & { __shareCopyBound?: boolean }).__shareCopyBound = true;
+	document.addEventListener("click", async (e) => {
+		const btn = (e.target as HTMLElement | null)?.closest<HTMLButtonElement>(".share-copy");
+		if (!btn) return;
+		const label = btn.querySelector<HTMLElement>(".share-copy-label");
+		try {
+			await navigator.clipboard.writeText(btn.dataset.url ?? location.href);
+			if (label) label.textContent = "コピーしました";
+		} catch {
+			if (label) label.textContent = "コピーできませんでした";
+		}
+		setTimeout(() => { if (label) label.textContent = "URL をコピー"; }, 1500);
+	});
+}
+</script>
