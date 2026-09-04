@@ -5,7 +5,7 @@ import { commentConfig } from "@/config";
 {commentConfig.enable && (
     <!-- overflow-hidden は付けない。並び替えメニューがカードの外にはみ出すため -->
     <div class="flex w-full rounded-[var(--radius-large)] relative mb-4">
-        <div class="card-base z-10 px-6 md:px-9 py-6 relative w-full">
+        <div class="card-base !overflow-visible z-10 px-6 md:px-9 py-6 relative w-full">
             <div id="artalk"></div>
         </div>
     </div>
