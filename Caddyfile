@@ -44,6 +44,17 @@
 	@html not path /_astro/* /pagefind/* /static/*
 	header @html Cache-Control "public, max-age=0, must-revalidate"
 
+	# --- 削除した記事 ---
+	# 意図的に消したので 404 ではなく 410 Gone を返し、検索エンジンにも
+	# 恒久的な削除として伝える。本文には 404 ページを流用する
+	@gone path_regexp gone ^/posts/(wpdevenv|hhvmlaravel|wpgit|ec-ajax|paypalmeetup|doodcron|zabbixifttt)/?$
+	handle @gone {
+		rewrite * /404.html
+		file_server {
+			status 410
+		}
+	}
+
 	file_server
 
 	handle_errors {
