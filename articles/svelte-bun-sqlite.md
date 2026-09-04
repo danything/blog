@@ -100,6 +100,16 @@ bun:sqliteとBun.password(argon2id)が同梱されていて、ネイティブ依
 - adapter-nodeはSIGTERMを受けた瞬間にlistenを閉じる  
   これはBunというよりSvelteKitを長時間走るプロセスとしてk3sに置くときの話です。denpaは録画中にデプロイが来ても録り終わるまで居座る設計なのですが、adapter-nodeの既定の後始末が先に走って、プロセスは生きているのにポートだけ閉じている状態になりました。止まれの合図を自前で受け取って後始末を外す、しかも登録タイミングの都合で2回やる必要がありました。詳細はdenpaの[architecture.md](https://github.com/DAnything/denpa/blob/main/docs/architecture.md)に書いてあります。
 
+## BiomeとdaisyUIに関して
+
+周辺のツールも同じ考え方で選んでいます。
+
+Biomeはlintとformatを1つのツールで済ませるためです。Smart QR Paymentの書き直し直後はESLint + Prettierだったのですが、設定ファイルが3つあってそれぞれの相性も見る必要があり、この規模のアプリでは持ち物が多すぎるので`biome.json`1つと`biome check --write`1コマンドに寄せました。Rust製で速いので`check`のスクリプトに型チェックと並べて入れてもストレスがありません。  
+難点は先に書いた通り`.svelte`の`<script>`しか見ないことで、テンプレート側で使っている変数を未使用と判定します。ここだけルールを切って使っています。
+
+daisyUIはTailwindの上に`btn`や`card`のようなコンポーネントクラスを足すだけのもので、JSのランタイムを持ちません。書き直し前はVuetifyだったのですが、あれはVue専用なのでSvelteに移った時点で選べなくなり、Svelte向けのUIライブラリを新しく覚えるよりTailwindのクラスで完結するほうが楽だと判断しました。  
+テーマはCSS変数で持つのでライト/ダークの切り替えや自分のブランド色への差し替えも設定だけで済みますし、AIに画面を書かせたときも`class="btn btn-primary"`で済む分、素のTailwindのユーティリティを並べたものより出力が短くて読みやすいです。4つのアプリで同じdaisyUIのテーマ設定を使い回しているので、見た目の統一にも効いています。
+
 ## SvelteKitで済ませないもの
 
 全部これで済ませているわけではなく、大規模な計算や、キューを持って長時間回し続けるような処理が必要になった場合は.NETを使うようにしています。  
