@@ -82,6 +82,8 @@ function convertBody(body, slug) {
 		convertAdmonitions(body)
 			// 画像は doany.io 上の絶対パスなので、Zenn から見えるよう URL にする
 			.replace(/\]\(\/static\//g, `](${SITE_URL}/static/`)
+			// 記事同士の内部リンクも Zenn 上では解決できないので、ブログ側の URL に向ける
+			.replace(/\]\(\/posts\//g, `](${SITE_URL}/posts/`)
 			// Astro のディレクティブは Zenn のカード記法に置き換える
 			.replace(/^::github\{repo="([^"]+)"\}$/gm, "@[card](https://github.com/$1)")
 			.trimEnd()
