@@ -9,7 +9,7 @@ metadata:
   namespace: kube-system
 spec:
   chart: oci://ghcr.io/danything/charts/yosegaki
-  version: 0.1.1
+  version: 0.1.2
   targetNamespace: blog
   valuesContent: |-
     host: yk.doany.io
