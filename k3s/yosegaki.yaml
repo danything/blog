@@ -1,6 +1,6 @@
 # コメントサーバ yosegaki (https://github.com/DAnything/yosegaki)。
 # チャートは yosegaki 側の CI が OCI で ghcr に push する。version は 0.1.<CI の run 番号>。
-# 秘密は Infisical の /yosegaki/yosegaki-secrets (admin-password, secret, smtp-password,
+# 秘密は Infisical の /yosegaki/yosegaki-secrets (secret, oidc-client-secret, smtp-password,
 # turnstile-secret) を純正 operator が Secret yosegaki-secrets にする。
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
@@ -9,7 +9,7 @@ metadata:
   namespace: kube-system
 spec:
   chart: oci://ghcr.io/danything/charts/yosegaki
-  version: 0.1.3
+  version: 0.1.4
   targetNamespace: blog
   valuesContent: |-
     host: yk.doany.io
@@ -21,6 +21,15 @@ spec:
     admin:
       name: ruk
       email: info@doany.io
+    # 管理者は Entra ID でログインする。ArgoCD と同じアプリ登録・同じ "admins" グループ
+    # (bootstrap/argocd/helmchart.yaml の RBAC と同じ Object ID)。client secret は
+    # Infisical の oidc-client-secret
+    oidc:
+      issuer: https://login.microsoftonline.com/22ac977d-b140-4dc8-8150-90d645d3475b/v2.0
+      clientId: b0fa498f-7e6a-4fe1-a1c6-16fbbb6f397e
+      adminGroups:
+        - 5847ec59-0f80-4713-89f9-3624cc217468
+      label: Microsoft
     turnstile:
       # Cloudflare ダッシュボード → Turnstile → doany.io のウィジェット。公開値
       siteKey: 0x4AAAAAAEoiKxn884OxoH4h
