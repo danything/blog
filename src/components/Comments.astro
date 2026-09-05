@@ -1,12 +1,11 @@
 ---
-import "@/styles/artalk.css";
+import "@/styles/yosegaki.css";
 import { commentConfig } from "@/config";
 ---
 {commentConfig.enable && (
-    <!-- overflow-hidden は付けない。並び替えメニューがカードの外にはみ出すため -->
     <div class="flex w-full rounded-[var(--radius-large)] relative mb-4">
-        <div class="card-base !overflow-visible z-10 px-6 md:px-9 py-6 relative w-full">
-            <div id="artalk"></div>
+        <div class="card-base z-10 px-6 md:px-9 py-6 relative w-full">
+            <div id="yosegaki"></div>
         </div>
     </div>
 )}
@@ -14,100 +13,57 @@ import { commentConfig } from "@/config";
 <script>
 import { commentConfig } from "@/config";
 
-const { artalk: artalkConfig } = commentConfig;
+const { yosegaki: conf } = commentConfig;
 
-type ArtalkInstance = {
-	destroy: () => void;
-	setDarkMode: (dark: boolean) => void;
-};
+type Instance = { destroy: () => void };
 
 declare global {
 	interface Window {
-		Artalk?: {
-			init: (conf: Record<string, unknown>) => ArtalkInstance;
+		Yosegaki?: {
+			init: (opts: Record<string, unknown>) => Instance | null;
 		};
 	}
 }
 
-let instance: ArtalkInstance | null = null;
-
-// テーマ切替は html 要素の dark クラスの付け外しで行われる
-function isDark(): boolean {
-	return document.documentElement.classList.contains("dark");
-}
+let instance: Instance | null = null;
 
 function mount() {
-	const container = document.getElementById("artalk");
-	if (!container) return;
+	const target = document.getElementById("yosegaki");
+	if (!target) return;
 
-	// 黙って失敗すると空のカードだけが残って原因が追えないため、
-	// 読み込み漏れと初期化エラーはコンソールに出す
-	if (!window.Artalk) {
-		console.error(
-			`[comments] Artalk を読み込めませんでした (${artalkConfig.server}/dist/Artalk.js)`,
-		);
+	if (!window.Yosegaki) {
+		console.error(`[comments] yosegaki を読み込めませんでした (${conf.server}/embed.js)`);
 		return;
 	}
 
-	try {
-		// 2 回目以降 (swup 遷移) は既存インスタンスを捨てて作り直す
-		instance?.destroy();
-		instance = window.Artalk.init({
-			el: container,
-			server: artalkConfig.server,
-			site: artalkConfig.site,
-			locale: artalkConfig.locale,
-			darkMode: isDark(),
-			// クエリ文字列でスレッドが分かれないよう URL を明示する
-			pageKey: location.origin + location.pathname,
-			pageTitle: document.title,
-		});
-	} catch (e) {
-		instance = null;
-		console.error("[comments] Artalk の初期化に失敗しました", e);
-	}
+	// 2 回目以降 (swup 遷移) は既存インスタンスを捨てて作り直す。
+	// 同梱 CSS は init のたびに <head> に無ければ入れ直される
+	instance?.destroy();
+	instance = window.Yosegaki.init({
+		target,
+		server: conf.server,
+		lang: "ja",
+		// クエリ文字列でスレッドが分かれないよう URL を明示する
+		page: location.origin + location.pathname,
+		title: document.title,
+	});
 }
 
-const CSS_ID = "artalk-css";
-
-// swup は updateHead: true で遷移のたびに <head> を差し替えるため、
-// ここで動的に足した <link> は消える。ビルド時に生成される CSS は新しい
-// ページの head にも入っているので残るが、これだけは毎回入れ直す。
-function ensureStylesheet() {
-	if (document.getElementById(CSS_ID)) return;
-
-	const css = document.createElement("link");
-	css.id = CSS_ID;
-	css.rel = "stylesheet";
-	css.href = `${artalkConfig.server}/dist/Artalk.css`;
-	document.head.appendChild(css);
-}
-
-// 初回だけローダーを注入する。読み込み後に window.Artalk が生える。
+// 初回だけ埋め込みスクリプトを読む。data-auto="false" で自動描画は止め、
+// こちらから init する
 function load() {
-	ensureStylesheet();
-
-	if (window.Artalk) {
+	if (window.Yosegaki) {
 		mount();
 		return;
 	}
-
 	const script = document.createElement("script");
-	script.src = `${artalkConfig.server}/dist/Artalk.js`;
+	script.src = `${conf.server}/embed.js`;
+	script.dataset.auto = "false";
 	script.onload = mount;
 	document.head.appendChild(script);
 }
 
-function syncTheme() {
-	instance?.setDarkMode(isDark());
-}
-
 if (commentConfig.enable) {
-	new MutationObserver(syncTheme).observe(document.documentElement, {
-		attributes: true,
-		attributeFilter: ["class"],
-	});
-
 	const setup = () => {
 		window.swup.hooks.on("page:view", load);
 	};

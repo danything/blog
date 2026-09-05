@@ -77,17 +77,14 @@ export type LicenseConfig = {
 	url: string;
 };
 
-export type ArtalkConfig = {
-	/** Artalk バックエンドの URL */
+export type YosegakiConfig = {
+	/** yosegaki (https://github.com/DAnything/yosegaki) のサーバ */
 	server: string;
-	/** Artalk の ATK_SITE_DEFAULT と一致させる */
-	site: string;
-	locale: string;
 };
 
 export type CommentConfig = {
 	enable: boolean;
-	artalk: ArtalkConfig;
+	yosegaki: YosegakiConfig;
 };
 
 export type KofiConfig = {

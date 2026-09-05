@@ -1,0 +1,38 @@
+# コメントサーバ yosegaki (https://github.com/DAnything/yosegaki)。
+# チャートは yosegaki 側の CI が OCI で ghcr に push する。version は 0.1.<CI の run 番号>。
+# 秘密は Infisical の /yosegaki/yosegaki-secrets (admin-password, secret, smtp-password,
+# turnstile-secret) を純正 operator が Secret yosegaki-secrets にする。
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: yosegaki
+  namespace: kube-system
+spec:
+  chart: oci://ghcr.io/danything/charts/yosegaki
+  version: 0.1.1
+  targetNamespace: blog
+  valuesContent: |-
+    host: yk.doany.io
+    siteName: doany.io
+    allowedOrigins:
+      - https://doany.io
+    # 承認なしで公開。bot は Turnstile で止める
+    moderation: none
+    admin:
+      name: ruk
+      email: info@doany.io
+    turnstile:
+      # Cloudflare ダッシュボード → Turnstile → doany.io のウィジェット。公開値
+      siteKey: 0x4AAAAAAEoiKxn884OxoH4h
+    smtp:
+      host: smtp.office365.com
+      port: 587
+      user: info@doany.io
+      from: info@doany.io
+    infisicalSecret:
+      enabled: true
+      identityId: f2bc3416-f196-4626-9bf3-c11693b32cc6
+      projectSlug: k3s-cluster
+      path: /yosegaki/yosegaki-secrets
+    persistence:
+      storageClass: local-path-retain

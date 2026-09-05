@@ -1,0 +1,19 @@
+/* yosegaki をサイトの配色に合わせる。
+ *
+ * 同梱の CSS は色を決めず、文字色を薄めて罫線や背景にするので、
+ * 寄せるのは強調色と角丸だけでよい。ダークモードは文字色に追従する。
+ */
+#yosegaki {
+	--ysg-accent: var(--primary);
+	--ysg-accent-fg: #fff;
+	--ysg-radius: 0.75rem;
+	--ysg-line: var(--line-divider);
+	--ysg-surface: var(--btn-regular-bg);
+	color: var(--deep-text);
+}
+
+/* Turnstile のチャレンジが出たときにカードからはみ出さないように */
+#yosegaki .ysg-turnstile {
+	max-width: 100%;
+	overflow: hidden;
+}

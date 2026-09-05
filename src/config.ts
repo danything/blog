@@ -118,10 +118,8 @@ export const licenseConfig: LicenseConfig = {
 
 export const commentConfig: CommentConfig = {
 	enable: true,
-	artalk: {
-		server: "https://ak.doany.io",
-		site: "doany",
-		locale: "ja",
+	yosegaki: {
+		server: "https://yk.doany.io",
 	},
 };
 
