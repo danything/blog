@@ -27,6 +27,10 @@
 
 ## Projects
 
+### [車台（shadai）](https://sd.doany.io/)
+
+車両台帳と、登録・届出の書類作成のサービスです。車検証の項目を一度入れれば、車検・自賠責・税の期限、1 台ごとの原価と利益（消費税区分付き）、仕入れから貨物登録・販売までの工程を 1 か所で持ち、構造変更の重量分布計算書を印刷できます。自分で書類を作る人のための道具で、代書はしません。SvelteKit と SQLite（drizzle）で構築しています。
+
 ### [worklog](https://w.doany.io/)
 
 Slack / GitHub / GitLab / Backlog / Jira / OpenProject / Redmine の API ログを横断し、日別の稼働開始・終了・休憩・実働を推定するサービスです。常駐エージェントを入れる必要がなく、過去の月に遡って稼働表を作れるのが特徴です。SvelteKit と SQLite で構築しています。
