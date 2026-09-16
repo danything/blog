@@ -23,7 +23,7 @@ published_at: 2026-09-04
 | denpa | テレビの番組表、予約、録画、配信 | [ソース](https://github.com/DAnything/denpa) |
 | [tamasagashi](https://ts.doany.io/) | 公的データから作った車両マスター(型式 → 通称名・諸元)の閲覧 | サービスのみ |
 
-5つともpackage.jsonの中身がほぼ同じで、SvelteKit 2 + Svelte 5、adapter-node、Tailwind 4 + daisyUI、bun:sqlite、TypeScript 7、起動は`bun build/index.js`という構成になっています。  
+5つともpackage.jsonの中身がほぼ同じで、SvelteKit 2 + Svelte 5、adapter-node、Pico CSS、bun:sqlite、TypeScript 7、起動は`bun build/index.js`という構成になっています。  
 別に最初から揃えようと思っていたわけではなく、1個書き直したら楽だったので以降全部そうなった、というのが正直なところです。
 
 ## 書き直しに至った経緯
@@ -107,13 +107,29 @@ bun:sqliteとBun.password(argon2id)が同梱されていて、ネイティブ依
 - adapter-nodeはSIGTERMを受けた瞬間にlistenを閉じる  
   これはBunというよりSvelteKitを長時間走るプロセスとしてk3sに置くときの話です。denpaは録画中にデプロイが来ても録り終わるまで居座る設計なのですが、adapter-nodeの既定の後始末が先に走って、プロセスは生きているのにポートだけ閉じている状態になりました。止まれの合図を自前で受け取って後始末を外す、しかも登録タイミングの都合で2回やる必要がありました。詳細はdenpaの[architecture.md](https://github.com/DAnything/denpa/blob/main/docs/architecture.md)に書いてあります。
 
-## BiomeとdaisyUIに関して
+## BiomeとCSSに関して
 
 Biomeを選んだのは、自分がきれい好きでライブラリが分散するのを嫌った面が大きいです。ライブラリは少ないにこしたことはないでしょう。Smart QR Paymentの書き直し直後はESLint + Prettierだったのですが、lintとformatで別々のライブラリと設定ファイルを持って、しかもお互いの相性まで見るのが嫌だったので`biome.json`1つと`biome check --write`1コマンドに寄せました。Rust製で速いので`check`のスクリプトに型チェックと並べて入れても気になりません。  
 難点は先に書いた通り`.svelte`の`<script>`しか見ないことで、テンプレート側で使っている変数を未使用と判定するので、そこだけルールを切って使っています。
 
-daisyUIを使っているのは、立ち上げの段階では決め打ちでUIを作るのが楽で、カスタマイズしたくなったときはTailwindでそのまま手を入れやすいからです。Tailwindの上に`btn`や`card`のようなコンポーネントクラスを足すだけのものでJSのランタイムを持ちませんし、書き直し前のVuetifyはVue専用なのでSvelteに移った時点で選べなくなった、という事情もあります。  
-最初は`class="btn btn-primary"`で済ませておいて、気に入らないところだけ`class="btn btn-primary rounded-full px-8"`のようにTailwindのユーティリティを足していく、という使い方をしています。4つのアプリで同じテーマ設定を使い回しているので見た目の統一にも効いています。
+CSSは長らくTailwind + daisyUIでした。立ち上げの段階では決め打ちでUIを作るのが楽で、カスタマイズしたくなったときはTailwindでそのまま手を入れやすい。最初は`class="btn btn-primary"`で済ませておいて、気に入らないところだけ`class="btn btn-primary rounded-full px-8"`とユーティリティを足す、という使い方をしていました。
+
+ただ全アプリを一通り作り終えてから見直すと、実際に出てくる部品は表・フォーム・注意書き・札くらいしかありませんでした。その程度のものに3,000行のコンポーネントCSSを読み込んで、マークアップ側は`class="card bg-base-100 border-base-300 flex flex-col gap-3 p-4 shadow-sm"`のようにクラスを10個並べる形になっていて、半年後の自分が読んで何をしているのか分からない。utility classは書くのは速いのですが、**読む**ときには全部のクラス名を頭の中でCSSに戻す作業が要ります。
+
+なので[Pico CSS](https://picocss.com/)に全部移しました。素の`<button>`や`<table>`にそのまま見た目が付くクラスレスのCSSで、使うモジュールだけSCSSで読み込めます。
+
+```scss
+@use "@picocss/pico/scss/pico" with (
+  $enable-semantic-container: false,
+  $modules: ("components/dropdown": false, "components/nav": false)
+);
+```
+
+そのうえで、アプリ共通で使うものだけ`app.scss`に`.panel`(白い箱)・`.note`(注意書き)・`.tag`(札)・`.field`(ラベル+入力欄)といった名前を10個ほど置いて、画面固有の調整はSvelteの`<style>`(scoped)に閉じ込める、という形にしました。結果として先ほどのマークアップは`class="panel body"`の2語になり、画面ごとの事情はその画面のファイルの中だけに書かれるようになります。
+
+色もPicoの既定のまま使っています。自前のトークンはPicoの変数から引くだけにしておくと、明暗の切り替えがPico側に勝手に追従してくれるので、アプリ側でダークテーマの面倒を見る必要がなくなりました。
+
+ドロップダウンやダイアログのようにキーボード操作とフォーカスの面倒を見ないといけない部品だけは[Bits UI](https://bits-ui.com/)を足しています。見た目を持たないヘッドレスなものなので、CSSはこちらで書く方針と喧嘩しません。
 
 ## SvelteKitで済ませないもの
 
