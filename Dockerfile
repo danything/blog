@@ -1,12 +1,11 @@
-FROM node:24-slim AS builder
+FROM oven/bun:1.4.2-slim AS builder
 WORKDIR /usr/src/app
-RUN corepack enable
 
-COPY package.json pnpm-lock.yaml .npmrc ./
-RUN pnpm install --frozen-lockfile
+COPY package.json bun.lock ./
+RUN bun i --frozen-lockfile
 
 COPY . .
-RUN pnpm build
+RUN bun run build
 
 FROM caddy:2-alpine
 COPY Caddyfile /etc/caddy/Caddyfile

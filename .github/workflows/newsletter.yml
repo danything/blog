@@ -27,9 +27,7 @@ jobs:
           # 差分を取るため直前のコミットも必要
           fetch-depth: 2
 
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "22"
+      - uses: oven-sh/setup-bun@v2
 
       - name: Collect newly added posts
         id: collect
@@ -50,4 +48,4 @@ jobs:
           BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
           NEWSLETTER_STATUS: draft
           SITE_URL: https://doany.io
-        run: node scripts/newsletter.mjs ${{ steps.collect.outputs.files }}
+        run: bun scripts/newsletter.mjs ${{ steps.collect.outputs.files }}
