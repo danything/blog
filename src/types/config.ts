@@ -3,6 +3,10 @@ import type { AUTO_MODE, DARK_MODE, LIGHT_MODE } from "@constants/constants";
 export type SiteConfig = {
 	title: string;
 	subtitle: string;
+	/** 記事以外のページの meta description */
+	description: string;
+	/** OGP 画像の既定値(public 配下の絶対パス)。記事にアイキャッチがあればそちらを使う */
+	ogImage: string;
 
 	lang:
 		| "en"

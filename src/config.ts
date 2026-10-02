@@ -13,6 +13,9 @@ import { LinkPreset } from "./types/config";
 export const siteConfig: SiteConfig = {
 	title: "Doa",
 	subtitle: "気ままな備忘録",
+	description:
+		"Linux やネットワーク、Web アプリ開発から、車のコーディングや登録手続きまで、実際に試して分かったことを書き留めている備忘録です。",
+	ogImage: "/static/images/x-card.png",
 	lang: "ja", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.
 	themeColor: {
 		// テーマ色の色相 (0-360)。Fuwari の既定は 250 だが、この配色は
