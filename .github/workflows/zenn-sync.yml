@@ -24,11 +24,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
+      - uses: oven-sh/setup-bun@v2
 
-      - run: node scripts/zenn-sync.mjs
+      - run: bun scripts/zenn-sync.mjs
 
       - name: Publish to the zenn branch
         env:

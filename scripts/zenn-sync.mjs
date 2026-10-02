@@ -1,6 +1,6 @@
 // src/content/posts/*.md から Zenn 用の articles/*.md を生成する。
 //
-//   node scripts/zenn-sync.mjs
+//   bun scripts/zenn-sync.mjs
 //
 // Zenn はリポジトリ直下の articles/*.md しか読まないため、Astro 側の記事を
 // 変換して出力する。articles/ は全体が生成物なので、対応する記事がなくなった

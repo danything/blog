@@ -12,7 +12,7 @@ dist
 
 # infra (イメージのビルドには不要)
 deploy
-# Zenn 用の生成物。手元で pnpm zenn-sync を叩くと残るのでビルド文脈から外す
+# Zenn 用の生成物。手元で bun run zenn-sync を叩くと残るのでビルド文脈から外す
 articles
 compose.yml
 
@@ -21,4 +21,3 @@ compose.yml
 *.log
 npm-debug.log*
 yarn-debug.log*
-pnpm-debug.log*

@@ -1,6 +1,6 @@
 // 新規追加された記事を Buttondown のメールとして作成する。
 //
-//   node scripts/newsletter.mjs <追加されたファイル...>
+//   bun scripts/newsletter.mjs <追加されたファイル...>
 //
 // 環境変数:
 //   BUTTONDOWN_API_KEY  必須

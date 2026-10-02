@@ -5,8 +5,8 @@
 ## 開発
 
 ```shell
-pnpm install
-pnpm dev
+bun install
+bun run dev
 ```
 
 <http://localhost:4321>
@@ -20,14 +20,14 @@ docker compose up
 ## ビルド
 
 ```shell
-pnpm build    # dist/ に出力（pagefind の検索インデックス生成まで実行）
-pnpm preview
+bun run build    # dist/ に出力（pagefind の検索インデックス生成まで実行）
+bun run preview
 ```
 
 ## 記事の追加
 
 ```shell
-pnpm new-post <filename>
+bun run new-post <filename>
 ```
 
 `src/content/posts/` に Markdown を置く。フロントマターは以下。
