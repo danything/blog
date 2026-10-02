@@ -12,7 +12,9 @@ import rehypeSlug from "rehype-slug";
 import remarkSectionize from "remark-sectionize";
 import { expressiveCodeConfig } from "./src/config.ts";
 import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.ts";
+import { remarkAlerts } from "./src/plugins/remark-alerts.mjs";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
+import { remarkGithubCard } from "./src/plugins/remark-github-card.mjs";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
 
@@ -97,6 +99,8 @@ export default defineConfig({
 		remarkPlugins: [
 			remarkReadingTime,
 			remarkExcerpt,
+			remarkAlerts,
+			remarkGithubCard,
 			remarkSectionize,
 		],
 		rehypePlugins: [
