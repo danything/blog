@@ -44,6 +44,30 @@ draft: false
 ---
 ```
 
+### 注意書きブロック
+
+GitHub と同じ書き方。種類は `NOTE` / `TIP` / `IMPORTANT` / `WARNING` / `CAUTION`(大文字)。
+
+```markdown
+> [!NOTE]
+> 補足の内容
+>
+> 段落を分けてもよい
+
+> [!WARNING]
+> 注意の内容
+```
+
+### GitHub リポジトリのカード
+
+1 行まるごとこの形で書く。説明・スター数などは表示時に api.github.com から取ってくる。
+
+```markdown
+::github{repo="withastro/astro"}
+```
+
+どちらも Zenn へ同期するとき(`bun run zenn-sync`)に Zenn の記法(`:::message` / `@[card](...)`)へ変換される。
+
 ## デプロイ
 
 `main` への push で GitHub Actions がイメージをビルドし `ghcr.io` へ push、
