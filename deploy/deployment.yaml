@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: blog
-          image: ghcr.io/danything/blog:02e32fbd06af65b86efe641c0d38814420ee43b3
+          image: ghcr.io/danything/blog:f1bf2ccf2c4aa2b5524a7aa58648ca2cd1293c38
           ports:
             - containerPort: 80
           readinessProbe:
