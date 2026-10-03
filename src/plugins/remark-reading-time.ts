@@ -1,6 +1,5 @@
 import type { RemarkPlugin } from "@astrojs/markdown-remark";
-// biome-ignore lint/suspicious/noShadowRestrictedNames: mdast-util-to-string の名前
-import { toString } from "mdast-util-to-string";
+import { mdastText } from "./mdast";
 
 /** 1 分に読める語数(以前使っていた reading-time の既定値) */
 const WORDS_PER_MINUTE = 200;
@@ -55,7 +54,7 @@ export function countWords(text: string): number {
 
 /** 文字数(CJK は 1 文字 1 語)と読了時間を記事のフロントマターに足す */
 export const remarkReadingTime: RemarkPlugin = () => (tree, file) => {
-	const words = countWords(toString(tree));
+	const words = countWords(mdastText(tree));
 	const frontmatter = (
 		file.data.astro as { frontmatter: Record<string, unknown> }
 	).frontmatter;
