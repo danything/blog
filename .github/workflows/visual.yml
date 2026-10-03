@@ -12,8 +12,7 @@ name: Visual Check
 on:
   pull_request:
     branches: [main]
-  # translate.yml が英訳の PR に対して呼ぶ。このときは main を基準にする
-  # (英訳の PR のブランチは毎回 main から作り直される)
+  # translate.yml が英訳の PR に対して呼ぶ。このときは実行したブランチと main の分岐点を基準にする
   workflow_dispatch:
 
 permissions:
@@ -32,10 +31,22 @@ jobs:
         env:
           VISUAL_FIXTURES: 1 # GitHub カードも api.github.com に取りに行かず固定の値を使う
 
+      # workflow_dispatch では github.event.pull_request が無い。また PR のように main と
+      # マージしたものではなくブランチそのものをビルドしているので、main の先頭ではなく分岐点と比べる
+      - name: 基準のコミットを決める
+        id: base
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ -z "$BASE_SHA" ]; then
+            BASE_SHA=$(gh api "repos/$GITHUB_REPOSITORY/compare/main...$GITHUB_SHA" --jq .merge_base_commit.sha)
+          fi
+          echo "sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v7
         with:
-          # workflow_dispatch では pull_request が無く、空だと実行したブランチ自身を取り出してしまう
-          ref: ${{ github.event.pull_request.base.sha || 'main' }}
+          ref: ${{ steps.base.outputs.sha }}
           path: .base
 
       # 固定の記事を入れる前の main には tests/fixtures/ が無い。そのときは PR の固定の記事と、それを
