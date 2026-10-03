@@ -9,6 +9,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { parsePost } from "./frontmatter";
 
 const API = "https://api.buttondown.com/v1/emails";
 const KEY = process.env.BUTTONDOWN_API_KEY;
@@ -29,20 +30,6 @@ if (files.length === 0) {
 	process.exit(0);
 }
 
-/** フロントマターから必要な項目だけを取り出す */
-function readFrontmatter(file) {
-	const raw = fs.readFileSync(file, "utf8");
-	const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-	if (!m) return null;
-
-	const fm = {};
-	for (const line of m[1].split(/\r?\n/)) {
-		const mm = line.match(/^([A-Za-z_]+):\s*(.*)$/);
-		if (mm) fm[mm[1]] = mm[2].trim().replace(/^['"]|['"]$/g, "");
-	}
-	return fm;
-}
-
 let created = 0;
 let skipped = 0;
 
@@ -53,7 +40,7 @@ for (const file of files) {
 		continue;
 	}
 
-	const fm = readFrontmatter(file);
+	const fm = parsePost(file)?.fm;
 	if (!fm?.title) {
 		console.log(`スキップ (title なし): ${file}`);
 		skipped++;
@@ -87,7 +74,7 @@ for (const file of files) {
 		process.exit(1);
 	}
 
-	const json = await res.json();
+	const json = (await res.json()) as { id: string };
 	console.log(`作成 [${STATUS}] ${fm.title} -> ${json.id}`);
 	created++;
 }

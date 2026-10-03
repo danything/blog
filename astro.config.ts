@@ -77,9 +77,9 @@ export default defineConfig({
 					terminalTitlebarBorderBottomColor: "none",
 				},
 				textMarkers: {
-					delHue: 0,
-					insHue: 180,
-					markHue: 250,
+					delHue: "0",
+					insHue: "180",
+					markHue: "250",
 				},
 			},
 			frames: {

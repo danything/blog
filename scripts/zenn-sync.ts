@@ -18,6 +18,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { parsePost } from "./frontmatter";
 
 const POSTS_DIR = "src/content/posts";
 const OUT_DIR = "articles";
@@ -26,24 +27,10 @@ const SITE_URL = (process.env.SITE_URL || "https://doany.io").replace(
 	"",
 );
 
-/** フロントマターと本文を分ける */
-function parse(file) {
-	const raw = fs.readFileSync(file, "utf8");
-	const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
-	if (!m) return null;
-
-	const fm = {};
-	for (const line of m[1].split(/\r?\n/)) {
-		const mm = line.match(/^([A-Za-z_]+):\s*(.*)$/);
-		if (mm) fm[mm[1]] = mm[2].trim().replace(/^['"]|['"]$/g, "");
-	}
-	return { fm, body: m[2] };
-}
-
 // Zenn のスラッグは a-z0-9_- の 12〜50 文字。ブログ側のファイル名は短いものが
 // 多いが、リネームすると doany.io の URL が変わってしまうため、ここでだけ
 // 決定的なハッシュを足して長さを満たす。
-function toZennSlug(slug) {
+function toZennSlug(slug: string): string {
 	if (slug.length >= 12) return slug.slice(0, 50);
 	const need = Math.max(4, 12 - slug.length - 1);
 	const hash = crypto.createHash("sha256").update(slug).digest("hex");
@@ -51,9 +38,9 @@ function toZennSlug(slug) {
 }
 
 /** Zenn のトピックは空白を含められないため詰める */
-function toTopics(tags) {
+function toTopics(tags: string | undefined): string[] {
 	if (!tags) return [];
-	let list;
+	let list: unknown[];
 	try {
 		list = JSON.parse(tags);
 	} catch {
@@ -64,10 +51,10 @@ function toTopics(tags) {
 
 // GitHub 形式のアラートは Zenn では素の引用になってしまうため、
 // Zenn のメッセージ記法に変換する。
-function convertAdmonitions(body) {
+function convertAdmonitions(body: string): string {
 	return body.replace(
 		/^> \[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\r?\n((?:>.*(?:\r?\n|$))+)/gm,
-		(_, kind, rest) => {
+		(_, kind: string, rest: string) => {
 			const inner = rest
 				.split(/\r?\n/)
 				.filter((l) => l.startsWith(">"))
@@ -80,7 +67,7 @@ function convertAdmonitions(body) {
 	);
 }
 
-function convertBody(body, slug) {
+function convertBody(body: string, slug: string): string {
 	return (
 		convertAdmonitions(body)
 			// 画像は doany.io 上の絶対パスなので、Zenn から見えるよう URL にする
@@ -99,7 +86,7 @@ function convertBody(body, slug) {
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
-const generated = new Set();
+const generated = new Set<string>();
 let published = 0;
 let draft = 0;
 let skipped = 0;
@@ -108,7 +95,7 @@ for (const name of fs.readdirSync(POSTS_DIR).sort()) {
 	if (!name.endsWith(".md")) continue;
 
 	const slug = path.basename(name, ".md");
-	const parsed = parse(path.join(POSTS_DIR, name));
+	const parsed = parsePost(path.join(POSTS_DIR, name));
 	if (!parsed?.fm.title) {
 		console.log(`スキップ (title なし): ${name}`);
 		skipped++;

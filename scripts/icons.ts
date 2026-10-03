@@ -7,8 +7,9 @@
 // 名前は https://icon-sets.iconify.design/ で探せる。
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const SRC = path.resolve(import.meta.dirname, "../src");
+const SRC = fileURLToPath(new URL("../src", import.meta.url));
 const OUT = path.join(SRC, "icons.json");
 const NAME = /\b([a-z0-9]+(?:-[a-z0-9]+)*):([a-z0-9]+(?:-[a-z0-9]+)*)\b/g;
 // 名前の形をしているがアイコンではないもの(URL のスキームなど)を除くため、既知のセットだけ拾う
