@@ -37,12 +37,22 @@ bun run new-post <filename>
 title: タイトル
 published: 2026-07-29
 description: 概要
-image: /static/images/blog/example.png # 省略可
+image: /static/images/blog/example.webp # 省略可
 tags: ["タグ1", "タグ2"]
 category: "インフラ" # インフラ / Web開発 / 車 / 決済 / その他
 draft: false
 ---
 ```
+
+### 画像
+
+画像は `public/static/images/blog/` に置き、記事からは `/static/images/blog/xxx.png` のように参照する。書いたあとに
+
+```shell
+bun run images
+```
+
+を実行すると、記事から参照されている PNG / JPEG を WebP に変換して参照も書き換える(スクリーンショットはロスレス、写真は非可逆で軽く)。特定のファイルだけなら `bun run images public/static/images/blog/xxx.png`。
 
 ### 注意書きブロック
 

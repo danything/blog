@@ -35,6 +35,17 @@ for (const path of pages) {
 			await document.fonts.ready;
 		});
 		await page.waitForLoadState("networkidle");
+		// フォントの代替などで読み込み直後に高さが数 px 動くことがあるので、落ち着くまで待つ
+		await page.waitForFunction(
+			() =>
+				new Promise<boolean>((resolve) => {
+					const h = document.documentElement.scrollHeight;
+					setTimeout(
+						() => resolve(document.documentElement.scrollHeight === h),
+						300,
+					);
+				}),
+		);
 		await expect(page).toHaveScreenshot(`${path.replace(/\W+/g, "_")}.png`, {
 			fullPage: true,
 		});
