@@ -141,6 +141,9 @@ bun run icons
 
 を実行すると、src 内で使われている名前を集めて Iconify から取り込み直す(この 2 つ以外のセットの名前は拾わない)。
 
+CSS の `mask-image` などで使うアイコン(注意書きの見出し・GitHub カード)は、CSS に `var(--icon-lucide-info)` のように書いておくと、
+`bun run icons` がデータ URL にして `src/styles/icons.css` の変数に書き出す。コードブロックのコピーボタンは `src/icons.json` から取る。
+
 ## 見た目のテスト
 
 PR では `main` との見た目の差を自動で確かめる(`.github/workflows/visual.yml`)。比べるのは実際の記事ではなく、`tests/fixtures/` の固定の記事だけでビルドしたサイト(`VISUAL_FIXTURES=1 bun run build`)。記事の追加・編集・削除だけの PR では差が出ず、デザインやコードを変えたときだけ差が出る。このビルドでは GitHub カードも api.github.com に取りに行かず固定の値を使う。デスクトップ(ライト / ダーク)とスマホで撮って比べ、差があると失敗して差分の画像が `playwright-report` に付く。
