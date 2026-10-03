@@ -1,14 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "github>5ym/renovate"
-  ],
+  "extends": ["github>5ym/renovate"],
   "packageRules": [
     {
       "description": "astro check が TypeScript 7 にまだ対応していない(「TypeScript 6 を入れて」とエラーになる)ので、対応するまで 6 までに留める",
-      "matchPackageNames": [
-        "typescript"
-      ],
+      "matchPackageNames": ["typescript"],
       "allowedVersions": "<7"
     }
   ]
