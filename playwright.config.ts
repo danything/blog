@@ -37,8 +37,13 @@ export default defineConfig({
 			name: "desktop-dark",
 			use: { viewport: { width: 1280, height: 900 }, colorScheme: "dark" },
 		},
-		// isMobile だとページ全体を撮るときにレイアウトが揺れる(高さが毎回数 px 変わる)ので、
-		// 画面の大きさだけスマホに合わせる
-		{ name: "mobile", use: { ...devices["Pixel 7"], isMobile: false } },
+		// 画面の大きさだけスマホに合わせる。isMobile や 1 以外の deviceScaleFactor(Pixel 7 は 2.625)だと、
+		// ページ全体を撮るときに Chromium が描き直し、文字の縦の位置や行の高さが 1 px ほど変わることがある
+		// (見出しが 1 px 高くなってページが数 px 伸びる、コードブロックの文字が 1 px 未満ずれる)。
+		// 撮るたびに変わるので、同じビルドどうしでも差が出る。どちらにしても画像は CSS の px の大きさ(幅 412px)で撮る
+		{
+			name: "mobile",
+			use: { ...devices["Pixel 7"], isMobile: false, deviceScaleFactor: 1 },
+		},
 	],
 });
