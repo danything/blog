@@ -37,11 +37,13 @@ jobs:
       operation: ${{ steps.pr.outputs.pull-request-operation }}
       head-sha: ${{ steps.pr.outputs.pull-request-head-sha }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0 # 原文の変更点を git log / git diff で見るため
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: package.json # packageManager の版(Dockerfile の oven/bun と同じ)
 
       - run: bun install --frozen-lockfile
 
@@ -74,6 +76,9 @@ jobs:
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           TODO: ${{ steps.status.outputs.todo }}
+          # 版を固定する(Renovate が renovate.json の customManagers で上げる)
+          # renovate: datasource=npm depName=@anthropic-ai/claude-code
+          CLAUDE_CODE_VERSION: 2.1.288
         run: |
           # 'EOF' で囲んで中のバッククォートを展開させず、対象だけをあとから差し込む
           prompt=$(cat <<'EOF'
@@ -99,7 +104,7 @@ jobs:
           EOF
           )
           prompt=${prompt//__TODO__/$TODO}
-          bunx @anthropic-ai/claude-code -p "$prompt" \
+          bunx "@anthropic-ai/claude-code@$CLAUDE_CODE_VERSION" -p "$prompt" \
             --allowedTools "Read,Write,Edit,Glob,Grep,Bash(bun scripts/translate-status.ts:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*)"
 
       # 訳が残っていないか、フロントマターや Markdown が壊れていないかを確かめる
@@ -124,7 +129,7 @@ jobs:
       - name: Open a pull request
         id: pr
         if: steps.status.outputs.count != '0'
-        uses: peter-evans/create-pull-request@v8
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           branch: ${{ env.BRANCH }}
           base: main

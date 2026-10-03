@@ -22,12 +22,14 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # 差分を取るため直前のコミットも必要
           fetch-depth: 2
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: package.json # packageManager の版(Dockerfile の oven/bun と同じ)
 
       - name: Collect newly added posts
         id: collect
