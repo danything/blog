@@ -45,7 +45,7 @@
 	},
 	"overrides": [
 		{
-			"includes": ["**/*.json", "!biome.json", "!src/icons.json"],
+			"includes": ["**/*.json", "!biome.json"],
 			"formatter": {
 				"indentStyle": "space",
 				"indentWidth": 2

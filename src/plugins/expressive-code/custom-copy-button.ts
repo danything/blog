@@ -2,7 +2,7 @@ import {
 	definePlugin,
 	type PostprocessRenderedBlockContext,
 } from "astro-expressive-code";
-import icons from "../../icons.json";
+import { getIcon } from "../../utils/icons";
 import { h } from "../hast";
 
 type Element = PostprocessRenderedBlockContext["renderData"]["blockAst"];
@@ -29,15 +29,9 @@ function parseSvgBody(body: string): ElementContent[] {
 	return root;
 }
 
-// アイコンは src/icons.json(bun run icons で生成)から取る
+// アイコンは src/utils/icons.ts(@iconify-json/*)から取る
 const icon = (kind: string, name: string) => {
-	const data = (icons as Record<string, { viewBox: string; body: string }>)[
-		name
-	];
-	if (!data)
-		throw new Error(
-			`アイコン ${name} が src/icons.json にありません(bun run icons を実行)`,
-		);
+	const data = getIcon(name);
 	return h(
 		"svg",
 		{
