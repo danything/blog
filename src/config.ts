@@ -90,7 +90,6 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "GitHub",
 			icon: "simple-icons:github", // ロゴは Simple Icons から選ぶ(https://icon-sets.iconify.design/simple-icons/)
-			// 新しいアイコンを使うときは `bun run icons` で src/icons.json に取り込む
 			url: "https://github.com/5ym/",
 		},
 		{

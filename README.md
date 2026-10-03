@@ -127,22 +127,18 @@ bun scripts/translate-status.ts --hash <原文>   # sourceHash に書く値
 
 ## アイコン
 
-使っているアイコンだけを `src/icons.json` に持ち、`src/components/misc/Icon.astro` で埋め込む。
+アイコンは Iconify のアイコンセットのパッケージ(`@iconify-json/lucide`・`@iconify-json/simple-icons`)からビルド時に取り、
+`src/components/misc/Icon.astro` で SVG として埋め込む(`<Icon name="lucide:search" />`)。ページに入るのは使ったアイコンだけ。
 
 - 画面の部品(検索・メニュー・矢印・日付など)は [Lucide](https://lucide.dev/)(`lucide:search` など)
 - サービスのロゴ(GitHub・X・Threads・Bluesky・Ko-fi・Creative Commons など)は [Simple Icons](https://simpleicons.org/)(`simple-icons:github` など)。
   Lucide にはロゴが無い(以前あった GitHub などは非推奨で、新しい版では消えている)ので、ロゴはすべて Simple Icons に揃える
 
-新しいアイコンは名前(https://icon-sets.iconify.design/lucide/ か https://icon-sets.iconify.design/simple-icons/ で探す)をコードや設定に書いてから、
+新しいアイコンは https://icon-sets.iconify.design/lucide/ か https://icon-sets.iconify.design/simple-icons/ で探し、名前を書くだけで使える
+(取り込みの手順は無い。無い名前を書くとビルドが止まる)。読み込みは `src/utils/icons.ts`、セットの更新は Renovate が PR にする。
 
-```shell
-bun run icons
-```
-
-を実行すると、src 内で使われている名前を集めて Iconify から取り込み直す(この 2 つ以外のセットの名前は拾わない)。
-
-CSS の `mask-image` などで使うアイコン(注意書きの見出し・GitHub カード)は、CSS に `var(--icon-lucide-info)` のように書いておくと、
-`bun run icons` がデータ URL にして `src/styles/icons.css` の変数に書き出す。コードブロックのコピーボタンは `src/icons.json` から取る。
+CSS の `mask-image` などで使うアイコン(注意書きの見出し・GitHub カード)は、`src/styles/` の CSS に `var(--icon-lucide-info)` のように
+書くと、Tailwind のプラグイン(`src/styles/icons-plugin.ts`)が `:root` にデータ URL の変数を足す。
 
 ## 見た目のテスト
 

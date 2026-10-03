@@ -7,7 +7,6 @@
 @import "tailwindcss" source("../");
 @source not "../content";
 @import "./variables.css";
-@import "./icons.css";
 @import "./markdown.css";
 @import "./markdown-extend.css";
 @import "./scrollbar.css";
@@ -16,6 +15,7 @@
 @import "./expressive-code.css";
 
 @plugin '@tailwindcss/typography';
+@plugin './icons-plugin.ts';
 
 @custom-variant dark (&:is(.dark *));
 
