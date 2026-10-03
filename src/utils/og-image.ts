@@ -1,6 +1,6 @@
 import fs from "node:fs";
-import { Resvg } from "@resvg/resvg-js";
 import satori from "satori";
+import sharp from "sharp";
 import { siteConfig } from "@/config";
 
 const WIDTH = 1200;
@@ -92,7 +92,11 @@ export async function renderOgImage(title: string): Promise<Uint8Array> {
 				],
 			},
 		);
-		return new Resvg(svg).render().asPng();
+		// satori は文字をパスにして出すので、SVG → PNG の変換にフォントは要らない。
+		// 色数の少ない絵なので、パレット PNG にして小さくする
+		return await sharp(Buffer.from(svg))
+			.png({ palette: true, compressionLevel: 9, effort: 10 })
+			.toBuffer();
 	} catch (e) {
 		footerFont = undefined;
 		console.warn(
