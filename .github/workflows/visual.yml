@@ -4,6 +4,11 @@ name: Visual Check
 # PR のビルドと 1 ピクセル単位で比べる(tests/visual.spec.ts)。差があると失敗し、差分の画像を
 # playwright-report として添付する。意図して見た目を変える PR では、差分を確認してからマージする。
 # Renovate の自動マージはこのチェックが通らないと止まる。
+#
+# 比べるのは実際の記事ではなく、tests/fixtures/ の固定の記事だけで作ったサイト(VISUAL_FIXTURES=1 で
+# ビルドする。src/constants/content-dir.ts)。記事の追加・編集・削除だけの PR では差が出ず、
+# デザインやコードを変えたときだけ差が出る。実際の記事は a11y.yml が調べる。
+# 新しい書き方や部品を足したときは、tests/fixtures/ の記事にも足して比較の対象にする。
 on:
   pull_request:
     branches: [main]
@@ -22,16 +27,29 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run build
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub カードの情報を取るため
+          VISUAL_FIXTURES: 1 # GitHub カードも api.github.com に取りに行かず固定の値を使う
 
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           path: .base
+
+      # 固定の記事を入れる前の main には tests/fixtures/ が無い。そのときは PR の固定の記事と、それを
+      # 読むための仕組みを main に重ねてビルドし、記事以外(デザイン・コード)が main のままの基準を作る
+      - name: main に固定の記事が無ければ PR から持ってくる
+        run: |
+          if [ ! -d .base/tests/fixtures ]; then
+            echo "::notice::main に tests/fixtures/ が無いので、PR の固定の記事と読み込みの仕組みを重ねて基準を作ります"
+            for f in tests/fixtures src/constants/content-dir.ts src/content.config.ts src/plugins/remark-github-card.ts src/styles/main.css; do
+              mkdir -p ".base/$(dirname "$f")"
+              rm -rf ".base/$f"
+              cp -r "$f" ".base/$f"
+            done
+          fi
       - run: bun install --frozen-lockfile && bun run build
         working-directory: .base
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VISUAL_FIXTURES: 1
 
       - run: bunx playwright install --with-deps chromium
 

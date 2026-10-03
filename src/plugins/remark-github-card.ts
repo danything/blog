@@ -19,7 +19,22 @@ type Repo = {
 // 同じリポジトリはビルド中に 1 回だけ取りに行く
 const cache = new Map<string, Promise<Repo | null>>();
 
+// 見た目の比較用の固定の記事(VISUAL_FIXTURES=1、src/constants/content-dir.ts)では
+// api.github.com に取りに行かず、決まった値を使う。スター数などが変わったり、
+// 取得に失敗したりして見た目が揺れないようにするため。リポジトリ名が missing のときは
+// 「取得失敗」の見た目を確かめるために null にする
+const FIXTURE_REPO: Repo = {
+	description: "見た目の比較用の固定のリポジトリ :sparkles:",
+	language: "TypeScript",
+	forks: 42,
+	stargazers_count: 12345,
+	license: { spdx_id: "MIT" },
+	owner: { avatar_url: "/static/images/avatar.png" },
+};
+
 function fetchRepo(repo: string): Promise<Repo | null> {
+	if (process.env.VISUAL_FIXTURES)
+		return Promise.resolve(repo.endsWith("/missing") ? null : FIXTURE_REPO);
 	let p = cache.get(repo);
 	if (!p) {
 		// CI では GITHUB_TOKEN で回数制限(未認証は 1 時間に 60 回)を緩める

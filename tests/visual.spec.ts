@@ -1,9 +1,14 @@
 import { expect, test } from "@playwright/test";
-import { pages, setupContext } from "./setup";
+import { setupContext, visualPages } from "./setup";
+
+// 見た目の比較(.github/workflows/visual.yml)。VISUAL_FIXTURES=1 でビルドした、固定の記事
+// (tests/fixtures/)だけのサイトを撮って、main のビルドと比べる:
+//   VISUAL_FIXTURES=1 bun run build
+//   BASE_URL=<ビルドを配信している URL> bunx playwright test tests/visual.spec.ts
 
 test.beforeEach(({ context }, info) => setupContext(context, info));
 
-for (const path of pages) {
+for (const path of visualPages) {
 	test(path, async ({ page }) => {
 		await page.goto(path);
 		// 遅延読み込みの画像は撮る時点で読み込まれているかで高さが揺れるので、全部読み込ませてから撮る
