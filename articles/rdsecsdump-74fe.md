@@ -212,8 +212,10 @@ AWS ECS 上でリポジトリオーナー名でクラスタが作成されてい
 
 ![ap-northeast-1.console.aws.amazon.com_ecs_home_region=ap-northeast-1 (2).png](https://doany.io/static/images/blog/rdsecsdump12.png)
 
-補足:Cron 式を選択したときに躓いたのだが busybox cron 等の cron 式とは違う模様下記を参考にいたしました。  
+:::message
+Cron 式を選択したときに躓いたのだが busybox cron 等の cron 式とは違う模様下記を参考にいたしました。  
 [AWS_Cron 式のワイルドカード](https://qiita.com/da-sugi/items/ef3bb45a8a99a4acacb1)
+:::
 
 ---
 
