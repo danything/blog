@@ -1,6 +1,6 @@
 // src/content/posts/*.md から Zenn 用の articles/*.md を生成する。
 //
-//   bun scripts/zenn-sync.mjs
+//   bun scripts/zenn-sync.ts
 //
 // Zenn はリポジトリ直下の articles/*.md しか読まないため、Astro 側の記事を
 // 変換して出力する。articles/ は全体が生成物なので、対応する記事がなくなった
@@ -21,7 +21,10 @@ import path from "node:path";
 
 const POSTS_DIR = "src/content/posts";
 const OUT_DIR = "articles";
-const SITE_URL = (process.env.SITE_URL || "https://doany.io").replace(/\/$/, "");
+const SITE_URL = (process.env.SITE_URL || "https://doany.io").replace(
+	/\/$/,
+	"",
+);
 
 /** フロントマターと本文を分ける */
 function parse(file) {
@@ -85,7 +88,10 @@ function convertBody(body, slug) {
 			// 記事同士の内部リンクも Zenn 上では解決できないので、ブログ側の URL に向ける
 			.replace(/\]\(\/posts\//g, `](${SITE_URL}/posts/`)
 			// Astro のディレクティブは Zenn のカード記法に置き換える
-			.replace(/^::github\{repo="([^"]+)"\}$/gm, "@[card](https://github.com/$1)")
+			.replace(
+				/^::github\{repo="([^"]+)"\}$/gm,
+				"@[card](https://github.com/$1)",
+			)
 			.trimEnd()
 			.concat(`\n\n---\n\n初出: ${SITE_URL}/posts/${slug}/\n`)
 	);
@@ -151,4 +157,6 @@ for (const name of fs.readdirSync(OUT_DIR)) {
 	}
 }
 
-console.log(`\n公開 ${published} 件 / 下書き ${draft} 件 / スキップ ${skipped} 件`);
+console.log(
+	`\n公開 ${published} 件 / 下書き ${draft} 件 / スキップ ${skipped} 件`,
+);

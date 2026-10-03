@@ -8,7 +8,7 @@ on:
     branches: [main]
     paths:
       - "src/content/posts/**.md"
-      - "scripts/zenn-sync.mjs"
+      - "scripts/zenn-sync.ts"
   workflow_dispatch:
 
 permissions:
@@ -26,7 +26,7 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
 
-      - run: bun scripts/zenn-sync.mjs
+      - run: bun scripts/zenn-sync.ts
 
       - name: Publish to the zenn branch
         env:

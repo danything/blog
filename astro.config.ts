@@ -10,13 +10,13 @@ import expressiveCode from "astro-expressive-code";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import remarkSectionize from "remark-sectionize";
-import { expressiveCodeConfig } from "./src/config.ts";
-import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
-import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.ts";
-import { remarkAlerts } from "./src/plugins/remark-alerts.mjs";
-import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
-import { remarkGithubCard } from "./src/plugins/remark-github-card.mjs";
-import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
+import { expressiveCodeConfig } from "./src/config";
+import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button";
+import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge";
+import { remarkAlerts } from "./src/plugins/remark-alerts";
+import { remarkExcerpt } from "./src/plugins/remark-excerpt";
+import { remarkGithubCard } from "./src/plugins/remark-github-card";
+import { remarkReadingTime } from "./src/plugins/remark-reading-time";
 
 // https://astro.build/config
 export default defineConfig({
