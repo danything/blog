@@ -5,7 +5,9 @@ name: Translate
 # 未訳・原文が変わった・原文が消えたものだけを直し、translate/auto ブランチの PR にまとめる(マージは手で)。
 #
 # GITHUB_TOKEN で作った PR や push では、ほかのワークフロー(Check・A11y Check など)が動かない。
-# PR の検査を走らせるときは、PR を一度閉じて開き直すか、空のコミットを push する。
+# 例外として workflow_dispatch は GITHUB_TOKEN でも起こせるので、PR を作った・更新したあとに
+# 検査のワークフローを translate/auto ブランチで実行する。結果は PR の head のコミットに付き、PR の Checks に出る。
+# Claude Code Review は呼ばない(PR のイベントでしか動かず、bot の PR は対象外にしている)。
 on:
   push:
     branches: [main]
@@ -17,6 +19,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write # gh workflow run で検査のワークフローを起こすため
 
 concurrency:
   group: translate
@@ -116,6 +119,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub カードの情報を取るため
 
       - name: Open a pull request
+        id: pr
         if: steps.status.outputs.count != '0'
         uses: peter-evans/create-pull-request@v8
         with:
@@ -136,6 +140,20 @@ jobs:
             ```
 
             - 訳文は .github/translate.md の決まりで Claude が作っています。目を通してからマージしてください
-            - この PR は GITHUB_TOKEN で作っているため、Check や A11y Check などのワークフローが自動では動きません。
-              検査を走らせるときは、PR を一度閉じて開き直すか、空のコミットを push してください
+            - この PR は GITHUB_TOKEN で作っているため、PR のイベントではほかのワークフローが動きません。
+              代わりに translate.yml が Check・A11y Check・Visual Check・Docker Build Check を workflow_dispatch で実行し、
+              結果がこの PR の Checks に出ます(Claude Code Review は動きません)
           delete-branch: true
+
+      # PR のイベントでは検査が動かないので、workflow_dispatch で PR のブランチに対して実行する
+      - name: Run the checks on the pull request
+        if: steps.pr.outputs.pull-request-operation == 'created' || steps.pr.outputs.pull-request-operation == 'updated'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_SHA: ${{ steps.pr.outputs.pull-request-head-sha }}
+          PR_NUMBER: ${{ steps.pr.outputs.pull-request-number }}
+        run: |
+          echo "PR #$PR_NUMBER ($HEAD_SHA) の検査を実行します"
+          for wf in check.yml a11y.yml visual.yml docker-build-check.yml; do
+            gh workflow run "$wf" --repo "$GITHUB_REPOSITORY" --ref "$BRANCH"
+          done
