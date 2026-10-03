@@ -6,7 +6,6 @@ interface Props {
 	src: string;
 	class?: string;
 	alt?: string;
-	position?: string;
 	basePath?: string;
 }
 
@@ -14,15 +13,7 @@ import { Image } from "astro:assets";
 import { url } from "../../utils/url-utils";
 
 // 呼び出し元の <style> が効くよう、残りの属性(data-astro-cid-*)も外側の要素に付ける
-const {
-	id,
-	src,
-	alt,
-	position = "center",
-	basePath = "/",
-	class: className,
-	...rest
-} = Astro.props;
+const { id, src, alt, basePath = "/", class: className, ...rest } = Astro.props;
 
 const isLocal = !(
 	src.startsWith("/") ||
@@ -54,13 +45,11 @@ if (isLocal) {
 		img = await file();
 	}
 }
-
-const imageStyle = `object-position: ${position}`;
 ---
 <div id={id} class:list={[className, "image-wrapper"]} {...rest}>
     <div class="dim"></div>
-    {isLocal && img && <Image src={img} alt={alt || ""} class="image" style={imageStyle}/>}
-    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class="image" style={imageStyle}/>}
+    {isLocal && img && <Image src={img} alt={alt || ""} class="image"/>}
+    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class="image"/>}
 </div>
 
 <style>

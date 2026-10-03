@@ -1,6 +1,8 @@
 /* utils */
 :root {
 	--radius-large: 1rem;
+	/* ページ(ナビゲーションバーと本文)の幅 */
+	--page-width: 75rem;
 	--content-delay: 150ms;
 
 	/* Web フォントは使わず、端末に入っているフォントを使う。
