@@ -89,38 +89,38 @@ export const profileConfig: ProfileConfig = {
 	links: [
 		{
 			name: "GitHub",
-			icon: "fa6-brands:github", // アイコン名は https://icon-sets.iconify.design/ で探す
+			icon: "simple-icons:github", // ロゴは Simple Icons から選ぶ(https://icon-sets.iconify.design/simple-icons/)
 			// 新しいアイコンを使うときは `bun run icons` で src/icons.json に取り込む
 			url: "https://github.com/5ym/",
 		},
 		{
 			name: "X",
-			icon: "fa6-brands:x-twitter",
+			icon: "simple-icons:x",
 			url: "https://x.com/5yuim",
 		},
 		{
 			name: "Facebook",
-			icon: "fa6-brands:facebook",
+			icon: "simple-icons:facebook",
 			url: "https://www.facebook.com/5yuim/",
 		},
 		{
 			name: "Instagram",
-			icon: "fa6-brands:instagram",
+			icon: "simple-icons:instagram",
 			url: "https://www.instagram.com/5yuim/",
 		},
 		{
 			name: "Threads",
-			icon: "fa6-brands:threads",
+			icon: "simple-icons:threads",
 			url: "https://www.threads.com/@5yuim",
 		},
 		{
 			name: "LinkedIn",
-			icon: "fa6-brands:linkedin",
+			icon: "simple-icons:linkedin",
 			url: "https://www.linkedin.com/in/yui/",
 		},
 		{
 			name: "YouTube",
-			icon: "fa6-brands:youtube",
+			icon: "simple-icons:youtube",
 			url: "https://www.youtube.com/channel/UCJWogAotKEJ70bs_e19yMyQ",
 		},
 	],

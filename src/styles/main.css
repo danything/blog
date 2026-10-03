@@ -5,6 +5,7 @@
 /* 見た目の比較用の固定の記事(tests/fixtures/)の文字をクラス名として拾わない。拾うと本番の CSS が変わる */
 @source not "../../tests";
 @import "./variables.css";
+@import "./icons.css";
 @import "./markdown.css";
 @import "./markdown-extend.css";
 @import "./scrollbar.css";

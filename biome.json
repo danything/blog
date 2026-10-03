@@ -52,7 +52,7 @@
 			}
 		},
 		{
-			"includes": ["**/*.svelte", "**/*.astro", "**/*.vue"],
+			"includes": ["**/*.astro"],
 			"linter": {
 				"rules": {
 					"style": {

@@ -127,14 +127,22 @@ bun scripts/translate-status.ts --hash <原文>   # sourceHash に書く値
 
 ## アイコン
 
-使っているアイコンだけを `src/icons.json` に持ち、`src/components/misc/Icon.astro`(Svelte からは `Icon.svelte`)で埋め込む。
-新しいアイコンは名前(`material-symbols:search` など。https://icon-sets.iconify.design/ で探す)をコードや設定に書いてから、
+使っているアイコンだけを `src/icons.json` に持ち、`src/components/misc/Icon.astro` で埋め込む。
+
+- 画面の部品(検索・メニュー・矢印・日付など)は [Lucide](https://lucide.dev/)(`lucide:search` など)
+- サービスのロゴ(GitHub・X・Threads・Bluesky・Ko-fi・Creative Commons など)は [Simple Icons](https://simpleicons.org/)(`simple-icons:github` など)。
+  Lucide にはロゴが無い(以前あった GitHub などは非推奨で、新しい版では消えている)ので、ロゴはすべて Simple Icons に揃える
+
+新しいアイコンは名前(https://icon-sets.iconify.design/lucide/ か https://icon-sets.iconify.design/simple-icons/ で探す)をコードや設定に書いてから、
 
 ```shell
 bun run icons
 ```
 
-を実行すると、src 内で使われている名前を集めて Iconify から取り込み直す。
+を実行すると、src 内で使われている名前を集めて Iconify から取り込み直す(この 2 つ以外のセットの名前は拾わない)。
+
+CSS の `mask-image` などで使うアイコン(注意書きの見出し・GitHub カード)は、CSS に `var(--icon-lucide-info)` のように書いておくと、
+`bun run icons` がデータ URL にして `src/styles/icons.css` の変数に書き出す。コードブロックのコピーボタンは `src/icons.json` から取る。
 
 ## 見た目のテスト
 
@@ -150,6 +158,8 @@ BASE_URL=http://127.0.0.1:4321 bunx playwright test tests/visual.spec.ts --updat
 # 変更してビルドし直してから
 BASE_URL=http://127.0.0.1:4321 bunx playwright test tests/visual.spec.ts                      # 基準と比べる
 ```
+
+通常のビルドと `VISUAL_FIXTURES=1` のビルドを同じ場所で切り替えるときは、Astro のコンテンツのキャッシュが使い回されて実際の記事が混ざることがあるので、先に `rm -rf .astro node_modules/.astro` で消す。
 
 ## デプロイ
 

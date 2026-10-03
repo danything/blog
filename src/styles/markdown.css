@@ -83,16 +83,16 @@
     }
 
     .copy-btn-icon {
-        @apply absolute top-1/2 left-1/2 transition -translate-x-1/2 -translate-y-1/2 w-4 h-4 fill-white pointer-events-none;
+        @apply absolute top-1/2 left-1/2 transition -translate-x-1/2 -translate-y-1/2 w-4 h-4 text-white pointer-events-none;
     }
     .copy-btn .copy-icon {
-        @apply opacity-100 fill-white dark:fill-white/75;
+        @apply opacity-100 text-white dark:text-white/75;
     }
     .copy-btn.success .copy-icon {
-        @apply opacity-0 fill-[var(--deep-text)]
+        @apply opacity-0 text-[var(--deep-text)]
     }
     .copy-btn .success-icon {
-        @apply opacity-0 fill-white;
+        @apply opacity-0 text-white;
     }
     .copy-btn.success .success-icon {
         @apply opacity-100
