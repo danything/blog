@@ -33,32 +33,91 @@ const modes = [
 ];
 // 保存されたテーマはスクリプトで反映する。ここでは既定のテーマで描いておく
 ---
-<!-- z-50 make the panel higher than other float panels -->
-<div class="relative z-50" role="group" data-light-dark-switch>
-    <button aria-label="Light/Dark Mode" class="relative btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="scheme-switch">
+<!-- z-index: 50 でほかのパネルより上に出す -->
+<div class="theme-switch" role="group" data-light-dark-switch>
+    <button aria-label="Light/Dark Mode" class="btn-plain scale-animation" id="scheme-switch">
         {modes.map(({ mode, icon }) => (
-            <div class:list={["absolute", { "opacity-0": mode !== DEFAULT_THEME }]} data-mode-icon={mode}>
-                <Icon name={icon} class="text-[1.25rem]" />
+            <div class:list={["mode-icon", { inactive: mode !== DEFAULT_THEME }]} data-mode-icon={mode}>
+                <Icon name={icon} class="icon" />
             </div>
         ))}
     </button>
 
-    <div id="light-dark-panel" class="hidden lg:block absolute transition float-panel-closed top-11 -right-2 pt-5" >
-        <div class="card-base float-panel p-2">
-            {modes.map(({ mode, icon, label }, i) => (
-                <button class:list={[
-                            "flex transition whitespace-nowrap items-center !justify-start w-full btn-plain scale-animation rounded-lg h-9 px-3 font-medium active:scale-95",
-                            { "mb-0.5": i < modes.length - 1, "current-theme-btn": mode === DEFAULT_THEME },
-                        ]}
+    <div id="light-dark-panel" class="float-panel-closed">
+        <div class="card-base float-panel theme-panel">
+            {modes.map(({ mode, icon, label }) => (
+                <button class:list={["btn-plain scale-animation mode-button", { "current-theme-btn": mode === DEFAULT_THEME }]}
                         data-mode={mode}
                 >
-                    <Icon name={icon} class="text-[1.25rem] mr-3" />
+                    <Icon name={icon} class="icon" />
                     {label}
                 </button>
             ))}
         </div>
     </div>
 </div>
+
+<style>
+    .theme-switch {
+        position: relative;
+        z-index: 50;
+    }
+    #scheme-switch {
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 0.5rem;
+
+        &:active {
+            scale: 0.9;
+        }
+    }
+    .mode-icon {
+        position: absolute;
+
+        &.inactive {
+            opacity: 0;
+        }
+    }
+    .icon {
+        font-size: 1.25rem;
+    }
+    /* マウスを乗せると開く(タッチの端末では押すと切り替わるだけ) */
+    #light-dark-panel {
+        display: none;
+        position: absolute;
+        top: 2.75rem;
+        right: -0.5rem;
+        padding-top: 1.25rem;
+        transition: var(--transition);
+
+        @media (width >= 64rem) {
+            display: block;
+        }
+    }
+    .theme-panel {
+        padding: 0.5rem;
+        background-color: var(--card-bg);
+    }
+    .mode-button {
+        justify-content: flex-start;
+        width: 100%;
+        height: 2.25rem;
+        padding-inline: 0.75rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        white-space: nowrap;
+
+        &:not(:last-child) {
+            margin-bottom: 0.125rem;
+        }
+        &:active {
+            scale: 0.95;
+        }
+        .icon {
+            margin-right: 0.75rem;
+        }
+    }
+</style>
 
 <script>
 import { AUTO_MODE, DARK_MODE, LIGHT_MODE } from "@constants/constants.ts";
@@ -88,7 +147,7 @@ function setup(group: HTMLElement) {
 		for (const icon of group.querySelectorAll<HTMLElement>(
 			"[data-mode-icon]",
 		)) {
-			icon.classList.toggle("opacity-0", icon.dataset.modeIcon !== mode);
+			icon.classList.toggle("inactive", icon.dataset.modeIcon !== mode);
 		}
 		for (const btn of panel.querySelectorAll<HTMLElement>("[data-mode]")) {
 			btn.classList.toggle("current-theme-btn", btn.dataset.mode === mode);

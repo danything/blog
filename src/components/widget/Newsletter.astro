@@ -15,7 +15,7 @@ const profileUrl = `https://buttondown.com/${newsletterConfig.username}`;
 ---
 {newsletterConfig.enable && newsletterConfig.username && (
 <WidgetLayout name={newsletterConfig.title} id="newsletter" class={className} style={style}>
-    <div class="text-sm text-black/75 dark:text-white/75 transition mb-3">
+    <div class="description">
         {newsletterConfig.description}
     </div>
     <form
@@ -23,7 +23,6 @@ const profileUrl = `https://buttondown.com/${newsletterConfig.username}`;
         method="post"
         target="popupwindow"
         data-buttondown-url={profileUrl}
-        class="flex flex-col gap-2"
     >
         <label class="sr-only" for="bd-email">{newsletterConfig.placeholder}</label>
         <input
@@ -32,17 +31,65 @@ const profileUrl = `https://buttondown.com/${newsletterConfig.username}`;
             id="bd-email"
             required
             placeholder={newsletterConfig.placeholder}
-            class="transition w-full rounded-lg h-9 px-3 text-sm
-                bg-black/5 dark:bg-white/10 text-black/75 dark:text-white/75
-                placeholder:text-black/35 dark:placeholder:text-white/35
-                focus:outline-hidden focus:ring-2 focus:ring-[var(--primary)]"
         />
-        <button type="submit" class="btn-regular rounded-lg h-9 text-sm font-bold">
+        <button type="submit" class="btn-regular">
             {newsletterConfig.buttonLabel}
         </button>
     </form>
 </WidgetLayout>
 )}
+
+<style>
+    .description {
+        margin-bottom: 0.75rem;
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+        color: var(--text-75);
+        transition: var(--transition);
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    input,
+    button {
+        height: 2.25rem;
+        border-radius: 0.5rem;
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+    }
+    input {
+        width: 100%;
+        padding-inline: 0.75rem;
+        background-color: color-mix(in oklab, var(--black) 5%, transparent);
+        color: var(--text-75);
+        transition: var(--transition);
+
+        &::placeholder {
+            color: color-mix(in oklab, var(--black) 35%, transparent);
+        }
+        :global(.dark) & {
+            background-color: color-mix(in oklab, var(--white) 10%, transparent);
+
+            &::placeholder {
+                color: color-mix(in oklab, var(--white) 35%, transparent);
+            }
+        }
+        &:focus {
+            outline-style: none;
+            box-shadow: 0 0 0 2px var(--primary);
+
+            @media (forced-colors: active) {
+                outline: 2px solid transparent;
+                outline-offset: 2px;
+            }
+        }
+    }
+    button {
+        font-weight: 700;
+    }
+</style>
 
 <script>
 // 送信時に buttondown の確認ページをポップアップで開く (公式の埋め込みフォームと同じ挙動)。

@@ -141,6 +141,8 @@ export default defineConfig({
 	vite: {
 		plugins: [tailwindcss()],
 		build: {
+			// CSS の入れ子(nesting)などを、対応していないブラウザ向けに平らに直す(Tailwind 4 と同じ対応範囲)
+			cssTarget: ["chrome111", "safari16.4", "firefox128"],
 			rollupOptions: {
 				onwarn(warning, warn) {
 					// temporarily suppress this warning

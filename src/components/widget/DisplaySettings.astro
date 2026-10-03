@@ -12,36 +12,121 @@ const title = i18n(I18nKey.themeColor, Astro.props.lang);
 // 保存された色相はスクリプトで反映する。ここでは既定の色相で描いておく
 const hue = siteConfig.themeColor.hue;
 ---
-<div id="display-setting" class="float-panel float-panel-closed absolute w-80 right-4 px-4 py-4" role="group"
+<div id="display-setting" class="float-panel float-panel-closed" role="group"
      aria-label={title}>
-    <div class="flex flex-row gap-2 mb-3 items-center justify-between">
-        <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
-            before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
-            before:absolute before:-left-3 before:top-[0.33rem]"
-        >
+    <div class="header">
+        <div class="title">
             {title}
             <!-- 既定の色のときは見えないので、Tab で止まらないよう disabled にする -->
-            <button id="hue-reset" aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md  active:scale-90 will-change-transform opacity-0 pointer-events-none"
-                    disabled>
-                <div class="text-[var(--btn-content)]">
-                    <Icon name="lucide:rotate-ccw" class="text-[0.875rem]" />
+            <button id="hue-reset" aria-label="Reset to Default" class="btn-regular" disabled>
+                <div class="reset-icon">
+                    <Icon name="lucide:rotate-ccw" class="reset-icon-svg" />
                 </div>
             </button>
         </div>
-        <div class="flex gap-1">
-            <div id="hueValue" class="transition bg-[var(--btn-regular-bg)] w-10 h-7 rounded-md flex justify-center
-            font-bold text-sm items-center text-[var(--btn-content)]">
+        <div class="hue-value-wrapper">
+            <div id="hueValue">
                 {hue}
             </div>
         </div>
     </div>
-    <div class="w-full h-6 px-1 bg-[oklch(0.80_0.10_0)] dark:bg-[oklch(0.70_0.10_0)] rounded-sm select-none">
+    <div class="slider-track">
         <input aria-label={title} type="range" min="0" max="360" value={hue}
                class="slider" id="colorSlider" step="5" style="width: 100%">
     </div>
 </div>
 
 <style>
+	#display-setting {
+	  position: absolute;
+	  right: 1rem;
+	  width: 20rem;
+	  padding: 1rem;
+	}
+	.header {
+	  display: flex;
+	  align-items: center;
+	  justify-content: space-between;
+	  gap: 0.5rem;
+	  margin-bottom: 0.75rem;
+	}
+	/* 見出しの左の縦線は ::before で描く */
+	.title {
+	  position: relative;
+	  display: flex;
+	  gap: 0.5rem;
+	  margin-left: 0.75rem;
+	  font-size: var(--text-lg);
+	  line-height: var(--text-lg-lh);
+	  font-weight: 700;
+	  color: var(--neutral-900);
+	  transition: var(--transition);
+
+	  :global(.dark) & {
+	    color: var(--neutral-100);
+	  }
+	  &::before {
+	    content: "";
+	    position: absolute;
+	    top: 0.33rem;
+	    left: -0.75rem;
+	    width: 0.25rem;
+	    height: 1rem;
+	    border-radius: 0.375rem;
+	    background-color: var(--primary);
+	  }
+	}
+	#hue-reset {
+	  width: 1.75rem;
+	  height: 1.75rem;
+	  border-radius: 0.375rem;
+	  will-change: transform;
+
+	  &:active {
+	    scale: 0.9;
+	  }
+	  /* 既定の色のときは隠す */
+	  &:disabled {
+	    opacity: 0;
+	    pointer-events: none;
+	  }
+	}
+	.reset-icon {
+	  color: var(--btn-content);
+	}
+	.reset-icon-svg {
+	  font-size: 0.875rem;
+	}
+	.hue-value-wrapper {
+	  display: flex;
+	  gap: 0.25rem;
+	}
+	#hueValue {
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  width: 2.5rem;
+	  height: 1.75rem;
+	  border-radius: 0.375rem;
+	  background-color: var(--btn-regular-bg);
+	  font-size: var(--text-sm);
+	  line-height: var(--text-sm-lh);
+	  font-weight: 700;
+	  color: var(--btn-content);
+	  transition: var(--transition);
+	}
+	.slider-track {
+	  width: 100%;
+	  height: 1.5rem;
+	  padding-inline: 0.25rem;
+	  border-radius: 0.25rem;
+	  background-color: oklch(0.8 0.1 0);
+	  user-select: none;
+
+	  :global(.dark) & {
+	    background-color: oklch(0.7 0.1 0);
+	  }
+	}
 	#display-setting input[type="range"] {
 	  -webkit-appearance: none;
 	  height: 1.5rem;
@@ -96,8 +181,6 @@ function setup(panel: HTMLElement) {
 		slider.value = String(hue);
 		value.textContent = String(hue);
 		const isDefault = hue === defaultHue;
-		reset.classList.toggle("opacity-0", isDefault);
-		reset.classList.toggle("pointer-events-none", isDefault);
 		reset.disabled = isDefault;
 	};
 

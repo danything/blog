@@ -1,11 +1,17 @@
-/* サイト全体のスタイルの入口(Layout.astro で読み込む)。
- * 独自のスタイルはレイヤーに入れない。Tailwind 3 のときと同じく prose や
- * ユーティリティより後ろ(=優先)に来るようにするため */
+/* サイト全体のスタイルの入口(Layout.astro で読み込む)。コンポーネントごとのスタイルは各 .astro の <style> に書く。
+ * 層(@layer)は弱い順に reset(ブラウザの既定を打ち消す) → base(ページの土台) → components(共通の部品)。
+ * 層に入れていない規則(変数・記事の本文の調整・各コンポーネントの <style>)は、詳細度に関係なく層の中の規則に勝つ。
+ * Tailwind はまだ残っている部分のためのもの(theme・utilities の層) */
+@layer theme, reset, base, components, utilities;
 /* クラス名を探すのは src/ だけにする。記事(src/content/)の本文やコードに書かれた
  * class="…" の文字を拾うと、使っていないユーティリティまで CSS に入る。見た目の比較用の
  * 固定の記事(tests/fixtures/)も src/ の外なので、本番と同じ CSS になる */
-@import "tailwindcss" source("../");
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source("../");
 @source not "../content";
+@import "./reset.css" layer(reset);
+@import "./base.css" layer(base);
+@import "./components.css" layer(components);
 @import "./variables.css";
 @import "./markdown.css";
 @import "./markdown-extend.css";
@@ -18,123 +24,6 @@
 @plugin './icons-plugin.ts';
 
 @custom-variant dark (&:is(.dark *));
-
-/* Tailwind 4 で変わった既定値を Tailwind 3 と同じに戻す(公式の移行ガイドの設定) */
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
-  button:not(:disabled),
-  [role="button"]:not(:disabled) {
-    cursor: pointer;
-  }
-  input::placeholder,
-  textarea::placeholder {
-    color: var(--color-gray-400);
-  }
-  /* Tailwind 4 は全要素の padding を 0 にするが、3 は表のセルのブラウザ既定値(1px)を残していた */
-  td,
-  th {
-    padding: 1px;
-  }
-}
-
-/* Web フォントは使わず、端末に入っているフォントを使う。
- * 本文: Windows 10 以降の BIZ UDPゴシック → Mac / iPhone のヒラギノ → Android / Linux の Noto → 古い Windows のメイリオ
- * コード: 英数字は各 OS の等幅フォント、日本語は BIZ UDゴシック(等幅) → ヒラギノ / Noto
- * static: 使われていなくても変数を出力する(expressive-code などからも参照するため) */
-@theme static {
-  --font-sans:
-    "BIZ UDPGothic", "BIZ UDPゴシック", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans CJK JP",
-    "Noto Sans JP", Meiryo, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji";
-  --font-mono:
-    ui-monospace, SFMono-Regular, Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", "Hiragino Sans",
-    "Noto Sans Mono CJK JP", "Noto Sans CJK JP", monospace;
-}
-
-@utility card-base {
-  @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg) transition;
-}
-
-@utility expand-animation {
-  @apply relative before:ease-out before:transition active:bg-none hover:before:bg-(--btn-plain-bg-hover) active:before:bg-(--btn-plain-bg-active) z-0
-        before:absolute before:rounded-[inherit] before:inset-0 before:scale-[0.85] hover:before:scale-100 before:-z-10;
-}
-
-@utility link {
-  @apply transition rounded-md p-1 -m-1 expand-animation;
-}
-
-@utility link-lg {
-  @apply transition rounded-md p-1.5 -m-1.5 expand-animation;
-}
-
-@utility float-panel {
-  @apply top-21 rounded-(--radius-large) overflow-hidden bg-(--float-panel-bg) transition shadow-xl dark:shadow-none;
-}
-
-/* 閉じているパネルは visibility: hidden にして、中のボタンや入力欄に Tab で入れないようにする。
-   閉じた状態でだけ visibility も遷移させるので、閉じるときは消えきるまで見えたまま、開くときはすぐ見える
-   (すぐ中へフォーカスを移せる)。そのためパネルに transition-all は付けない(付けると開くときも遷移する) */
-@utility float-panel-closed {
-  @apply -translate-y-1 opacity-0 pointer-events-none invisible;
-  transition-property: all !important;
-}
-
-@utility search-panel {
-  & mark {
-    @apply bg-transparent text-(--primary);
-  }
-}
-
-@utility btn-card {
-  @apply transition flex items-center justify-center bg-(--card-bg) hover:bg-(--btn-card-bg-hover)
-        active:bg-(--btn-card-bg-active);
-  &.disabled {
-    @apply pointer-events-none text-black/10 dark:text-white/10;
-  }
-}
-
-@utility disabled {
-  &.btn-card {
-    @apply pointer-events-none text-black/10 dark:text-white/10;
-  }
-}
-
-@utility btn-plain {
-  @apply transition relative flex items-center justify-center bg-none
-        text-black/75 hover:text-(--primary) dark:text-white/75 dark:hover:text-(--primary);
-  &:not(.scale-animation) {
-    @apply hover:bg-(--btn-plain-bg-hover) active:bg-(--btn-plain-bg-active);
-  }
-  &.scale-animation {
-    @apply expand-animation;
-    &.current-theme-btn {
-      @apply before:scale-100 before:opacity-100 before:bg-(--btn-plain-bg-hover) text-(--primary);
-    }
-  }
-}
-
-@utility btn-regular {
-  @apply transition flex items-center justify-center bg-(--btn-regular-bg) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active)
-        text-(--btn-content) dark:text-white/75;
-}
-
-@utility toc-hide {
-  @apply opacity-0 pointer-events-none;
-}
-
-@utility hide-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
 
 @utility text-90 {
   @apply text-black/90 dark:text-white/90;
@@ -157,22 +46,8 @@
         text-(--btn-content) mr-2;
 }
 
-@layer components {
-    h1, h2, h3, h4, h5, h6, p, a, span, li, ul, ol, blockquote, code, pre, table, th, td, strong {
-        @apply transition;
-    }
-
-    #toc-inner-wrapper {
-        mask-image: linear-gradient(to bottom, transparent 0%, black 2rem, black calc(100% - 2rem), transparent 100%);
-    }
-}
-
 .custom-md img, #post-cover img {
     @apply cursor-zoom-in
-}
-
-::selection {
-    background-color: var(--selection-bg)
 }
 
 .dash-line {

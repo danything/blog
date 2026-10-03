@@ -8,14 +8,55 @@ const lang = langFromPath(Astro.url.pathname);
 const currentYear = new Date().getFullYear();
 ---
 
-<div class="transition border-t border-black/10 dark:border-white/15 my-10 border-dashed mx-32"></div>
-<div class="transition border-dashed border-[oklch(85%_0.01_var(--hue))] dark:border-white/15 rounded-2xl mb-12 flex flex-col items-center justify-center px-6">
-    <div class="transition text-50 text-sm text-center">
+<div class="separator"></div>
+<div class="footer-box">
+    <div class="footer-text">
         &copy; <span id="copyright-year">{currentYear}</span> {siteText(lang).profileName}. All Rights Reserved. /
-        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href={localeUrl('/rss.xml', lang)}>RSS</a> /
-        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href={url('sitemap-index.xml')}>Sitemap</a><br>
+        <a class="link" target="_blank" href={localeUrl('/rss.xml', lang)}>RSS</a> /
+        <a class="link" target="_blank" href={url('sitemap-index.xml')}>Sitemap</a><br>
         Powered by
-        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://astro.build">Astro</a> &
-        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://github.com/saicaca/fuwari">Fuwari</a>
+        <a class="link" target="_blank" href="https://astro.build">Astro</a> &
+        <a class="link" target="_blank" href="https://github.com/saicaca/fuwari">Fuwari</a>
     </div>
 </div>
+
+<style>
+    .separator {
+        margin: 2.5rem 8rem;
+        border-top-width: 1px;
+        border-style: dashed;
+        border-color: color-mix(in oklab, var(--black) 10%, transparent);
+        transition: var(--transition);
+
+        :global(.dark) & {
+            border-color: color-mix(in oklab, var(--white) 15%, transparent);
+        }
+    }
+    .footer-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 3rem;
+        padding-inline: 1.5rem;
+        border-style: dashed;
+        border-color: oklch(85% 0.01 var(--hue));
+        border-radius: 1rem;
+        transition: var(--transition);
+
+        :global(.dark) & {
+            border-color: color-mix(in oklab, var(--white) 15%, transparent);
+        }
+    }
+    .footer-text {
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+        text-align: center;
+        color: var(--text-50);
+        transition: var(--transition);
+    }
+    .link {
+        font-weight: 500;
+        color: var(--primary);
+    }
+</style>

@@ -9,62 +9,217 @@ interface Props {
 
 const placeholder = i18n(I18nKey.search, Astro.props.lang);
 ---
-<div data-search class="contents">
+<div data-search class="search">
 <!-- search bar for desktop view -->
-<div id="search-bar" class="hidden lg:flex transition-all items-center h-11 mr-2 rounded-lg
-      bg-black/[0.04] hover:bg-black/[0.06] focus-within:bg-black/[0.06]
-      dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10
-">
-    <Icon name="lucide:search" class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30" />
-    <input placeholder={placeholder} data-search-input="desktop"
-           class="transition-all pl-10 text-sm bg-transparent outline-0
-         h-full w-40 active:w-60 focus:w-60 text-50"
-    >
+<div id="search-bar" class="search-bar">
+    <Icon name="lucide:search" class="search-icon" />
+    <input placeholder={placeholder} data-search-input="desktop" class="search-input">
 </div>
 
 <!-- toggle btn for phone/tablet view -->
-<button aria-label="Search Panel" id="search-switch"
-        class="btn-plain scale-animation lg:!hidden rounded-lg w-11 h-11 active:scale-90">
-    <Icon name="lucide:search" class="text-[1.25rem]" />
+<button aria-label="Search Panel" id="search-switch" class="btn-plain scale-animation">
+    <Icon name="lucide:search" class="switch-icon" />
 </button>
 
 <!-- search panel -->
-<div id="search-panel" class="float-panel float-panel-closed search-panel absolute md:w-[30rem]
-top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2">
+<div id="search-panel" class="float-panel float-panel-closed">
 
     <!-- search bar inside panel for phone/tablet -->
-    <div id="search-bar-inside" class="flex relative lg:hidden transition-all items-center h-11 rounded-xl
-      bg-black/[0.04] hover:bg-black/[0.06] focus-within:bg-black/[0.06]
-      dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10
-  ">
-        <Icon name="lucide:search" class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30" />
-        <input placeholder={placeholder} data-search-input="mobile"
-               class="pl-10 absolute inset-0 text-sm bg-transparent outline-0
-               focus:w-60 text-50"
-        >
+    <div id="search-bar-inside" class="search-bar">
+        <Icon name="lucide:search" class="search-icon" />
+        <input placeholder={placeholder} data-search-input="mobile" class="search-input">
     </div>
 
     <!-- search results(下のテンプレートを複製して、この後ろに並べる) -->
 </div>
 
 <template data-search-result>
-    <a class="transition first-of-type:mt-2 lg:first-of-type:mt-0 group block
-       rounded-xl text-lg px-3 py-2 hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)]">
-        <div class="transition text-90 inline-flex font-bold group-hover:text-[var(--primary)]">
-            <span data-title></span><Icon name="lucide:chevron-right" class="transition text-[0.75rem] translate-x-1 my-auto text-[var(--primary)]" />
+    <a class="result">
+        <div class="result-title">
+            <span data-title></span><Icon name="lucide:chevron-right" class="result-chevron" />
         </div>
-        <div class="transition text-sm text-50" data-excerpt></div>
+        <div class="result-excerpt" data-excerpt></div>
     </a>
 </template>
 </div>
 
 <style>
-  input:focus {
-    outline: 0;
+  .search {
+    display: contents;
   }
-  .search-panel {
+  /* 検索の入力欄。デスクトップではナビゲーションバーに、狭い画面ではパネルの中に出す */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    height: 2.75rem;
+    background-color: color-mix(in oklab, var(--black) 4%, transparent);
+    transition: all 0.15s var(--ease);
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: color-mix(in oklab, var(--black) 6%, transparent);
+      }
+    }
+    &:focus-within {
+      background-color: color-mix(in oklab, var(--black) 6%, transparent);
+    }
+    :global(.dark) & {
+      background-color: color-mix(in oklab, var(--white) 5%, transparent);
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: color-mix(in oklab, var(--white) 10%, transparent);
+        }
+      }
+      &:focus-within {
+        background-color: color-mix(in oklab, var(--white) 10%, transparent);
+      }
+    }
+  }
+  #search-bar {
+    display: none;
+    margin-right: 0.5rem;
+    border-radius: 0.5rem;
+
+    @media (width >= 64rem) {
+      display: flex;
+    }
+  }
+  #search-bar-inside {
+    position: relative;
+    border-radius: 0.75rem;
+
+    @media (width >= 64rem) {
+      display: none;
+    }
+  }
+  .search-icon {
+    position: absolute;
+    margin-block: auto;
+    margin-left: 0.75rem;
+    font-size: 1.25rem;
+    color: color-mix(in oklab, var(--black) 30%, transparent);
+    pointer-events: none;
+    transition: var(--transition);
+
+    :global(.dark) & {
+      color: color-mix(in oklab, var(--white) 30%, transparent);
+    }
+  }
+  .search-input {
+    padding-left: 2.5rem;
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    color: var(--text-50);
+    background-color: transparent;
+    outline: 0 solid;
+
+    &:focus {
+      outline: 0;
+      width: 15rem;
+    }
+  }
+  #search-bar .search-input {
+    width: 10rem;
+    height: 100%;
+    transition: all 0.15s var(--ease);
+
+    &:active,
+    &:focus {
+      width: 15rem;
+    }
+  }
+  #search-bar-inside .search-input {
+    position: absolute;
+    inset: 0;
+  }
+  #search-switch {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.5rem;
+
+    &:active {
+      scale: 0.9;
+    }
+    @media (width >= 64rem) {
+      display: none;
+    }
+  }
+  .switch-icon {
+    font-size: 1.25rem;
+  }
+
+  #search-panel {
+    position: absolute;
+    top: 5rem;
+    left: 1rem;
+    right: 1rem;
     max-height: calc(100vh - 100px);
+    padding: 0.5rem;
     overflow-y: auto;
+    border-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+    :global(.dark) & {
+      box-shadow: none;
+    }
+    @media (width >= 48rem) {
+      left: unset;
+      width: 30rem;
+    }
+  }
+
+  .result {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.75rem;
+    font-size: var(--text-lg);
+    line-height: var(--text-lg-lh);
+    transition: var(--transition);
+
+    &:first-of-type {
+      margin-top: 0.5rem;
+
+      @media (width >= 64rem) {
+        margin-top: 0;
+      }
+    }
+    @media (hover: hover) {
+      &:hover {
+        background-color: var(--btn-plain-bg-hover);
+      }
+      &:hover .result-title {
+        color: var(--primary);
+      }
+    }
+    &:active {
+      background-color: var(--btn-plain-bg-active);
+    }
+  }
+  .result-title {
+    display: inline-flex;
+    font-weight: 700;
+    color: var(--text-90);
+    transition: var(--transition);
+  }
+  .result-chevron {
+    margin-block: auto;
+    font-size: 0.75rem;
+    color: var(--primary);
+    translate: 0.25rem;
+    transition: var(--transition);
+  }
+  .result-excerpt {
+    font-size: var(--text-sm);
+    line-height: var(--text-sm-lh);
+    color: var(--text-50);
+    transition: var(--transition);
+
+    /* 一致した語(Pagefind が <mark> で囲む) */
+    :global(mark) {
+      background-color: transparent;
+      color: var(--primary);
+    }
   }
 </style>
 
