@@ -30,16 +30,16 @@ ECS で動かす定期実行用のコンテナのイメージやタスクも管�
 IAM を開き左メニューにあるユーザーを開くその後ユーザーの追加を開くと下記の様な画面になる  
 ユーザー名を適宜入力,アクセスの種類をプログラムによるアクセスに制限
 
-![console.aws.amazon.com_iam_home_.png](https://doany.io/static/images/blog/rdsecsdump0.png)
+![console.aws.amazon.com_iam_home_.png](https://doany.io/static/images/blog/rdsecsdump0.webp)
 
 `AmazonECS_FullAccess`, `AmazonEC2ContainerRegistryFullAccess`, `AmazonS3FullAccess`を選択(今回 CLI で同一ユーザーを使いたかったので広に権限取ってあります。わかる人は適宜絞ってください。)
 
-![console.aws.amazon.com_iam_home_ (1).png](https://doany.io/static/images/blog/rdsecsdump1.png)
+![console.aws.amazon.com_iam_home_ (1).png](https://doany.io/static/images/blog/rdsecsdump1.webp)
 
 その後特に設定項目はないのでユーザーの作成まで進む  
 最後にこのような画面が表示されるのでアクセスキー ID とシークレットアクセスキーをメモしておいてください。シークレットアクセスキーに関しては追加発行できますが二度と再表示できないので絶対にメモしておいてください。
 
-![console.aws.amazon.com_iam_home_ (2).png](https://doany.io/static/images/blog/rdsecsdump2.png)
+![console.aws.amazon.com_iam_home_ (2).png](https://doany.io/static/images/blog/rdsecsdump2.webp)
 
 ### IAM ロールの作成
 
@@ -48,15 +48,15 @@ IAM を開き左メニューにあるユーザーを開くその後ユーザー�
 IAM を開き左メニューにあるロールを開くその後ロールの作成を開くと下記の様な画面になる  
 `Elastic Container Service`を選択次に`Elastic Container Service Task`を選択次へ
 
-![console.aws.amazon.com_iam_home_region=ap-northeast-1 (1).png](https://doany.io/static/images/blog/rdsecsdump3.png)
+![console.aws.amazon.com_iam_home_region=ap-northeast-1 (1).png](https://doany.io/static/images/blog/rdsecsdump3.webp)
 
 `AmazonECSTaskExecutionRolePolicy`を選択その後特に設定項目はないのでロールの作成まで進む
 
-![console.aws.amazon.com_iam_home_region=ap-northeast-1 (2).png](https://doany.io/static/images/blog/rdsecsdump4.png)
+![console.aws.amazon.com_iam_home_region=ap-northeast-1 (2).png](https://doany.io/static/images/blog/rdsecsdump4.webp)
 
 作成が完了したら元の画面に戻ってくるので先ほど作成したロールを開く下記画面の`ロール ARN`をメモしておいてください。
 
-![console.aws.amazon.com_iam_home_region=ap-northeast-1 (4).png](https://doany.io/static/images/blog/rdsecsdump5.png)
+![console.aws.amazon.com_iam_home_region=ap-northeast-1 (4).png](https://doany.io/static/images/blog/rdsecsdump5.webp)
 
 ### バケットの作成
 
@@ -177,12 +177,12 @@ aws s3 sync . s3://{S3のバケット}
 先ほどプッシュしたリポジトリを bitbucket で開く  
 設定->PIPELINES->Settings に進み`Enable Pipelines`を有効にする
 
-![bitbucket.org_j-roi_dump_admin_addon_admin_pipelines_settings.png](https://doany.io/static/images/blog/rdsecsdump6.png)
+![bitbucket.org_j-roi_dump_admin_addon_admin_pipelines_settings.png](https://doany.io/static/images/blog/rdsecsdump6.webp)
 
 次に`Repository variables`を開く  
 下記の通り先ほどメモしたものから設定をする。
 
-![bitbucket.org_j-roi_dump_admin_addon_admin_pipelines_repository-variables.png](https://doany.io/static/images/blog/rdsecsdump7.png)
+![bitbucket.org_j-roi_dump_admin_addon_admin_pipelines_repository-variables.png](https://doany.io/static/images/blog/rdsecsdump7.webp)
 
 ## デプロイと cron の設定
 
@@ -190,11 +190,11 @@ aws s3 sync . s3://{S3のバケット}
 
 引き続き bitbucket の画面で再度メニューから`Pipelines`を開く次に`Run pipeline`をクリックし下記の通り選択して`Run`をクリック
 
-![bitbucket.org_j-roi_dump_addon_pipelines_home.png](https://doany.io/static/images/blog/rdsecsdump8.png)
+![bitbucket.org_j-roi_dump_addon_pipelines_home.png](https://doany.io/static/images/blog/rdsecsdump8.webp)
 
 完了すると下記の様になるのでパイプラインが完了するのを待つ
 
-![bitbucket.org_j-roi_dump_addon_pipelines_home (1).png](https://doany.io/static/images/blog/rdsecsdump9.png)
+![bitbucket.org_j-roi_dump_addon_pipelines_home (1).png](https://doany.io/static/images/blog/rdsecsdump9.webp)
 
 次回以降ブランチに変更が入る度自動で実行されます。
 
@@ -202,15 +202,15 @@ aws s3 sync . s3://{S3のバケット}
 
 AWS ECS 上でリポジトリオーナー名でクラスタが作成されているのでそのクラスタを開く(クラスタ名が書かれているところをクリックすると開きます)。
 
-![ap-northeast-1.console.aws.amazon.com_ecs_home_region=ap-northeast-1.png](https://doany.io/static/images/blog/rdsecsdump10.png)
+![ap-northeast-1.console.aws.amazon.com_ecs_home_region=ap-northeast-1.png](https://doany.io/static/images/blog/rdsecsdump10.webp)
 
 タスクのスケジューリングのタブを開き作成をクリック
 
-![ap-northeast-1.console.aws.amazon.com_ecs_home_region=ap-northeast-1 (1).png](https://doany.io/static/images/blog/rdsecsdump11.png)
+![ap-northeast-1.console.aws.amazon.com_ecs_home_region=ap-northeast-1 (1).png](https://doany.io/static/images/blog/rdsecsdump11.webp)
 
 実行間隔等を設定しターゲットの部分は今回`FARGATE`用にタスクを作成したので起動タイプを`FARGATE`を選択タスク定義のファミリーはリポジトリ名と同名のタスクがあるのでそれを選択する。VPC とセキュリティグループは適宜設定してください。
 
-![ap-northeast-1.console.aws.amazon.com_ecs_home_region=ap-northeast-1 (2).png](https://doany.io/static/images/blog/rdsecsdump12.png)
+![ap-northeast-1.console.aws.amazon.com_ecs_home_region=ap-northeast-1 (2).png](https://doany.io/static/images/blog/rdsecsdump12.webp)
 
 :::message
 Cron 式を選択したときに躓いたのだが busybox cron 等の cron 式とは違う模様下記を参考にいたしました。  
