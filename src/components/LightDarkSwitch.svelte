@@ -70,8 +70,9 @@ function hidePanelOnFocusOut(e: FocusEvent & { currentTarget: HTMLElement }) {
 
 function hidePanelOnEscape(e: KeyboardEvent) {
 	if (e.key !== "Escape") return;
-	hidePanel();
+	// ボタンへ戻すと focus で開くので、戻してから閉じる
 	document.getElementById("scheme-switch")?.focus();
+	hidePanel();
 }
 </script>
 
