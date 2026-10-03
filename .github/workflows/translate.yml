@@ -38,7 +38,8 @@ jobs:
       - run: bun install --frozen-lockfile
 
       # まだマージしていない前回の英訳 PR があれば、その英訳から続ける
-      # (同じ記事を訳し直さず、原文の変わった分だけを直すため)
+      # (同じ記事を訳し直さず、原文の変わった分だけを直すため)。
+      # 前回の PR で消したファイルは戻らないが、原文が無ければ次のステップで消える
       - name: Restore the previous translations
         run: |
           if git fetch --quiet origin "$BRANCH"; then
@@ -54,9 +55,12 @@ jobs:
           echo "json=$json" >> "$GITHUB_OUTPUT"
           count=$(echo "$json" | jq '[.missing, .outdated, .orphaned] | map(length) | add')
           echo "count=$count" >> "$GITHUB_OUTPUT"
+          # 原文が無くなった英訳はここで消す(Claude には訳すことだけを頼む)
+          echo "$json" | jq -r '.orphaned[]' | xargs -r rm -v --
+          echo "todo=$(echo "$json" | jq -c '{missing, outdated}')" >> "$GITHUB_OUTPUT"
 
       - name: Translate
-        if: steps.status.outputs.count != '0'
+        if: steps.status.outputs.todo != '{"missing":[],"outdated":[]}'
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -65,13 +69,12 @@ jobs:
             まず .github/translate.md を読み、その決まりに従ってください。
 
             対象(scripts/translate-status.ts の出力。source が日本語の原文、target が英訳):
-            ${{ steps.status.outputs.json }}
+            ${{ steps.status.outputs.todo }}
 
             - missing: 英訳がまだ無い。原文を読んで target に英訳を新しく作る
             - outdated: 原文が変わった。`git diff` などで原文の変更点を確かめ、既存の英訳を、
               変わった箇所が反映されるよう最小限だけ直す(訳し直さない。変わっていない部分の訳文は変えない)。
               原文の差分が分からないときは、原文と既存の英訳を突き合わせて食い違う箇所だけを直す
-            - orphaned: 原文が無くなった。その英訳のファイルを削除する
             - 作った・直した英訳のフロントマターの sourceHash は、
               `bun scripts/translate-status.ts --hash <原文のパス>` の値にする
 
@@ -82,7 +85,7 @@ jobs:
             - git の commit・push はしない(このあとのステップで PR にする)
             - 最後に `bun scripts/translate-status.ts` を実行し、「英訳はすべて最新です」と出ることを確かめる
           claude_args: |
-            --allowedTools "Read,Write,Edit,Glob,Grep,Bash(bun scripts/translate-status.ts:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*),Bash(rm src/content/posts-en/:*),Bash(git rm src/content/posts-en/:*)"
+            --allowedTools "Read,Write,Edit,Glob,Grep,Bash(bun scripts/translate-status.ts:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*)"
 
       # 訳が残っていないか、フロントマターや Markdown が壊れていないかを確かめる
       - name: Verify
@@ -93,6 +96,13 @@ jobs:
           count=$(echo "$json" | jq '[.missing, .outdated, .orphaned] | map(length) | add')
           if [ "$count" != "0" ]; then
             echo "::error::英訳が終わっていないものがあります: $json"
+            exit 1
+          fi
+          # 英訳とその決まり以外のファイルを変えていないか
+          others=$(git status --porcelain --untracked-files=all | cut -c4- \
+            | grep -vE '^(src/content/posts-en/|src/content/spec/about-en\.md$|\.github/translate\.md$)' || true)
+          if [ -n "$others" ]; then
+            echo "::error::英訳以外のファイルが変わっています: $others"
             exit 1
           fi
           bun run build
@@ -116,7 +126,7 @@ jobs:
 
             対象:
             ```json
-            ${{ steps.status.outputs.json }}
+            ${{ steps.status.outputs.todo }}
             ```
 
             - 訳文は .github/translate.md の決まりで Claude が作っています。目を通してからマージしてください
