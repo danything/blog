@@ -83,7 +83,7 @@ GitHub と同じ書き方。種類は `NOTE` / `TIP` / `IMPORTANT` / `WARNING` /
 `src/content/posts/` から Markdown を消すだけでは足りない。あわせて次をする:
 
 - [ ] `Caddyfile` の `@gone` の一覧にスラッグ(ファイル名から `.md` を除いたもの)を足し、404 ではなく 410 Gone を返す
-- [ ] `tests/setup.ts` の `pages` に入っていれば外す
+- [ ] `tests/setup.ts` の `a11yPages` に入っていれば外す
 - [ ] Zenn 側の記事を手で削除する。zenn ブランチからファイルが消えても Zenn は記事を消さない。
       Zenn のスラッグはフロントマターの `zennSlug`、なければ `scripts/zenn-sync.ts` の `toZennSlug` で決まる
       (12 文字以上ならそのまま(50 文字まで)、短ければハッシュを足したもの)。zenn ブランチの `articles/` にあるファイル名を見るのが早い
@@ -112,13 +112,17 @@ bun run icons
 
 ## 見た目のテスト
 
-PR では `main` との見た目の差を自動で確かめる(`.github/workflows/visual.yml`)。主要なページをデスクトップ(ライト / ダーク)とスマホで撮って比べ、差があると失敗して差分の画像が `playwright-report` に付く。手元でも同じことができる:
+PR では `main` との見た目の差を自動で確かめる(`.github/workflows/visual.yml`)。比べるのは実際の記事ではなく、`tests/fixtures/` の固定の記事だけでビルドしたサイト(`VISUAL_FIXTURES=1 bun run build`)。記事の追加・編集・削除だけの PR では差が出ず、デザインやコードを変えたときだけ差が出る。このビルドでは GitHub カードも api.github.com に取りに行かず固定の値を使う。デスクトップ(ライト / ダーク)とスマホで撮って比べ、差があると失敗して差分の画像が `playwright-report` に付く。
+
+新しい Markdown の書き方や部品を足したときは、`tests/fixtures/posts/` の記事にも足して比較の対象にする(撮るページは `tests/setup.ts` の `visualPages`)。アクセシビリティの検査(`.github/workflows/a11y.yml`)は引き続き実際の記事のビルドで行い、対象は `a11yPages`。
+
+手元でも同じことができる:
 
 ```shell
-bun run build && (cd dist && python3 -m http.server 4321 &)
-bunx playwright test --update-snapshots   # いまのビルドを基準にする
+VISUAL_FIXTURES=1 bun run build && (cd dist && python3 -m http.server 4321 &)
+BASE_URL=http://127.0.0.1:4321 bunx playwright test tests/visual.spec.ts --update-snapshots   # いまのビルドを基準にする
 # 変更してビルドし直してから
-bunx playwright test                      # 基準と比べる
+BASE_URL=http://127.0.0.1:4321 bunx playwright test tests/visual.spec.ts                      # 基準と比べる
 ```
 
 ## デプロイ
