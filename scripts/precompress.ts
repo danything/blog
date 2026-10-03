@@ -1,6 +1,7 @@
-// ビルドした dist/ の圧縮が効くファイルの隣に .zst・.br・.gz を書き出す。
-// Caddy の `file_server { precompressed zstd br gzip }` がこれを配信するので、
-// リクエストのたびに圧縮しなくてよくなり、圧縮率も最大にできる(brotli 11・gzip 9・zstd 19)。
+// ビルドした dist/ の圧縮が効くファイルの隣に .br・.gz を書き出す。
+// Caddy の `file_server { precompressed br gzip }` がこれを配信するので、
+// リクエストのたびに圧縮しなくてよくなり、圧縮率も最大にできる(brotli 11・gzip 9)。
+// zstd は作らない。前段の Cloudflare はオリジンに br・gzip しか求めない(ブラウザへの zstd は Cloudflare がする)
 //
 //   bun scripts/precompress.ts [dir]   (既定は dist。bun run build の最後に呼ぶ)
 //
@@ -15,13 +16,6 @@ const COMPRESSIBLE =
 	/\.(?:html|css|js|mjs|json|xml|svg|txt|webmanifest|map|ico)$/i;
 
 const encoders: [ext: string, (buf: Buffer) => Buffer][] = [
-	[
-		".zst",
-		(buf) =>
-			zlib.zstdCompressSync(buf, {
-				params: { [zlib.constants.ZSTD_c_compressionLevel]: 19 },
-			}),
-	],
 	[
 		".br",
 		(buf) =>

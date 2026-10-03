@@ -10,18 +10,25 @@ COPY . .
 # トークンを secret で渡す(イメージには残らない)。無くてもビルドはできる
 RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN bun run build
 
-FROM caddy:2-alpine@sha256:881bbc60f9986d5ab8e7cfd6cf7e4ef3c9c0439fef2429d035d065577882f028
-# root で動かさない。ファイルは root のもののまま(読むだけ)。
-# - 公式イメージの caddy には 80 番で待つための cap_net_bind_service がファイルに付いていて、
-#   capabilities をすべて落とす (k8s の drop: [ALL] と allowPrivilegeEscalation: false) と
-#   exec が operation not permitted で失敗する。8080 で待つので外す
-# - Caddy が書くのは XDG_DATA_HOME (/data) の instance.uuid などだけ。k8s ではここに emptyDir を
-#   付けてルートを読み取り専用にする
-# setcap で caddy (約 50MB) が丸ごと新しいレイヤーになるので、毎回変わる dist より前に置いて
-# キャッシュを効かせる (ベースイメージが変わらない限り、デプロイで取り直すのは dist のレイヤーだけ)
-RUN setcap -r /usr/bin/caddy && chown 65532:65532 /data /config
+# 公式イメージの caddy には 80 番で待つための cap_net_bind_service がファイルに付いていて、
+# capabilities をすべて落とす (k8s の drop: [ALL] と allowPrivilegeEscalation: false) と
+# exec が operation not permitted で失敗する。8080 で待つのでここで外し、本体だけを取り出す。
+# (公式イメージの上で setcap すると約 50MB の本体がもう 1 層増えてイメージが倍近くになるため)
+FROM caddy:2-alpine@sha256:881bbc60f9986d5ab8e7cfd6cf7e4ef3c9c0439fef2429d035d065577882f028 AS caddy
+RUN setcap -r /usr/bin/caddy
+
+# 配信用は素の Alpine に Caddy 本体と MIME の定義だけを置く(preStop の sleep は busybox のもの)。
+# root で動かさない。ファイルは root のもののまま(読むだけ)。Caddy が書くのは XDG_DATA_HOME (/data) の
+# instance.uuid などだけで、k8s ではここに emptyDir を付けてルートを読み取り専用にする
+FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0
+COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
+COPY --from=caddy /etc/mime.types /etc/mime.types
+ENV XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data
+RUN mkdir -p /config /data && chown 65532:65532 /config /data
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=builder /usr/src/app/dist /srv
+WORKDIR /srv
 USER 65532:65532
 EXPOSE 8080
 # 死活の確認は k8s のプローブ (deploy/deployment.yaml) でする
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
