@@ -17,7 +17,7 @@ const url = `https://ko-fi.com/${kofiConfig.username}`;
 const text = siteText(langFromPath(Astro.url.pathname)).kofi;
 ---
 {kofiConfig.enable && kofiConfig.username && (
-<WidgetLayout name={kofiConfig.title} id="kofi" class={className} style={style}>
+<WidgetLayout name={text.title} id="kofi" class={className} style={style}>
     <div class="text-sm text-black/75 dark:text-white/75 transition mb-3">
         {text.description}
     </div>

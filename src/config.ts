@@ -63,6 +63,7 @@ export const siteTextEn = {
 	profileName: "Ryuki Maruyama",
 	bio: "A casual notebook",
 	kofi: {
+		title: "Support",
 		description: "If a post helped you out, your support keeps me going.",
 		buttonLabel: "Support me on Ko-fi",
 	},
@@ -142,7 +143,7 @@ export const newsletterConfig: NewsletterConfig = {
 	enable: true,
 	// https://buttondown.com/<username> の <username> 部分
 	username: "doa",
-	title: "Newsletter",
+	title: "更新のお知らせ",
 	description: "新しい記事を公開したらお知らせします。",
 	placeholder: "your@email.com",
 	buttonLabel: "登録",
@@ -152,7 +153,7 @@ export const kofiConfig: KofiConfig = {
 	enable: true,
 	// https://ko-fi.com/<username> の <username> 部分
 	username: "yui5m",
-	title: "Support",
+	title: "応援",
 	description: "記事が役に立ったら応援していただけると励みになります。",
 	buttonLabel: "Ko-fi で支援する",
 };
