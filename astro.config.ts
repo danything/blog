@@ -28,9 +28,15 @@ const postLastmod = new Map<string, string>();
 for (const name of fs.readdirSync(POSTS_DIR)) {
 	if (!name.endsWith(".md")) continue;
 	const fm = parsePost(path.join(POSTS_DIR, name))?.fm;
+	if (fm?.draft === true || fm?.draft === "true") continue;
 	const date = fm?.updated || fm?.published;
 	if (date) postLastmod.set(name.slice(0, -".md".length), date);
 }
+// 記事の一覧(トップ・ページ送り・アーカイブ)は、いちばん新しい記事の日付を lastmod にする
+const listLastmod = [...postLastmod.values()]
+	.map((d) => new Date(d))
+	.filter((d) => !Number.isNaN(d.getTime()))
+	.sort((x, y) => y.getTime() - x.getTime())[0];
 
 // https://astro.build/config
 export default defineConfig({
@@ -94,15 +100,25 @@ export default defineConfig({
 			// 英語版の 404 は普通のページとして作られるので外す
 			filter: (page) => !/\/404\/?$/.test(new URL(page).pathname),
 			serialize(item) {
+				const pathname = new URL(item.url).pathname;
 				// 英語版(/en/posts/...)も日付は原文と同じ
-				const id = new URL(item.url).pathname.match(
-					/^\/(?:en\/)?posts\/([^/]+)\/$/,
-				)?.[1];
+				const id = pathname.match(/^\/(?:en\/)?posts\/([^/]+)\/$/)?.[1];
 				const date = id && postLastmod.get(decodeURIComponent(id));
 				// 日付として読めない値(簡易パーサなので行末コメントなど)なら付けない
 				const time = date ? new Date(date) : undefined;
 				if (time && !Number.isNaN(time.getTime()))
 					item.lastmod = time.toISOString();
+				else if (
+					listLastmod &&
+					/^\/(?:en\/)?(?:\d+\/|archive\/)?$/.test(pathname)
+				)
+					item.lastmod = listLastmod.toISOString();
+				// ページの <head> と同じく、既定(x-default)は日本語版にする。
+				// links の配列は日本語版と英語版の項目で共有されているので、書き換えずに作り直す
+				const links = item.links?.filter((l) => l.lang !== "x-default");
+				const ja = links?.find((l) => l.lang === "ja");
+				if (links && ja)
+					item.links = [...links, { lang: "x-default", url: ja.url }];
 				return item;
 			},
 		}),
