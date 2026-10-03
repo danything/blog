@@ -19,7 +19,7 @@ published_at: 2026-09-04
 | --- | --- | --- |
 | [worklog](https://w.doany.io/) | SlackやGitHubのログから稼働表を作るやつ | サービスのみ |
 | [𝕏ool](https://x.doany.io/) | 𝕏の1日分の成績を通信簿として自動ポストするやつ | [ソース](https://github.com/DAnything/xool) |
-| Smart QR Payment | QRを使った事前購入とセルフレジ | [ソース](https://github.com/5ym/smart-qr-payment) |
+| mogiri | QRを使った入場受付と、事前購入・セルフレジ | [ソース](https://github.com/5ym/mogiri) |
 | denpa | テレビの番組表、予約、録画、配信 | [ソース](https://github.com/DAnything/denpa) |
 | [tamasagashi](https://ts.doany.io/) | 公的データから作った車両マスター(型式 → 通称名・諸元)の閲覧 | サービスのみ |
 
@@ -28,7 +28,7 @@ published_at: 2026-09-04
 
 ## 書き直しに至った経緯
 
-Smart QR Paymentは元々Django REST Frameworkのバックエンドと、Nuxt(Vuetify)のフロントエンドの2本立てで2024年頃に作ったものでした。  
+mogiri(旧 Smart QR Payment)は元々Django REST Frameworkのバックエンドと、Nuxt(Vuetify)のフロントエンドの2本立てで2024年頃に作ったものでした。  
 その後しばらく触っていなかったのですが、触っていなくてもRenovateのPRだけは来続けます。2026年7月の履歴を見ると下記の様な感じで、依存を上げてはそれを動く状態に運ぶだけのコミットが挟まっています。
 
 ```text
@@ -111,7 +111,7 @@ bun:sqliteとBun.password(argon2id)が同梱されていて、ネイティブ依
 
 ## BiomeとCSSに関して
 
-Biomeを選んだのは、自分がきれい好きでライブラリが分散するのを嫌った面が大きいです。ライブラリは少ないにこしたことはないでしょう。Smart QR Paymentの書き直し直後はESLint + Prettierだったのですが、lintとformatで別々のライブラリと設定ファイルを持って、しかもお互いの相性まで見るのが嫌だったので`biome.json`1つと`biome check --write`1コマンドに寄せました。Rust製で速いので`check`のスクリプトに型チェックと並べて入れても気になりません。  
+Biomeを選んだのは、自分がきれい好きでライブラリが分散するのを嫌った面が大きいです。ライブラリは少ないにこしたことはないでしょう。mogiriの書き直し直後はESLint + Prettierだったのですが、lintとformatで別々のライブラリと設定ファイルを持って、しかもお互いの相性まで見るのが嫌だったので`biome.json`1つと`biome check --write`1コマンドに寄せました。Rust製で速いので`check`のスクリプトに型チェックと並べて入れても気になりません。  
 難点は先に書いた通り`.svelte`の`<script>`しか見ないことで、テンプレート側で使っている変数を未使用と判定するので、そこだけルールを切って使っています。
 
 CSSは長らくTailwind + daisyUIでした。立ち上げの段階では決め打ちでUIを作るのが楽で、カスタマイズしたくなったときはTailwindでそのまま手を入れやすい。最初は`class="btn btn-primary"`で済ませておいて、気に入らないところだけ`class="btn btn-primary rounded-full px-8"`とユーティリティを足す、という使い方をしていました。
@@ -145,7 +145,7 @@ bunのままだと何が困ったかというと、まずチューナーを取�
 
 ## AIに関して
 
-正直に書くとSmart QR Paymentの書き直しはほぼClaudeに書かせています。Django + Nuxtを読んで同じ画面フローをSvelteKitで作り直す、という作業です。人間がやったのは上に書いた判断と、出てきたものを触って直すことでした。
+正直に書くとmogiriの書き直しはほぼClaudeに書かせています。Django + Nuxtを読んで同じ画面フローをSvelteKitで作り直す、という作業です。人間がやったのは上に書いた判断と、出てきたものを触って直すことでした。
 
 1言語1プロセスで生成コードが読みやすい、という選択はこの前提があるから効いています。読めないものを大量に生成されても困るので、書く量が少なく構造が素直なSvelteを選んだのはAIに任せる範囲を広げるための判断でもあります。  
 この辺りの実感は[Slackの記事](https://doany.io/posts/slack-search-read/)の後半に書いています。
