@@ -2,9 +2,10 @@
 title: "postfixの導入とOP25Bの回避"
 zennEmoji: "📮"
 published: 2018-08-01
+updated: 2026-10-03
 description: "postfixの導入とOP25Bの回避"
 image: ""
-tags: ["Ubuntu", "postfix", "OP25B"]
+tags: ["Ubuntu", "Postfix", "OP25B", "メール"]
 category: "インフラ"
 draft: false
 ---
@@ -37,6 +38,10 @@ smtp_sasl_tls_security_options = noanonymous
 smtp_use_tls = yes
 smtp_tls_CApath = /etc/ssl/certs/ca-certificates.crt #ca証明書(お使いの環境によって違います)
 ```
+
+> [!NOTE]
+> 2026年10月追記 `smtp_use_tls`は廃止予定のパラメータになっていて、今は`smtp_tls_security_level`で指定します。`smtp_use_tls = yes`の代わりに`smtp_tls_security_level = may`(TLSを必須にするなら`encrypt`)と書いてください。[Postfix Replacements for Deprecated Features](https://www.postfix.org/DEPRECATION_README.html)  
+> また`smtp_tls_CApath`はディレクトリを指定するパラメータなので、上のように証明書ファイル(`ca-certificates.crt`)を指すなら`smtp_tls_CAfile`を使います。[postconf(5)](https://www.postfix.org/postconf.5.html#smtp_tls_CAfile)
 
 次に/etc/postfix/mailpassを作成下記の様に記述していく。
 

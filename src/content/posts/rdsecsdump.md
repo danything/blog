@@ -2,9 +2,10 @@
 title: "RDS+ECSで定期的にダンプをS3に保存してみる"
 zennEmoji: "🪣"
 published: 2019-10-31
+updated: 2026-10-03
 description: "RDS+ECSで定期的にダンプをS3に保存してみる"
 image: ""
-tags: ["S3", "RDS", "Docker", "ECS", "BitbucketPipelines"]
+tags: ["AWS", "ECS", "RDS", "S3", "Docker", "PostgreSQL", "Bitbucket Pipelines"]
 category: "インフラ"
 draft: false
 ---
@@ -106,7 +107,7 @@ pipelines:
           - docker
         script:
           # aws login
-          - eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
+          - aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_REGISTRY_URL%%/*}
           # docker
           - export BUILD_ID=$BITBUCKET_BRANCH_$BITBUCKET_COMMIT_$BITBUCKET_BUILD_NUMBER
           - docker build -t ${AWS_REGISTRY_URL}:$BUILD_ID -t ${AWS_REGISTRY_URL}:development .
@@ -138,14 +139,17 @@ pipelines:
           - echo "Registered ECS Task Definition:" "${TASK_VERSION}"
 ```
 
+> [!NOTE]
+> 2026年10月追記 ログインに使っていた`aws ecr get-login`はAWS CLI v2で削除されたので、`aws ecr get-login-password`を`docker login`に渡す形に書き換えました(v1でも1.17.10以降なら動きます)。[AWS CLI v2の変更点](https://docs.aws.amazon.com/cli/latest/userguide/cliv2-migration-changes.html#cliv2-migration-ecr-get-login)  
+> また`atlassian/pipelines-awscli`イメージは非推奨になっていて、[amazon/aws-cli](https://hub.docker.com/r/amazon/aws-cli)への移行が案内されています。[Docker Hub](https://hub.docker.com/r/atlassian/pipelines-awscli)
+
 Dockerfile は ECS でデプロイする用のコンテナ定義です下記の通り記述してください。  
 補足がある箇所は先ほどメモしたものから適宜いれてください。
 
 ```dockerfile
 FROM alpine
 
-RUN apk --no-cache add postgresql-client python3
-RUN pip3 install awscli
+RUN apk --no-cache add postgresql-client aws-cli
 ENV AWS_DEFAULT_REGION ap-northeast-1
 ENV AWS_ACCESS_KEY_ID {アクセスキーID}
 ENV AWS_SECRET_ACCESS_KEY {シークレットアクセスキー}
@@ -158,6 +162,9 @@ RUN chmod +x /root/docker-entrypoint.sh
 
 CMD ["/root/docker-entrypoint.sh"]
 ```
+
+> [!NOTE]
+> 2026年10月追記 最近のAlpineでは`pip3 install`でシステムのPythonにパッケージを入れられない(externally-managed-environment で止まる)ので、AWS CLIはAlpineのパッケージ([aws-cli](https://pkgs.alpinelinux.org/packages?name=aws-cli))から入れる形に直しました。
 
 docker-entrypoint.sh は docker 起動時に実行するコマンド群ですいわゆる cron の中身です。  
 補足がある箇所は先ほどメモしたものから適宜いれてください。  
@@ -206,6 +213,9 @@ AWS ECS 上でリポジトリオーナー名でクラスタが作成されてい
 ![ap-northeast-1.console.aws.amazon.com_ecs_home_region=ap-northeast-1.png](/static/images/blog/rdsecsdump10.webp)
 
 タスクのスケジューリングのタブを開き作成をクリック
+
+> [!NOTE]
+> 2026年10月追記 現在のECSコンソールでは画面が変わっています。定期実行はAmazon EventBridge Schedulerでスケジュールを作り、ターゲットにECSの`RunTask`を選ぶ形が案内されています。cron式もEventBridge Schedulerのものを使います。[Using Amazon EventBridge Scheduler to schedule Amazon ECS tasks](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/tasks-scheduled-eventbridge-scheduler.html)
 
 ![ap-northeast-1.console.aws.amazon.com_ecs_home_region=ap-northeast-1 (1).png](/static/images/blog/rdsecsdump11.webp)
 

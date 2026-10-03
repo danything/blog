@@ -4,7 +4,7 @@ zennEmoji: "🎬"
 published: 2018-12-18
 description: "hls.jsのレベル変更で躓いた件"
 image: ""
-tags: ["tech"]
+tags: ["HLS", "JavaScript", "jQuery"]
 category: "Web開発"
 draft: false
 ---

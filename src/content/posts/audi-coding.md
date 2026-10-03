@@ -4,7 +4,7 @@ zennEmoji: "🚗"
 published: 2020-07-08
 description: "アウディにてVCDSを用いて電装系の動作のカスタマイズ(俗にコーディングというらしい)を行ったので、手順やカスタマイズできる内容などを紹介していく。"
 image: ""
-tags: ["車"]
+tags: ["車", "Audi", "VCDS"]
 category: "車"
 draft: false
 ---
