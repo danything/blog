@@ -1,7 +1,7 @@
 import type { RemarkPlugin } from "@astrojs/markdown-remark";
-import { visit } from "unist-util-visit";
 import { VISUAL_FIXTURES } from "../constants/content-dir";
 import { h } from "./hast";
+import { visit } from "./visit";
 
 // 1 行まるごとがこの形のときだけカードにする。以前の remark-directive のように
 // : を含む記法全般は解釈しないので、本文中の「bun:sqlite」などを誤認しない。

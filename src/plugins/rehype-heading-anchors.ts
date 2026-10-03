@@ -1,6 +1,6 @@
 import type { RehypePlugin } from "@astrojs/markdown-remark";
-import { SKIP, visit } from "unist-util-visit";
 import { h } from "./hast";
+import { SKIP, visit } from "./visit";
 
 const HEADING = /^h[1-6]$/;
 
