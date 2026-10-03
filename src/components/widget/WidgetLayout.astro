@@ -15,25 +15,76 @@ const { id, name, isCollapsed, collapsedHeight, style } = Astro.props;
 const className = Astro.props.class;
 const lang = langFromPath(Astro.url.pathname);
 ---
-<widget-layout data-id={id} data-is-collapsed={String(isCollapsed)} class={"pb-4 card-base " + className} style={style}>
-    <div class="font-bold transition text-lg text-neutral-900 dark:text-neutral-100 relative ml-8 mt-4 mb-2
-        before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
-        before:absolute before:left-[-16px] before:top-[5.5px]">{name}</div>
-    <div id={id} class:list={["collapse-wrapper px-4 overflow-hidden", {"collapsed": isCollapsed}]}>
+<widget-layout data-id={id} data-is-collapsed={String(isCollapsed)} class:list={["card-base widget", className]} style={style}>
+    <div class="widget-title">{name}</div>
+    <div id={id} class:list={["collapse-wrapper", {"collapsed": isCollapsed}]}>
         <slot></slot>
     </div>
-    {isCollapsed && <div class="expand-btn px-4 -mb-2">
-        <button class="btn-plain rounded-lg w-full h-9">
-            <div class="text-[var(--primary)] flex items-center justify-center gap-2 -translate-x-2">
-                <Icon name="lucide:ellipsis" class="text-[1.75rem]"></Icon> {i18n(I18nKey.more, lang)}
+    {isCollapsed && <div class="expand-btn">
+        <button class="btn-plain">
+            <div class="expand-label">
+                <Icon name="lucide:ellipsis" class="expand-icon"></Icon> {i18n(I18nKey.more, lang)}
             </div>
         </button>
     </div>}
 </widget-layout>
 
 <style define:vars={{ collapsedHeight }}>
+    .widget {
+        padding-bottom: 1rem;
+    }
+    /* 見出しの左の縦線は ::before で描く */
+    .widget-title {
+        position: relative;
+        margin: 1rem 0 0.5rem 2rem;
+        font-size: var(--text-lg);
+        line-height: var(--text-lg-lh);
+        font-weight: 700;
+        color: var(--neutral-900);
+        transition: var(--transition);
+
+        :global(.dark) & {
+            color: var(--neutral-100);
+        }
+        &::before {
+            content: "";
+            position: absolute;
+            top: 5.5px;
+            left: -16px;
+            width: 0.25rem;
+            height: 1rem;
+            border-radius: 0.375rem;
+            background-color: var(--primary);
+        }
+    }
+    .collapse-wrapper {
+        padding-inline: 1rem;
+        overflow: hidden;
+    }
+    /* 長いときは「もっと見る」を押すまで縮めておく */
     .collapsed {
         height: var(--collapsedHeight);
+    }
+    .expand-btn {
+        margin-bottom: -0.5rem;
+        padding-inline: 1rem;
+
+        button {
+            width: 100%;
+            height: 2.25rem;
+            border-radius: 0.5rem;
+        }
+    }
+    .expand-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        color: var(--primary);
+        translate: -0.5rem;
+    }
+    .expand-icon {
+        font-size: 1.75rem;
     }
 </style>
 
@@ -46,11 +97,11 @@ const lang = langFromPath(Astro.url.pathname);
                 return;
 
             const id = this.dataset.id;
-            const btn = this.querySelector('.expand-btn');
+            const btn = this.querySelector<HTMLElement>('.expand-btn');
             const wrapper = this.querySelector(`#${id}`)
             btn!.addEventListener('click', () => {
                 wrapper!.classList.remove('collapsed');
-                btn!.classList.add('hidden');
+                btn!.hidden = true;
             })
         }
     }

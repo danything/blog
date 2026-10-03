@@ -1,0 +1,147 @@
+/* ブラウザの既定のスタイルを打ち消す(Tailwind の Preflight と同じもの。使わない部品の分は省いた)。
+ * main.css で reset の層に入れるので、ほかのどの規則よりも弱い */
+*,
+::before,
+::after,
+::backdrop {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: 0 solid oklch(0.928 0.006 264.531);
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	tab-size: 4;
+	line-height: 1.5;
+	font-family: var(--font-sans);
+	-webkit-tap-highlight-color: transparent;
+}
+
+hr {
+	height: 0;
+	color: inherit;
+	border-top-width: 1px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-size: inherit;
+	font-weight: inherit;
+}
+
+a {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+b,
+strong {
+	font-weight: bolder;
+}
+
+code,
+kbd,
+samp,
+pre {
+	font-family: var(--font-mono);
+	font-size: 1em;
+}
+
+small {
+	font-size: 80%;
+}
+
+sub,
+sup {
+	position: relative;
+	vertical-align: baseline;
+	font-size: 75%;
+	line-height: 0;
+}
+sub {
+	bottom: -0.25em;
+}
+sup {
+	top: -0.5em;
+}
+
+table {
+	text-indent: 0;
+	border-color: inherit;
+	border-collapse: collapse;
+}
+/* 表のセルはブラウザの既定の余白(1px)を残す */
+td,
+th {
+	padding: 1px;
+}
+
+summary {
+	display: list-item;
+}
+
+:-moz-focusring:where(:not(iframe)) {
+	outline: auto;
+}
+
+ol,
+ul,
+menu {
+	list-style: none;
+}
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+	display: block;
+	vertical-align: middle;
+}
+img,
+video {
+	max-width: 100%;
+	height: auto;
+}
+
+button,
+input,
+select,
+optgroup,
+textarea {
+	font: inherit;
+	font-feature-settings: inherit;
+	font-variation-settings: inherit;
+	letter-spacing: inherit;
+	color: inherit;
+	opacity: 1;
+	background-color: transparent;
+	border-radius: 0;
+}
+textarea {
+	resize: vertical;
+}
+button,
+input:where([type="button"], [type="reset"], [type="submit"]) {
+	appearance: button;
+}
+button:not(:disabled),
+[role="button"]:not(:disabled) {
+	cursor: pointer;
+}
+::placeholder {
+	opacity: 1;
+	color: oklch(0.707 0.022 261.325);
+}
+
+[hidden]:where(:not([hidden="until-found"])) {
+	display: none !important;
+}

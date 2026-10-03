@@ -12,33 +12,88 @@ interface Props {
 	class: string;
 }
 
-const { title, pubDate } = Astro.props;
-const className = Astro.props.class;
+// 呼び出し元の <style> が効くよう、残りの属性(data-astro-cid-*)も外側の要素に付ける
+const { title, pubDate, slug: _slug, class: className, ...rest } = Astro.props;
 const profileConf = profileConfig;
 const licenseConf = licenseConfig;
 const postUrl = decodeURIComponent(Astro.url.toString());
 const lang = langFromPath(Astro.url.pathname);
 ---
-<div class={`relative transition overflow-hidden bg-[var(--license-block-bg)] py-5 px-6 ${className}`}>
-    <div class="transition font-bold text-black/75 dark:text-white/75">
+<div class:list={["license", className]} {...rest}>
+    <div class="title">
         {title}
     </div>
-    <a href={postUrl} class="link text-[var(--primary)]">
+    <a href={postUrl} class="link">
         {postUrl}
     </a>
-    <div class="flex gap-6 mt-2">
+    <div class="details">
         <div>
-            <div class="transition text-30 text-sm">{i18n(I18nKey.author, lang)}</div>
-            <div class="transition text-black/75 dark:text-white/75 line-clamp-2">{profileConf.name}</div>
+            <div class="label">{i18n(I18nKey.author, lang)}</div>
+            <div class="value">{profileConf.name}</div>
         </div>
         <div>
-            <div class="transition text-30 text-sm">{i18n(I18nKey.publishedAt, lang)}</div>
-            <div class="transition text-black/75 dark:text-white/75 line-clamp-2">{formatDateToYYYYMMDD(pubDate)}</div>
+            <div class="label">{i18n(I18nKey.publishedAt, lang)}</div>
+            <div class="value">{formatDateToYYYYMMDD(pubDate)}</div>
         </div>
         <div>
-            <div class="transition text-30 text-sm">{i18n(I18nKey.license, lang)}</div>
-            <a href={licenseConf.url} target="_blank" class="link text-[var(--primary)] line-clamp-2">{licenseConf.name}</a>
+            <div class="label">{i18n(I18nKey.license, lang)}</div>
+            <a href={licenseConf.url} target="_blank" class="link value-link">{licenseConf.name}</a>
         </div>
     </div>
-    <Icon name="simple-icons:creativecommons" class="transition text-[15rem] absolute pointer-events-none right-6 top-1/2 -translate-y-1/2 text-black/5 dark:text-white/5"></Icon>
+    <Icon name="simple-icons:creativecommons" class="cc-icon"></Icon>
 </div>
+
+<style>
+    .license {
+        position: relative;
+        padding: 1.25rem 1.5rem;
+        overflow: hidden;
+        background-color: var(--license-block-bg);
+        transition: var(--transition);
+    }
+    .title {
+        font-weight: 700;
+        color: var(--text-75);
+        transition: var(--transition);
+    }
+    .link {
+        color: var(--primary);
+    }
+    .details {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 0.5rem;
+    }
+    .label {
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+        color: var(--text-30);
+        transition: var(--transition);
+    }
+    .value,
+    .value-link {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+    .value {
+        color: var(--text-75);
+        transition: var(--transition);
+    }
+    /* 右に大きく薄く出す CC のマーク */
+    .cc-icon {
+        position: absolute;
+        top: 50%;
+        right: 1.5rem;
+        font-size: 15rem;
+        color: color-mix(in oklab, var(--black) 5%, transparent);
+        translate: 0 -50%;
+        pointer-events: none;
+        transition: var(--transition);
+
+        :global(.dark) & {
+            color: color-mix(in oklab, var(--white) 5%, transparent);
+        }
+    }
+</style>

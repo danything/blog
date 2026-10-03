@@ -32,51 +32,170 @@ let links: NavBarLink[] = navBarConfig.links.map(
 	},
 );
 ---
-<div id="navbar" class="z-50 onload-animation">
-    <div class="absolute h-8 left-0 right-0 -top-8 bg-[var(--card-bg)] transition"></div> <!-- used for onload animation -->
-    <div class:list={[
-        className,
-        "card-base !overflow-visible max-w-[var(--page-width)] h-[4.5rem] !rounded-t-none mx-auto flex items-center justify-between px-4"]}>
-        <a href={localeUrl('/', lang)} class="btn-plain scale-animation rounded-lg h-[3.25rem] px-5 font-bold active:scale-95">
-            <div class="flex flex-row text-[var(--primary)] items-center text-md">
-                <Icon name="lucide:house" class="text-[1.75rem] mb-1 mr-2" />
+<div id="navbar" class="onload-animation">
+    <div class="navbar-top"></div> <!-- used for onload animation -->
+    <div class:list={[className, "card-base navbar-card"]}>
+        <a href={localeUrl('/', lang)} class="btn-plain scale-animation home-link">
+            <div class="home-link-inner">
+                <Icon name="lucide:house" class="home-icon" />
                 {siteConfig.title}
             </div>
         </a>
-        <div class="hidden md:flex">
+        <div class="nav-links">
             {links.map((l) => {
                 return <a aria-label={l.name} href={l.external ? l.url : localeUrl(l.url, lang)} target={l.external ? "_blank" : null}
-                          class="btn-plain scale-animation rounded-lg h-11 font-bold px-5 active:scale-95"
+                          class="btn-plain scale-animation nav-link"
                 >
-                    <div class="flex items-center">
+                    <div class="nav-link-inner">
                         {l.name}
-                        {l.external && <Icon name="lucide:external-link" class="text-[0.875rem] transition -translate-y-[1px] ml-1 text-black/[0.2] dark:text-white/[0.2]"></Icon>}
+                        {l.external && <Icon name="lucide:external-link" class="external-icon"></Icon>}
                     </div>
                 </a>;
             })}
         </div>
-        <div class="flex">
+        <div class="nav-buttons">
             <Search lang={lang} />
             <a href={switchUrl} hreflang={otherLang} lang={otherLang}
                aria-label={i18n(I18nKey.switchLanguage, lang)} title={i18n(I18nKey.switchLanguage, lang)}
-               class="btn-plain scale-animation rounded-lg h-11 px-3 gap-1 font-bold text-sm active:scale-90">
-                <Icon name="lucide:languages" class="text-[1.25rem]"></Icon>
-                <span class="hidden sm:inline">{i18n(I18nKey.otherLanguage, lang)}</span>
+               class="btn-plain scale-animation lang-switch">
+                <Icon name="lucide:languages" class="nav-icon"></Icon>
+                <span class="lang-label">{i18n(I18nKey.otherLanguage, lang)}</span>
             </a>
             {!siteConfig.themeColor.fixed && (
-                    <button aria-label="Display Settings" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="display-settings-switch">
-                        <Icon name="lucide:palette" class="text-[1.25rem]"></Icon>
+                    <button aria-label="Display Settings" class="btn-plain scale-animation nav-button" id="display-settings-switch">
+                        <Icon name="lucide:palette" class="nav-icon"></Icon>
                     </button>
             )}
             <LightDarkSwitch lang={lang} />
-            <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 md:!hidden" id="nav-menu-switch">
-                <Icon name="lucide:menu" class="text-[1.25rem]"></Icon>
+            <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation nav-button" id="nav-menu-switch">
+                <Icon name="lucide:menu" class="nav-icon"></Icon>
             </button>
         </div>
         <NavMenuPanel links={links} lang={lang}></NavMenuPanel>
         <DisplaySettings lang={lang} />
     </div>
 </div>
+
+<style>
+    #navbar {
+        z-index: 50;
+    }
+    /* 上から入ってくる動きのときに、カードの上にすき間が見えないように */
+    .navbar-top {
+        position: absolute;
+        top: -2rem;
+        left: 0;
+        right: 0;
+        height: 2rem;
+        background-color: var(--card-bg);
+        transition: var(--transition);
+    }
+    .navbar-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: var(--page-width);
+        height: 4.5rem;
+        margin-inline: auto;
+        padding-inline: 1rem;
+        overflow: visible;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    .home-link {
+        height: 3.25rem;
+        padding-inline: 1.25rem;
+        border-radius: 0.5rem;
+        font-weight: 700;
+
+        &:active {
+            scale: 0.95;
+        }
+    }
+    .home-link-inner {
+        display: flex;
+        align-items: center;
+        color: var(--primary);
+    }
+    .home-icon {
+        margin-right: 0.5rem;
+        margin-bottom: 0.25rem;
+        font-size: 1.75rem;
+    }
+    .nav-links {
+        display: none;
+
+        @media (width >= 48rem) {
+            display: flex;
+        }
+    }
+    .nav-link {
+        height: 2.75rem;
+        padding-inline: 1.25rem;
+        border-radius: 0.5rem;
+        font-weight: 700;
+
+        &:active {
+            scale: 0.95;
+        }
+    }
+    .nav-link-inner {
+        display: flex;
+        align-items: center;
+    }
+    .external-icon {
+        margin-left: 0.25rem;
+        font-size: 0.875rem;
+        color: color-mix(in oklab, var(--black) 20%, transparent);
+        translate: 0 -1px;
+        transition: var(--transition);
+
+        :global(.dark) & {
+            color: color-mix(in oklab, var(--white) 20%, transparent);
+        }
+    }
+    .nav-buttons {
+        display: flex;
+    }
+    /* 右側のアイコンのボタン */
+    .nav-button {
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 0.5rem;
+
+        &:active {
+            scale: 0.9;
+        }
+    }
+    .nav-icon {
+        font-size: 1.25rem;
+    }
+    .lang-switch {
+        height: 2.75rem;
+        gap: 0.25rem;
+        padding-inline: 0.75rem;
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+        font-weight: 700;
+        border-radius: 0.5rem;
+
+        &:active {
+            scale: 0.9;
+        }
+    }
+    .lang-label {
+        display: none;
+
+        @media (width >= 40rem) {
+            display: inline;
+        }
+    }
+    #nav-menu-switch {
+        @media (width >= 48rem) {
+            display: none;
+        }
+    }
+</style>
 
 <script>
 document.getElementById("display-settings-switch")?.addEventListener("click", (e) => {

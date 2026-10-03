@@ -1,0 +1,42 @@
+/* ページ全体の土台(main.css で base の層に入れる) */
+html {
+	font-size: 14px;
+	background-color: var(--page-bg);
+	transition: var(--transition);
+
+	@media (width >= 768px) {
+		font-size: 16px;
+	}
+}
+
+body {
+	min-height: 100vh;
+	transition: var(--transition);
+}
+
+/* 文字の色はテーマの切り替えでなめらかに変える */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+span,
+li,
+ul,
+ol,
+blockquote,
+code,
+pre,
+table,
+th,
+td,
+strong {
+	transition: var(--transition);
+}
+
+::selection {
+	background-color: var(--selection-bg);
+}

@@ -4,7 +4,6 @@ import { rehypeHeadingIds, unified } from "@astrojs/markdown-remark";
 import sitemap from "@astrojs/sitemap";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
-import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import { parsePost } from "./scripts/frontmatter";
@@ -18,6 +17,7 @@ import { remarkExcerpt } from "./src/plugins/remark-excerpt";
 import { remarkGithubCard } from "./src/plugins/remark-github-card";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time";
 import { remarkSectionize } from "./src/plugins/remark-sectionize";
+import { cssIcons } from "./src/styles/icons-plugin";
 
 // サイトマップの lastmod 用に、記事ごとの最終更新日(updated があればそれ、無ければ published)を集める。
 // 設定ファイルでは astro:content を使えないので、フロントマターを直接読む
@@ -139,8 +139,10 @@ export default defineConfig({
 		}),
 	},
 	vite: {
-		plugins: [tailwindcss()],
+		plugins: [cssIcons()],
 		build: {
+			// CSS の入れ子(nesting)などを、対応していないブラウザ向けに平らに直す(Tailwind 4 と同じ対応範囲)
+			cssTarget: ["chrome111", "safari16.4", "firefox128"],
 			rollupOptions: {
 				onwarn(warning, warn) {
 					// temporarily suppress this warning

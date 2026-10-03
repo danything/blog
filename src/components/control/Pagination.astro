@@ -10,11 +10,10 @@ interface Props {
 	style?: string;
 }
 
-const { page, style } = Astro.props;
+// 呼び出し元の <style> が効くよう、残りの属性(data-astro-cid-*)も外側の要素に付ける
+const { page, class: className, ...rest } = Astro.props;
 
 const HIDDEN = -1;
-
-const className = Astro.props.class;
 
 const ADJ_DIST = 2;
 const VISIBLE = ADJ_DIST * 2 + 1;
@@ -50,34 +49,82 @@ const lang = langFromPath(Astro.url.pathname);
 const getPageUrl = (p: number) => localeUrl(p === 1 ? "/" : `/${p}/`, lang);
 ---
 
-<div class:list={[className, "flex flex-row gap-3 justify-center"]} style={style}>
+<div class:list={[className, "pagination"]} {...rest}>
     <a href={page.url.prev ?? undefined} aria-label={page.url.prev ? "Previous Page" : null}
-       class:list={["btn-card overflow-hidden rounded-lg text-[var(--primary)] w-11 h-11",
-           {"disabled": page.url.prev == undefined}
-       ]}
+       class:list={["btn-card arrow", {"disabled": page.url.prev == undefined}]}
     >
-        <Icon name="lucide:chevron-left" class="text-[1.75rem]"></Icon>
+        <Icon name="lucide:chevron-left" class="arrow-icon"></Icon>
     </a>
-    <div class="bg-[var(--card-bg)] flex flex-row rounded-lg items-center text-neutral-700 dark:text-neutral-300 font-bold">
+    <div class="pages">
         {pages.map((p) => {
             if (p == HIDDEN)
-                return <Icon name="lucide:ellipsis" class="mx-1"/>;
+                return <Icon name="lucide:ellipsis" class="ellipsis"/>;
             if (p == page.currentPage)
-                return <div class="h-11 w-11 rounded-lg bg-[var(--primary)] flex items-center justify-center
-                    font-bold text-white dark:text-black/70"
-                >
+                return <div class="current">
                     {p}
                 </div>
-            return <a href={getPageUrl(p)} aria-label={`Page ${p}`}
-                class="btn-card w-11 h-11 rounded-lg overflow-hidden active:scale-[0.85]"
+            return <a href={getPageUrl(p)} aria-label={`Page ${p}`} class="btn-card page"
             >{p}</a>
         })}
     </div>
     <a href={page.url.next ?? undefined} aria-label={page.url.next ? "Next Page" : null}
-       class:list={["btn-card overflow-hidden rounded-lg text-[var(--primary)] w-11 h-11",
-           {"disabled": page.url.next == undefined}
-       ]}
+       class:list={["btn-card arrow", {"disabled": page.url.next == undefined}]}
     >
-        <Icon name="lucide:chevron-right" class="text-[1.75rem]"></Icon>
+        <Icon name="lucide:chevron-right" class="arrow-icon"></Icon>
     </a>
 </div>
+
+<style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+    .arrow,
+    .page,
+    .current {
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 0.5rem;
+    }
+    .arrow,
+    .page {
+        overflow: hidden;
+    }
+    .arrow:not(.disabled) {
+        color: var(--primary);
+    }
+    .arrow-icon {
+        font-size: 1.75rem;
+    }
+    .pages {
+        display: flex;
+        align-items: center;
+        border-radius: 0.5rem;
+        background-color: var(--card-bg);
+        font-weight: 700;
+        color: var(--neutral-700);
+
+        :global(.dark) & {
+            color: var(--neutral-300);
+        }
+    }
+    .ellipsis {
+        margin-inline: 0.25rem;
+    }
+    .page:active {
+        scale: 0.85;
+    }
+    .current {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--primary);
+        font-weight: 700;
+        color: white;
+
+        :global(.dark) & {
+            color: color-mix(in oklab, var(--black) 70%, transparent);
+        }
+    }
+</style>

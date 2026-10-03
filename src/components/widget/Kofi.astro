@@ -18,7 +18,7 @@ const text = siteText(langFromPath(Astro.url.pathname)).kofi;
 ---
 {kofiConfig.enable && kofiConfig.username && (
 <WidgetLayout name={text.title} id="kofi" class={className} style={style}>
-    <div class="text-sm text-black/75 dark:text-white/75 transition mb-3">
+    <div class="description">
         {text.description}
     </div>
     <a
@@ -26,10 +26,32 @@ const text = siteText(langFromPath(Astro.url.pathname)).kofi;
         target="_blank"
         rel="noopener noreferrer"
         aria-label={text.buttonLabel}
-        class="btn-regular rounded-lg h-9 w-full text-sm font-bold flex items-center justify-center gap-2"
+        class="btn-regular kofi-button"
     >
-        <Icon name="simple-icons:kofi" class="text-[1.1rem]"></Icon>
+        <Icon name="simple-icons:kofi" class="kofi-icon"></Icon>
         {text.buttonLabel}
     </a>
 </WidgetLayout>
 )}
+
+<style>
+    .description {
+        margin-bottom: 0.75rem;
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+        color: var(--text-75);
+        transition: var(--transition);
+    }
+    .kofi-button {
+        gap: 0.5rem;
+        width: 100%;
+        height: 2.25rem;
+        border-radius: 0.5rem;
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+        font-weight: 700;
+    }
+    .kofi-icon {
+        font-size: 1.1rem;
+    }
+</style>

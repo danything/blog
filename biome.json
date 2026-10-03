@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**", "!**/src/**/*.css", "!public"]
+		"includes": ["**", "!public"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -49,6 +49,19 @@
 			"formatter": {
 				"indentStyle": "space",
 				"indentWidth": 2
+			}
+		},
+		{
+			"includes": ["**/*.css"],
+			"linter": {
+				"rules": {
+					"complexity": {
+						"noImportantStyles": "off"
+					},
+					"style": {
+						"noDescendingSpecificity": "off"
+					}
+				}
 			}
 		},
 		{

@@ -1,9 +1,10 @@
+/* コードブロック(Expressive Code)の調整。色や角丸は astro.config.ts の styleOverrides */
 .expressive-code {
-    .frame {
-        @apply !shadow-none;
-    }
+	.frame {
+		box-shadow: none !important;
+	}
 
-    .title {
-        font-family: var(--font-mono);
-    }
+	.title {
+		font-family: var(--font-mono);
+	}
 }

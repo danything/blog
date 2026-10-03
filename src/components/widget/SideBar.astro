@@ -12,14 +12,15 @@ interface Props {
 	headings?: MarkdownHeading[];
 }
 
-const className = Astro.props.class;
+// 呼び出し元の <style> が効くよう、残りの属性(data-astro-cid-*)も外側の要素に付ける
+const { class: className, headings: _headings, ...rest } = Astro.props;
 const lang = langFromPath(Astro.url.pathname);
 ---
-<div id="sidebar" class:list={[className, "w-full"]}>
-    <div class="flex flex-col w-full gap-4 mb-4">
+<div id="sidebar" class={className} {...rest}>
+    <div class="profile-area">
         <Profile></Profile>
     </div>
-    <div id="sidebar-sticky" class="transition-all duration-700 flex flex-col w-full gap-4 top-4 sticky top-4">
+    <div id="sidebar-sticky">
         <Categories class="onload-animation" style="animation-delay: 150ms"></Categories>
         <Tag class="onload-animation" style="animation-delay: 200ms"></Tag>
         <!-- ニュースレターは日本語の記事だけを送るので、英語版には出さない -->
@@ -27,3 +28,25 @@ const lang = langFromPath(Astro.url.pathname);
         <Kofi class="onload-animation" style="animation-delay: 300ms"></Kofi>
     </div>
 </div>
+
+<style>
+    #sidebar {
+        width: 100%;
+    }
+    .profile-area,
+    #sidebar-sticky {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+    }
+    .profile-area {
+        margin-bottom: 1rem;
+    }
+    /* プロフィールより下はスクロールしても画面に残す */
+    #sidebar-sticky {
+        position: sticky;
+        top: 1rem;
+        transition: all 0.7s var(--ease);
+    }
+</style>

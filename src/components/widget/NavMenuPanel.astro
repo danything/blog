@@ -12,24 +12,73 @@ interface Props {
 const lang = Astro.props.lang;
 const links = Astro.props.links;
 ---
-<div id="nav-menu-panel" class:list={["float-panel float-panel-closed absolute fixed right-4 px-2 py-2"]}>
+<div id="nav-menu-panel" class="float-panel float-panel-closed">
     {links.map((link) => (
-        <a href={link.external ? link.url : localeUrl(link.url, lang)} class="group flex justify-between items-center py-2 pl-3 pr-1 rounded-lg gap-8
-            hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)] transition
-        "
+        <a href={link.external ? link.url : localeUrl(link.url, lang)} class="menu-link"
            target={link.external ? "_blank" : null}
         >
-            <div class="transition text-black/75 dark:text-white/75 font-bold group-hover:text-[var(--primary)] group-active:text-[var(--primary)]">
+            <div class="menu-label">
                 {link.name}
             </div>
-            {!link.external && <Icon name="lucide:chevron-right"
-                  class="transition text-[1.25rem] text-[var(--primary)]"
-            >
-            </Icon>}
-            {link.external && <Icon name="lucide:external-link"
-                  class="transition text-[0.75rem] text-black/25 dark:text-white/25 -translate-x-1"
-            >
-            </Icon>}
+            {!link.external && <Icon name="lucide:chevron-right" class="chevron-icon"></Icon>}
+            {link.external && <Icon name="lucide:external-link" class="external-icon"></Icon>}
         </a>
     ))}
 </div>
+
+<style>
+    #nav-menu-panel {
+        position: fixed;
+        right: 1rem;
+        padding: 0.5rem;
+    }
+    .menu-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        padding: 0.5rem 0.25rem 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        transition: var(--transition);
+
+        @media (hover: hover) {
+            &:hover {
+                background-color: var(--btn-plain-bg-hover);
+            }
+        }
+        &:active {
+            background-color: var(--btn-plain-bg-active);
+        }
+    }
+    /* 文字の色を変えるのはライトモードだけ(ダークモードでは変えない) */
+    :global(:root:not(.dark)) .menu-link {
+        @media (hover: hover) {
+            &:hover .menu-label {
+                color: var(--primary);
+            }
+        }
+        &:active .menu-label {
+            color: var(--primary);
+        }
+    }
+    .menu-label {
+        font-weight: 700;
+        color: var(--text-75);
+        transition: var(--transition);
+    }
+    .chevron-icon {
+        font-size: 1.25rem;
+        color: var(--primary);
+        transition: var(--transition);
+    }
+    .external-icon {
+        font-size: 0.75rem;
+        color: color-mix(in oklab, var(--black) 25%, transparent);
+        translate: -0.25rem;
+        transition: var(--transition);
+
+        :global(.dark) & {
+            color: color-mix(in oklab, var(--white) 25%, transparent);
+        }
+    }
+</style>

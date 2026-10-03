@@ -32,32 +32,115 @@ let heading1Count = 1;
 const maxLevel = siteConfig.toc.depth;
 ---
 {isPostsRoute &&
-<table-of-contents class:list={[className, "group"]}>
+<table-of-contents class={className}>
     {headings.filter((heading) => heading.depth < minDepth + maxLevel).map((heading) =>
-            <a href={`#${heading.slug}`} class="px-2 flex gap-2 relative transition w-full min-h-9 rounded-xl
-        hover:bg-[var(--toc-btn-hover)] active:bg-[var(--toc-btn-active)] py-2
-    ">
-                <div class:list={["transition w-5 h-5 shrink-0 rounded-lg text-xs flex items-center justify-center font-bold",
-                    {
-                        "bg-[var(--toc-badge-bg)] text-[var(--btn-content)]": heading.depth == minDepth,
-                        "ml-4": heading.depth == minDepth + 1,
-                        "ml-8": heading.depth == minDepth + 2,
-                    }
-                ]}
+            <a href={`#${heading.slug}`} class="entry">
+                <div class:list={["marker", {
+                    "level-1": heading.depth == minDepth,
+                    "level-2": heading.depth == minDepth + 1,
+                    "level-3": heading.depth == minDepth + 2,
+                }]}
                 >
                     {heading.depth == minDepth && heading1Count++}
-                    {heading.depth == minDepth + 1 && <div class="transition w-2 h-2 rounded-[0.1875rem] bg-[var(--toc-badge-bg)]"></div>}
-                    {heading.depth == minDepth + 2 && <div class="transition w-1.5 h-1.5 rounded-xs bg-black/5 dark:bg-white/10"></div>}
+                    {heading.depth == minDepth + 1 && <div class="dot-2"></div>}
+                    {heading.depth == minDepth + 2 && <div class="dot-3"></div>}
                 </div>
-                <div class:list={["transition text-sm", {
-                    "text-50": heading.depth == minDepth || heading.depth == minDepth + 1,
-                    "text-30": heading.depth == minDepth + 2,
-                }]}>{removeTailingHash(heading.text)}</div>
+                <div class:list={["text", { "text-deep": heading.depth == minDepth + 2 }]}>{removeTailingHash(heading.text)}</div>
             </a>
     )}
-    <div id="active-indicator" style="opacity: 0" class:list={[{'hidden': headings.length == 0}, "-z-10 absolute bg-[var(--toc-btn-hover)] left-0 right-0 rounded-xl transition-all " +
-        "group-hover:bg-transparent border-2 border-[var(--toc-btn-hover)] group-hover:border-[var(--toc-btn-active)] border-dashed"]}></div>
+    <div id="active-indicator" style="opacity: 0" hidden={headings.length == 0}></div>
 </table-of-contents>}
+
+<style>
+    .entry {
+        position: relative;
+        display: flex;
+        gap: 0.5rem;
+        width: 100%;
+        min-height: 2.25rem;
+        padding: 0.5rem;
+        border-radius: 0.75rem;
+        transition: var(--transition);
+
+        @media (hover: hover) {
+            &:hover {
+                background-color: var(--toc-btn-hover);
+            }
+        }
+        &:active {
+            background-color: var(--toc-btn-active);
+        }
+    }
+    /* 見出しの左の印。いちばん上の階層は番号、その下は点 */
+    .marker {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 0.5rem;
+        font-size: var(--text-xs);
+        line-height: var(--text-xs-lh);
+        font-weight: 700;
+        transition: var(--transition);
+    }
+    .level-1 {
+        background-color: var(--toc-badge-bg);
+        color: var(--btn-content);
+    }
+    .level-2 {
+        margin-left: 1rem;
+    }
+    .level-3 {
+        margin-left: 2rem;
+    }
+    .dot-2 {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 0.1875rem;
+        background-color: var(--toc-badge-bg);
+        transition: var(--transition);
+    }
+    .dot-3 {
+        width: 0.375rem;
+        height: 0.375rem;
+        border-radius: 0.125rem;
+        background-color: color-mix(in oklab, var(--black) 5%, transparent);
+        transition: var(--transition);
+
+        :global(.dark) & {
+            background-color: color-mix(in oklab, var(--white) 10%, transparent);
+        }
+    }
+    .text {
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+        color: var(--text-50);
+        transition: var(--transition);
+
+        &.text-deep {
+            color: var(--text-30);
+        }
+    }
+    /* 画面に出ている見出しの範囲を囲む枠(下のスクリプトが位置と高さを決める) */
+    #active-indicator {
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: -10;
+        border: 2px dashed var(--toc-btn-hover);
+        border-radius: 0.75rem;
+        background-color: var(--toc-btn-hover);
+        transition: all 0.15s var(--ease);
+    }
+    @media (hover: hover) {
+        table-of-contents:hover #active-indicator {
+            background-color: transparent;
+            border-color: var(--toc-btn-active);
+        }
+    }
+</style>
 
 <script>
 class TableOfContents extends HTMLElement {
@@ -200,7 +283,7 @@ class TableOfContents extends HTMLElement {
 
     connectedCallback() {
         // wait for the onload animation to finish, which makes the `getBoundingClientRect` return correct values
-        const element = document.querySelector('.prose');
+        const element = document.querySelector('.custom-md');
         if (element) {
             element.addEventListener('animationend', () => {
                 this.init();

@@ -137,8 +137,27 @@ bun scripts/translate-status.ts --hash <原文>   # sourceHash に書く値
 新しいアイコンは https://icon-sets.iconify.design/lucide/ か https://icon-sets.iconify.design/simple-icons/ で探し、名前を書くだけで使える
 (取り込みの手順は無い。無い名前を書くとビルドが止まる)。読み込みは `src/utils/icons.ts`、セットの更新は Renovate が PR にする。
 
-CSS の `mask-image` などで使うアイコン(注意書きの見出し・GitHub カード)は、`src/styles/` の CSS に `var(--icon-lucide-info)` のように
-書くと、Tailwind のプラグイン(`src/styles/icons-plugin.ts`)が `:root` にデータ URL の変数を足す。
+CSS の `mask-image` などで使うアイコン(注意書きの見出し・GitHub カード)は、CSS(`src/styles/` の CSS でも `.astro` の `<style>` でもよい)に
+`var(--icon-lucide-info)` のように書くと、Vite のプラグイン(`src/styles/icons-plugin.ts`)がその CSS に `:root` のデータ URL の変数を足す。
+
+## スタイル
+
+CSS フレームワークは使わず、素の CSS(入れ子・変数・`@layer`)で書いている。
+
+- コンポーネントの見た目は、それぞれの `.astro` の `<style>` に書く(Astro がそのコンポーネントの中だけに効くようにする)。
+  親の `<style>` で子コンポーネントの外側の要素を調整するときは、子が `class` と残りの属性(`data-astro-cid-*`)を外側の要素に付ける(`ImageWrapper.astro` など)
+- サイト全体のものは `src/styles/` に置き、`main.css`(`Layout.astro` で読み込む)から読む
+  - `variables.css`: 色・文字の大きさ・`--transition` などの変数
+  - `reset.css`: ブラウザの既定のスタイルの打ち消し
+  - `base.css`: `html`・`body` など
+  - `components.css`: いくつものコンポーネントで使う部品(`.card-base`・`.btn-plain`・`.btn-regular`・`.btn-card`・`.link`・`.float-panel` など)
+  - `typography.css`: 記事の本文の基本の組版(見出し・段落・リスト・表など)
+  - `markdown.css`・`markdown-extend.css`: 記事の本文の調整と、注意書き・GitHub カード。Markdown から作られた本文には `.astro` の `<style>` が効かないので、ここに書く
+  - `lightbox.css`(画像の拡大表示)・`transition.css`(読み込み時の動きとページ遷移)・`expressive-code.css`(コードブロック)・`scrollbar.css`
+- 優先順位は `@layer` で決めている。弱い順に `reset` → `base` → `components` → `typography` で、層に入れていない規則
+  (`variables.css`・`markdown.css` などと、各 `.astro` の `<style>`)は詳細度に関係なく層の中の規則に勝つ
+- ダークモードは `<html class="dark">`。`.astro` の `<style>` では `:global(.dark) & { ... }`、`src/styles/` では `.dark & { ... }` と書く
+- 画面の幅の区切りは `40rem`・`48rem`・`64rem`・`96rem`(`@media (width >= 48rem)` のように書く)
 
 ## 見た目のテスト
 

@@ -98,7 +98,7 @@ const bannerOffset =
 ---
 
 <!DOCTYPE html>
-<html lang={siteLang} class="bg-[var(--page-bg)] transition text-[14px] md:text-[16px]">
+<html lang={siteLang}>
 	<head>
 
 		<title>{pageTitle}</title>
@@ -191,7 +191,7 @@ const bannerOffset =
 		<link rel="alternate" type="application/rss+xml" title={text.profileName} href={new URL(localeUrl("/rss.xml", pageLang), Astro.site).href}/>
 
 	</head>
-	<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}>
+	<body class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}>
 		<ConfigCarrier></ConfigCarrier>
 		<slot />
 		<!-- 記事の画像の拡大表示(下のスクリプトと styles/lightbox.css) -->
@@ -201,10 +201,10 @@ const bannerOffset =
 			</div>
 			<div class="lightbox-toolbar">
 				<button type="button" class="lightbox-zoom" aria-pressed="false" aria-label={i18n(I18nKey.actualSize, pageLang)} hidden>
-					<Icon name="lucide:zoom-in" class="text-[24px] text-white" aria-hidden="true" />
+					<Icon name="lucide:zoom-in" class="lightbox-icon" aria-hidden="true" />
 				</button>
 				<button type="button" class="lightbox-close" aria-label={i18n(I18nKey.close, pageLang)} autofocus>
-					<Icon name="lucide:x" class="text-[24px] text-white" aria-hidden="true" />
+					<Icon name="lucide:x" class="lightbox-icon" aria-hidden="true" />
 				</button>
 			</div>
 		</dialog>
@@ -217,33 +217,31 @@ const bannerOffset =
 	'banner-height-home': `${BANNER_HEIGHT_HOME}vh`,
 	'banner-height': `${BANNER_HEIGHT}vh`,
 }}>
-@reference "../styles/main.css";
-@layer components {
-	.enable-banner.is-home #banner-wrapper {
-		@apply h-[var(--banner-height-home)] translate-y-[var(--banner-height-extend)]
+/* バナーを出すとき(siteConfig.banner.enable)の高さと位置。トップページはバナーを高くする */
+.enable-banner {
+	#banner-wrapper {
+		height: var(--banner-height-home);
 	}
-	.enable-banner #banner-wrapper {
-		@apply h-[var(--banner-height-home)]
+	#banner {
+		translate: 0 var(--bannerOffset);
 	}
-
-	.enable-banner.is-home #banner {
-		@apply h-[var(--banner-height-home)] translate-y-0
+	#top-row {
+		height: calc(var(--banner-height-home) - 4.5rem);
 	}
-	.enable-banner #banner {
-		@apply h-[var(--banner-height-home)] translate-y-[var(--bannerOffset)]
+	&.is-home {
+		#banner-wrapper,
+		#main-grid {
+			translate: 0 var(--banner-height-extend);
+		}
+		#banner {
+			translate: 0 0;
+		}
 	}
-	.enable-banner.is-home #main-grid {
-		@apply translate-y-[var(--banner-height-extend)];
-	}
-	.enable-banner #top-row {
-		@apply h-[calc(var(--banner-height-home)_-_4.5rem)] transition-all duration-300
-	}
-	.enable-banner.is-home #sidebar-sticky {
-		@apply top-[calc(1rem_-_var(--banner-height-extend))]
-	}
-	.navbar-hidden {
-		@apply opacity-0 -translate-y-16
-	}
+}
+/* 下へスクロールしたらナビゲーションバーを隠す(下のスクリプト) */
+.navbar-hidden {
+	opacity: 0;
+	translate: 0 -4rem;
 }
 </style>
 
@@ -288,7 +286,7 @@ setHue(getHue());
 
 function showBanner() {
 	if (!siteConfig.banner.enable) return;
-	document.getElementById('banner')?.classList.remove('opacity-0', 'scale-105');
+	document.getElementById('banner')?.classList.remove('banner-hidden');
 }
 
 function scrollFunction() {

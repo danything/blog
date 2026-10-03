@@ -1,114 +1,209 @@
+/* 記事の本文(.custom-md)のサイト独自の調整。typography.css の基本の組版より必ず強い(層の外) */
 .custom-md {
-    h1 {
-        @apply text-3xl;
-    }
+	h1 {
+		font-size: var(--text-3xl);
+		line-height: var(--text-3xl-lh);
+	}
 
-    h1, h2, h3, h4, h5, h6 {
-        .anchor {
-            @apply transition! -m-0.5! ml-[0.2ch]! p-0.5! select-none! opacity-0! no-underline!;
+	/* 見出しの横のリンク(src/plugins/rehype-heading-anchors.ts)。見出しにマウスを乗せると出る */
+	:is(h1, h2, h3, h4, h5, h6) .anchor {
+		margin: -0.125rem !important;
+		margin-left: 0.2ch !important;
+		padding: 0.125rem !important;
+		opacity: 0 !important;
+		text-decoration-line: none !important;
+		user-select: none !important;
+		transition: var(--transition) !important;
 
-            .anchor-icon {
-                @apply mx-[0.45ch]!;
-            }
-        }
+		.anchor-icon {
+			margin-inline: 0.45ch !important;
+		}
+	}
+	:is(h1, h2, h3, h4, h5, h6):hover .anchor {
+		opacity: 1 !important;
+	}
 
-        &:hover {
-            .anchor {
-                @apply opacity-100!;
-            }
-        }
-    }
+	/* リンク。点線の下線を引き、マウスを乗せると周りに背景が広がる(components.css の .link と同じ動き) */
+	a:not(.no-styling) {
+		position: relative;
+		z-index: 0;
+		display: inline-block;
+		margin: -0.25rem;
+		padding: 0.25rem;
+		border-radius: 0.375rem;
+		background-image: none;
+		font-weight: 500;
+		color: var(--primary);
+		text-decoration: underline dashed 1px var(--link-underline);
+		text-underline-offset: 4px;
+		box-decoration-break: clone;
+		transition: var(--transition);
 
-    /* main.css の @layer components にある .link / .expand-animation を
-       @apply で参照すると、このファイルが別の PostCSS パスで処理された場合に
-       「The `link` class does not exist」でビルドが落ちる。処理順に依存して
-       再現が不安定なため、素の Tailwind ユーティリティに展開してある。
-       main.css 側の .link を変更したときはここも合わせること。 */
-    a:not(.no-styling) {
-        @apply relative bg-none font-medium text-[var(--primary)]
-        transition rounded-md p-1 -m-1
-        before:ease-out before:transition active:bg-none hover:before:bg-[var(--btn-plain-bg-hover)] active:before:bg-[var(--btn-plain-bg-active)] z-0
-        before:absolute before:rounded-[inherit] before:inset-0 before:scale-[0.85] hover:before:scale-100 before:-z-10
-        underline decoration-[var(--link-underline)] decoration-1 decoration-dashed underline-offset-4;
-        box-decoration-break: clone;
-        -webkit-box-decoration-break: clone;
-        display: inline-block;
-    
-        &:hover, &:active {
-            @apply decoration-transparent;
-            background: var(--btn-plain-bg-hover);
-            border-bottom: 1px dashed var(--link-hover);
-            text-decoration: none;
-        }
-    }
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			z-index: -10;
+			border-radius: inherit;
+			scale: 0.85;
+			transition: var(--transition);
+			transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+		}
+		@media (hover: hover) {
+			&:hover::before {
+				scale: 1;
+				background-color: var(--btn-plain-bg-hover);
+			}
+		}
+		&:active::before {
+			background-color: var(--btn-plain-bg-active);
+		}
+		&:hover,
+		&:active {
+			background: var(--btn-plain-bg-hover);
+			border-bottom: 1px dashed var(--link-hover);
+			text-decoration: none;
+		}
+	}
 
-    code {
-        @apply bg-[var(--inline-code-bg)] text-[var(--inline-code-color)] px-1 py-0.5 rounded-md overflow-hidden;
+	/* 文中のコード(前後の ` は付けない) */
+	code {
+		padding: 0.125rem 0.25rem;
+		overflow: hidden;
+		border-radius: 0.375rem;
+		background-color: var(--inline-code-bg);
+		font-family: var(--font-mono);
+		color: var(--inline-code-color);
 
-        font-family: var(--font-mono);
-        &:before {
-            content:none;
-        }
-        &:after {
-            content:none;
-        }
-    }
+		&::before,
+		&::after {
+			content: none;
+		}
+	}
 
-    /* コードブロックのコピーボタン(src/plugins/expressive-code/custom-copy-button.ts) */
-    .copy-btn {
-        all: initial;
-        @apply flex items-center justify-center
-        bg-[oklch(0.45_0.01_var(--hue))] hover:bg-[oklch(0.50_0.01_var(--hue))] active:bg-[oklch(0.55_0.01_var(--hue))]
-        dark:bg-[oklch(0.30_0.02_var(--hue))] dark:hover:bg-[oklch(0.35_0.03_var(--hue))] dark:active:bg-[oklch(0.40_0.03_var(--hue))]
-        opacity-0 shadow-lg shadow-black/50 absolute active:scale-90 h-8 w-8 top-3 right-3 text-sm rounded-lg transition-all ease-in-out z-20 cursor-pointer;
-    }
-    .frame:hover .copy-btn {
-        opacity: 1;
-    }
+	/* コードブロックのコピーボタン(src/plugins/expressive-code/custom-copy-button.ts) */
+	.copy-btn {
+		all: initial;
+		position: absolute;
+		top: 0.75rem;
+		right: 0.75rem;
+		z-index: 20;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 0.5rem;
+		background-color: oklch(0.45 0.01 var(--hue));
+		box-shadow:
+			0 10px 15px -3px color-mix(in oklab, var(--black) 50%, transparent),
+			0 4px 6px -4px color-mix(in oklab, var(--black) 50%, transparent);
+		font-size: var(--text-sm);
+		line-height: var(--text-sm-lh);
+		opacity: 0;
+		cursor: pointer;
+		transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
-    .copy-btn-icon {
-        @apply absolute top-1/2 left-1/2 transition -translate-x-1/2 -translate-y-1/2 w-4 h-4 text-white pointer-events-none;
-    }
-    .copy-btn .copy-icon {
-        @apply opacity-100 text-white dark:text-white/75;
-    }
-    .copy-btn.success .copy-icon {
-        @apply opacity-0 text-[var(--deep-text)]
-    }
-    .copy-btn .success-icon {
-        @apply opacity-0 text-white;
-    }
-    .copy-btn.success .success-icon {
-        @apply opacity-100
-    }
+		@media (hover: hover) {
+			&:hover {
+				background-color: oklch(0.5 0.01 var(--hue));
+			}
+		}
+		&:active {
+			scale: 0.9;
+			background-color: oklch(0.55 0.01 var(--hue));
+		}
+		.dark & {
+			background-color: oklch(0.3 0.02 var(--hue));
 
-    .expressive-code {
-        @apply my-4;
-        ::selection {
-            @apply bg-[var(--codeblock-selection)];
-        }
-    }
+			@media (hover: hover) {
+				&:hover {
+					background-color: oklch(0.35 0.03 var(--hue));
+				}
+			}
+			&:active {
+				background-color: oklch(0.4 0.03 var(--hue));
+			}
+		}
+	}
+	.frame:hover .copy-btn {
+		opacity: 1;
+	}
+	.copy-btn-icon {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 1rem;
+		height: 1rem;
+		color: white;
+		translate: -50% -50%;
+		pointer-events: none;
+		transition: var(--transition);
+	}
+	.copy-btn .copy-icon {
+		opacity: 1;
+		color: white;
 
+		.dark & {
+			color: color-mix(in oklab, var(--white) 75%, transparent);
+		}
+	}
+	.copy-btn.success .copy-icon {
+		opacity: 0;
+		color: var(--deep-text);
+	}
+	.copy-btn .success-icon {
+		opacity: 0;
+		color: white;
+	}
+	.copy-btn.success .success-icon {
+		opacity: 1;
+	}
 
-    ul, ol {
-        li::marker {
-            @apply text-[var(--primary)];
-        }
-    }
+	.expressive-code {
+		margin-block: 1rem;
 
-    blockquote {
-        @apply not-italic border-transparent relative;
-        font-weight: inherit;
+		::selection {
+			background-color: var(--codeblock-selection);
+		}
+	}
 
-        &:before {
-            @apply content-[''] absolute -left-1 block transition bg-[var(--btn-regular-bg)] h-full w-1 rounded-full;
-        }
+	:is(ul, ol) li::marker {
+		color: var(--primary);
+	}
 
-        /* Remove the double quotes from default styles */
-        p:before, p:after {
-            @apply content-none;
-        }
+	/* 引用は斜体にせず、左の線は ::before で丸く描く */
+	blockquote {
+		position: relative;
+		border-color: transparent;
+		font-style: normal;
+		font-weight: inherit;
 
-    }
-    
+		&::before {
+			content: "";
+			position: absolute;
+			left: -0.25rem;
+			display: block;
+			width: 0.25rem;
+			height: 100%;
+			border-radius: calc(infinity * 1px);
+			background-color: var(--btn-regular-bg);
+			transition: var(--transition);
+		}
+
+		/* 前後の引用符は付けない */
+		p::before,
+		p::after {
+			content: none;
+		}
+	}
+
+	/* 画像は押すと拡大表示になる(Layout.astro のスクリプト) */
+	img {
+		cursor: zoom-in;
+	}
+}
+
+#post-cover img {
+	cursor: zoom-in;
 }

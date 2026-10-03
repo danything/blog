@@ -45,38 +45,29 @@ const jsonLd = {
 ---
 <MainGridLayout banner={entry.data.image} title={entry.data.title} description={entry.data.description} lang={entry.data.lang} setOGTypeArticle={true} ogImage={isTranslation ? `/og/en/${entry.id}.png` : `/og/${entry.id}.png`} headings={headings}>
     <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
-    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative mb-4">
-        <div id="post-container" class:list={["card-base z-10 px-6 md:px-9 pt-6 pb-4 relative w-full ",
-            {}
-        ]}>
+    <div class="post-card">
+        <div id="post-container" class="card-base">
             <!-- word count and reading time -->
-            <div class="flex flex-row text-30 gap-5 mb-3 transition onload-animation">
-                <div class="flex flex-row items-center">
-                    <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
+            <div class="stats onload-animation">
+                <div class="stat">
+                    <div class="stat-icon">
                         <Icon name="lucide:text"></Icon>
                     </div>
-                    <div class="text-sm">{remarkPluginFrontmatter.words} {" " + i18n(I18nKey.wordsCount, lang)}</div>
+                    <div class="stat-text">{remarkPluginFrontmatter.words} {" " + i18n(I18nKey.wordsCount, lang)}</div>
                 </div>
-                <div class="flex flex-row items-center">
-                    <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
+                <div class="stat">
+                    <div class="stat-icon">
                         <Icon name="lucide:clock"></Icon>
                     </div>
-                    <div class="text-sm">
+                    <div class="stat-text">
                         {remarkPluginFrontmatter.minutes} {" " + i18n(remarkPluginFrontmatter.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount, lang)}
                     </div>
                 </div>
             </div>
 
             <!-- title -->
-            <div class="relative onload-animation">
-                <div
-                    data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title"
-                    class="transition w-full block font-bold mb-3
-                    text-3xl md:text-[2.25rem]/[2.75rem]
-                    text-black/90 dark:text-white/90
-                    md:before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
-                    before:absolute before:top-[0.75rem] before:left-[-1.125rem]
-                ">
+            <div class="title-wrapper onload-animation">
+                <div data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title" class="title">
                     {entry.data.title}
                 </div>
             </div>
@@ -84,60 +75,61 @@ const jsonLd = {
             <!-- metadata -->
             <div class="onload-animation">
                 <PostMetadata
-                        class="mb-5"
+                        class="meta"
                         published={entry.data.published}
                         updated={entry.data.updated}
                         tags={entry.data.tags}
                         category={entry.data.category}
                 ></PostMetadata>
-                {!entry.data.image && <div class="border-[var(--line-divider)] border-dashed border-b-[1px] mb-5"></div>}
+                {!entry.data.image && <div class="meta-divider"></div>}
             </div>
 
             <!-- always show cover as long as it has one -->
 
             {entry.data.image &&
-                <ImageWrapper id="post-cover" src={entry.data.image} basePath={path.join(isTranslation ? "content/posts-en/" : "content/posts/", getDir(entry.id))} class="mb-8 rounded-xl banner-container onload-animation"/>
+                <ImageWrapper id="post-cover" src={entry.data.image} basePath={path.join(isTranslation ? "content/posts-en/" : "content/posts/", getDir(entry.id))} class="cover onload-animation"/>
             }
 
 
             {isTranslation && (
-                <div class="mb-6 rounded-xl bg-[var(--license-block-bg)] px-5 py-3 text-sm text-black/75 dark:text-white/75 transition onload-animation">
+                <div class="translated-notice onload-animation">
                     {i18n(I18nKey.translatedNotice, lang)}
-                    <a href={getPostUrlBySlug(entry.id, "ja")} hreflang="ja" class="link text-[var(--primary)] font-medium">{i18n(I18nKey.readOriginal, lang)}</a>
+                    <a href={getPostUrlBySlug(entry.id, "ja")} hreflang="ja" class="link">{i18n(I18nKey.readOriginal, lang)}</a>
                 </div>
             )}
 
-            <Markdown class="mb-6 markdown-content onload-animation">
+            <Markdown class="section onload-animation">
                 <Content />
             </Markdown>
 
-            {licenseConfig.enable && <License title={entry.data.title} slug={entry.id} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
+            {licenseConfig.enable && <License title={entry.data.title} slug={entry.id} pubDate={entry.data.published} class="section license onload-animation"></License>}
 
-            <Share title={entry.data.title} class="mb-6 onload-animation"></Share>
+            <Share title={entry.data.title} class="section onload-animation"></Share>
 
-            <KofiPostEnd class="mb-6 onload-animation"></KofiPostEnd>
+            <KofiPostEnd class="section onload-animation"></KofiPostEnd>
 
         </div>
     </div>
 
-    <div class="flex flex-col md:flex-row justify-between mb-4 gap-4 overflow-hidden w-full">
+    <!-- 前後の記事 -->
+    <div class="neighbors">
         <a href={entry.data.nextSlug ? getPostUrlBySlug(entry.data.nextSlug, lang) : undefined}
-           class:list={["w-full font-bold overflow-hidden active:scale-95", {"pointer-events-none": !entry.data.nextSlug}]}>
-            {entry.data.nextSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center !justify-start gap-4" >
-                <Icon name="lucide:chevron-left" class="text-[2rem] text-[var(--primary)]" />
-                <div class="overflow-hidden transition text-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
+           class:list={["neighbor", {"empty": !entry.data.nextSlug}]}>
+            {entry.data.nextSlug && <div class="btn-card neighbor-button">
+                <Icon name="lucide:chevron-left" class="neighbor-icon" />
+                <div class="neighbor-title">
                     {entry.data.nextTitle}
                 </div>
             </div>}
         </a>
 
         <a href={entry.data.prevSlug ? getPostUrlBySlug(entry.data.prevSlug, lang) : undefined}
-           class:list={["w-full font-bold overflow-hidden active:scale-95", {"pointer-events-none": !entry.data.prevSlug}]}>
-            {entry.data.prevSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center !justify-end gap-4">
-                <div class="overflow-hidden transition text-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
+           class:list={["neighbor", {"empty": !entry.data.prevSlug}]}>
+            {entry.data.prevSlug && <div class="btn-card neighbor-button next">
+                <div class="neighbor-title">
                     {entry.data.prevTitle}
                 </div>
-                <Icon name="lucide:chevron-right" class="text-[2rem] text-[var(--primary)]" />
+                <Icon name="lucide:chevron-right" class="neighbor-icon" />
             </div>}
         </a>
     </div>
@@ -145,3 +137,176 @@ const jsonLd = {
     <Comments />
 
 </MainGridLayout>
+
+<style>
+    .post-card {
+        position: relative;
+        display: flex;
+        width: 100%;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        border-radius: var(--radius-large);
+    }
+    #post-container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        padding: 1.5rem 1.5rem 1rem;
+
+        @media (width >= 48rem) {
+            padding-inline: 2.25rem;
+        }
+    }
+    .stats {
+        display: flex;
+        gap: 1.25rem;
+        margin-bottom: 0.75rem;
+        color: var(--text-30);
+        transition: var(--transition);
+    }
+    .stat {
+        display: flex;
+        align-items: center;
+    }
+    .stat-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-right: 0.5rem;
+        border-radius: 0.375rem;
+        background-color: color-mix(in oklab, var(--black) 5%, transparent);
+        color: color-mix(in oklab, var(--black) 50%, transparent);
+        transition: var(--transition);
+
+        :global(.dark) & {
+            background-color: color-mix(in oklab, var(--white) 10%, transparent);
+            color: color-mix(in oklab, var(--white) 50%, transparent);
+        }
+    }
+    .stat-text {
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+    }
+    .title-wrapper {
+        position: relative;
+    }
+    /* タイトルの左の縦線は ::before で描く(広い画面だけ幅を持たせる) */
+    .title {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.75rem;
+        font-size: var(--text-3xl);
+        line-height: var(--text-3xl-lh);
+        font-weight: 700;
+        color: color-mix(in oklab, var(--black) 90%, transparent);
+        transition: var(--transition);
+
+        :global(.dark) & {
+            color: color-mix(in oklab, var(--white) 90%, transparent);
+        }
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0.75rem;
+            left: -1.125rem;
+            height: 1.25rem;
+            border-radius: 0.375rem;
+            background-color: var(--primary);
+        }
+        @media (width >= 48rem) {
+            font-size: 2.25rem;
+            line-height: 2.75rem;
+
+            &::before {
+                width: 0.25rem;
+            }
+        }
+    }
+    .meta {
+        margin-bottom: 1.25rem;
+    }
+    .meta-divider {
+        margin-bottom: 1.25rem;
+        border-bottom-width: 1px;
+        border-style: dashed;
+        border-color: var(--line-divider);
+    }
+    .cover {
+        margin-bottom: 2rem;
+        border-radius: 0.75rem;
+    }
+    .translated-notice {
+        margin-bottom: 1.5rem;
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.75rem;
+        background-color: var(--license-block-bg);
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+        color: var(--text-75);
+        transition: var(--transition);
+
+        .link {
+            font-weight: 500;
+            color: var(--primary);
+        }
+    }
+    .section {
+        margin-bottom: 1.5rem;
+    }
+    .license {
+        border-radius: 0.75rem;
+    }
+
+    .neighbors {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 1rem;
+        width: 100%;
+        margin-bottom: 1rem;
+        overflow: hidden;
+
+        @media (width >= 48rem) {
+            flex-direction: row;
+        }
+    }
+    .neighbor {
+        width: 100%;
+        overflow: hidden;
+        font-weight: 700;
+
+        &:active {
+            scale: 0.95;
+        }
+        &.empty {
+            pointer-events: none;
+        }
+    }
+    .neighbor-button {
+        justify-content: flex-start;
+        gap: 1rem;
+        width: 100%;
+        max-width: 100%;
+        height: 3.75rem;
+        padding-inline: 1rem;
+        border-radius: 1rem;
+
+        &.next {
+            justify-content: flex-end;
+        }
+    }
+    .neighbor-icon {
+        font-size: 2rem;
+        color: var(--primary);
+    }
+    .neighbor-title {
+        max-width: calc(100% - 3rem);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--text-75);
+        transition: var(--transition);
+    }
+</style>
