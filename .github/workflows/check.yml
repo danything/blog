@@ -16,5 +16,5 @@ jobs:
       - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
-      # Biome の検査と型チェック(biome check . && astro check && tsc --noEmit)
+      # Biome の検査と型チェック(biome check . && astro check。astro check は .astro と tsconfig.json の include の .ts を調べる)
       - run: bun run lint

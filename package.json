@@ -4,16 +4,13 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev",
     "check": "astro check",
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
-    "type-check": "tsc --noEmit",
     "new-post": "bun scripts/new-post.ts",
     "zenn-sync": "bun scripts/zenn-sync.ts",
-    "format": "biome format --write .",
-    "lint": "biome check . && astro check && tsc --noEmit",
+    "lint": "biome check . && astro check",
     "lint:fix": "biome check --write .",
     "images": "bun scripts/images.ts"
   },
