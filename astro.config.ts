@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { unified } from "@astrojs/markdown-remark";
+import { rehypeHeadingIds, unified } from "@astrojs/markdown-remark";
 import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
@@ -9,7 +9,6 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeSlug from "rehype-slug";
 import remarkSectionize from "remark-sectionize";
 import { parsePost } from "./scripts/frontmatter";
 import { expressiveCodeConfig } from "./src/config";
@@ -134,7 +133,9 @@ export default defineConfig({
 				remarkSectionize,
 			],
 			rehypePlugins: [
-				rehypeSlug,
+				// 見出しの id は Astro が付けるが、それは利用者のプラグインの後なので、
+				// 見出しにリンクを足すプラグインより前にも同じものを入れておく(id が付いていれば Astro は付け直さない)
+				rehypeHeadingIds,
 				[
 					rehypeAutolinkHeadings,
 					{
