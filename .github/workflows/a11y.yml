@@ -1,0 +1,38 @@
+name: A11y Check
+
+# ビルドしたサイトを axe で調べ、WCAG 2.1 A/AA の違反(影響が serious・critical のもの)がないかを
+# 確かめる(tests/a11y.spec.ts)。違反があると失敗し、playwright-report として添付する。
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  a11y:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub カードの情報を取るため
+
+      - run: bunx playwright install --with-deps chromium
+
+      - name: アクセシビリティを調べる
+        run: |
+          (cd dist && python3 -m http.server 4321 --bind 127.0.0.1 &)
+          until curl -s -o /dev/null http://127.0.0.1:4321/; do sleep 1; done
+          BASE_URL=http://127.0.0.1:4321 bunx playwright test tests/a11y.spec.ts
+
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report

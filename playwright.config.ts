@@ -1,9 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 
-// 見た目の比較テスト(.github/workflows/visual.yml)。
-// 基準の画像はリポジトリに置かず、PR ごとに main のビルドで撮ってから PR のビルドと比べる:
-//   BASE_URL=<main のビルド> bunx playwright test --update-snapshots
-//   BASE_URL=<PR のビルド>   bunx playwright test
+// 見た目の比較テスト(.github/workflows/visual.yml)と、アクセシビリティの検査(a11y.yml)。
+// 見た目の比較では、基準の画像はリポジトリに置かず、PR ごとに main のビルドで撮ってから PR のビルドと比べる:
+//   BASE_URL=<main のビルド> bunx playwright test tests/visual.spec.ts --update-snapshots
+//   BASE_URL=<PR のビルド>   bunx playwright test tests/visual.spec.ts
 export default defineConfig({
 	testDir: "tests",
 	// test-results/ は実行のたびに消されるので、基準の画像は別の場所に置く
