@@ -109,6 +109,8 @@ TODO              text
 .htaccess         text
 *.lock            text -diff
 package-lock.json text -diff
+# bun.lock は人が読める形式なので、どのバージョンが変わったかを PR で確かめられるよう差分を出す
+bun.lock          text diff
 *.toml            text
 *.yaml            text
 *.yml             text
