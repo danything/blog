@@ -4,7 +4,7 @@ zennEmoji: "💻"
 published: 2019-01-11
 description: "GUIを入れたubuntuでネットワークが繋がらない"
 image: ""
-tags: ["Ubuntu", "networkmanager", "netplan"]
+tags: ["Ubuntu", "NetworkManager", "netplan"]
 category: "インフラ"
 draft: false
 ---

@@ -2,9 +2,10 @@
 title: "ubuntuのlxdが仮想ブリッジからネットワークにつながらない"
 zennEmoji: "🌉"
 published: 2019-09-20
+updated: 2026-10-03
 description: "ubuntuのlxdが仮想ブリッジからネットワークにつながらない"
 image: ""
-tags: ["lxc", "lxd", "netplan"]
+tags: ["Ubuntu", "LXD", "LXC", "netplan", "ufw"]
 category: "インフラ"
 draft: false
 ---
@@ -33,3 +34,12 @@ sudo ufw enable
 ```bash
 sudo ufw default allow routed
 ```
+
+> [!NOTE]
+> 2026年10月追記 現在のLXDの公式ドキュメントでは、ufwを使う場合はブリッジ単位で許可する方法が案内されています。`default allow routed`で全部許可するより範囲を絞れるので、こちらを先に試すのがいいと思います。`lxdbr0`の部分は使っているブリッジ名に置き換えてください。[How to configure your firewall](https://canonical.com/lxd/docs/latest/howto/network_bridge_firewalld/)
+>
+> ```bash
+> sudo ufw allow in on lxdbr0
+> sudo ufw route allow in on lxdbr0
+> sudo ufw route allow out on lxdbr0
+> ```

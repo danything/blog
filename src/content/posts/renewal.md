@@ -2,6 +2,7 @@
 title: "サイトをAstro + k3sで作り直した話"
 zennEmoji: "🧱"
 published: 2026-07-29
+updated: 2026-10-03
 description: "Next.jsで動かしていたこのブログをAstro製テーマFuwariに全面移行しました。ビルドから配信、コメント、購読まで現在の構成をひととおり書いておきます。コメントはgiscus、remark42、Artalkを経て、結局自分で書きました。"
 image: ""
 tags: ["Astro", "Caddy", "k3s", "Docker", "GitHub Actions", "Artalk", "yosegaki"]
@@ -29,6 +30,9 @@ k3s + Traefik（Let's Encrypt / DNS-01）→ Cloudflare → 読者
 ```
 
 サーバーサイドのアプリケーションは一切動いておらず、配信されているのは完全に静的なファイルだけです。
+
+> [!NOTE]
+> 2026年10月追記 その後パッケージマネージャをpnpmからBunに替えたので、ビルドは`bun run build`、ビルド用のイメージは`node:24-slim`ではなく`oven/bun`になっています。ページ遷移もSwupからAstro標準のClientRouterに置き換えました。それ以外の流れは変わっていません。最新の構成は[リポジトリ](https://github.com/DAnything/blog)を見てください。
 
 ## ビルド
 

@@ -4,7 +4,7 @@ zennEmoji: "🔓"
 published: 2024-05-25
 description: "NTG SSD化における私的メモ"
 image: ""
-tags: ["車"]
+tags: ["車", "Mercedes", "NTG"]
 category: "車"
 draft: false
 ---
