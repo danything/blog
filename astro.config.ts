@@ -93,7 +93,10 @@ export default defineConfig({
 					/^\/posts\/([^/]+)\/$/,
 				)?.[1];
 				const date = id && postLastmod.get(decodeURIComponent(id));
-				if (date) item.lastmod = new Date(date).toISOString();
+				// 日付として読めない値(簡易パーサなので行末コメントなど)なら付けない
+				const time = date ? new Date(date) : undefined;
+				if (time && !Number.isNaN(time.getTime()))
+					item.lastmod = time.toISOString();
 				return item;
 			},
 		}),
