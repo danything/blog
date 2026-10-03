@@ -177,14 +177,15 @@ function setup(root: HTMLElement) {
 		setPanelVisibility(result.length > 0, isDesktop);
 	};
 
-	// 空にしたときは検索し直さない(結果はそのまま残る)。入力欄にフォーカスし直すと閉じる
-	desktop.addEventListener("input", () => {
-		if (desktop.value) search(desktop.value, true);
-	});
+	// 空にしたときは検索し直さない(結果はそのまま残る)。入力欄にフォーカスし直すと閉じる。
+	// ただし途中の検索の結果は、遅れて返ってきても捨てる
+	const onInput = (input: HTMLInputElement, isDesktop: boolean) => () => {
+		if (input.value) search(input.value, isDesktop);
+		else latest++;
+	};
+	desktop.addEventListener("input", onInput(desktop, true));
 	desktop.addEventListener("focus", () => search(desktop.value, true));
-	mobile.addEventListener("input", () => {
-		if (mobile.value) search(mobile.value, false);
-	});
+	mobile.addEventListener("input", onInput(mobile, false));
 
 	root.querySelector("#search-switch")?.addEventListener("click", () => {
 		panel.classList.toggle("float-panel-closed");
