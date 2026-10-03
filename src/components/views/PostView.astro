@@ -3,6 +3,7 @@ import { render } from "astro:content";
 import path from "node:path";
 import Comments from "@components/Comments.astro";
 import Icon from "@components/misc/Icon.astro";
+import KofiPostEnd from "@components/misc/KofiPostEnd.astro";
 import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import Share from "@components/misc/Share.astro";
@@ -113,6 +114,8 @@ const jsonLd = {
             {licenseConfig.enable && <License title={entry.data.title} slug={entry.id} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
 
             <Share title={entry.data.title} class="mb-6 onload-animation"></Share>
+
+            <KofiPostEnd class="mb-6 onload-animation"></KofiPostEnd>
 
         </div>
     </div>
