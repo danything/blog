@@ -127,8 +127,7 @@ bun scripts/translate-status.ts --hash <原文>   # sourceHash に書く値
 
 ## アイコン
 
-使っているアイコンだけを `src/icons.json` に持ち、`src/components/misc/Icon.astro` で `<svg><use href="#icon-…"></use></svg>` として描く。
-アイコンの形(`<symbol>`)は、そのページで使っているものだけを `src/middleware.ts` が `</body>` の前に 1 回ずつ置く(`src/utils/icon-sprite.ts`)。
+使っているアイコンだけを `src/icons.json` に持ち、`src/components/misc/Icon.astro` で埋め込む。
 
 - 画面の部品(検索・メニュー・矢印・日付など)は [Lucide](https://lucide.dev/)(`lucide:search` など)
 - サービスのロゴ(GitHub・X・Threads・Bluesky・Ko-fi・Creative Commons など)は [Simple Icons](https://simpleicons.org/)(`simple-icons:github` など)。
