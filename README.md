@@ -79,6 +79,17 @@ bun run icons
 
 を実行すると、src 内で使われている名前を集めて Iconify から取り込み直す。
 
+## 見た目のテスト
+
+PR では `main` との見た目の差を自動で確かめる(`.github/workflows/visual.yml`)。主要なページをデスクトップ(ライト / ダーク)とスマホで撮って比べ、差があると失敗して差分の画像が `playwright-report` に付く。手元でも同じことができる:
+
+```shell
+bun run build && (cd dist && python3 -m http.server 4321 &)
+bunx playwright test --update-snapshots   # いまのビルドを基準にする
+# 変更してビルドし直してから
+bunx playwright test                      # 基準と比べる
+```
+
 ## デプロイ
 
 `main` への push で GitHub Actions がイメージをビルドし `ghcr.io` へ push、
