@@ -396,6 +396,14 @@ document.addEventListener("astro:page-load", () => {
 	}
 })
 
+/** 実際の大きさで出しているときのスクロールバーを押したか(押しても閉じない) */
+function onScrollbar(e: MouseEvent) {
+	const el = e.target
+	if (!(el instanceof HTMLElement) || !el.matches(".lightbox-scroller")) return false
+	const rect = el.getBoundingClientRect()
+	return e.clientX - rect.left >= el.clientWidth || e.clientY - rect.top >= el.clientHeight
+}
+
 // ダイアログもページ遷移で入れ替わるので、イベントは document で受ける
 document.addEventListener("click", (e) => {
 	if (!(e.target instanceof Element)) return
@@ -412,8 +420,8 @@ document.addEventListener("click", (e) => {
 	if (e.target.closest(".lightbox-zoom")) setZoom(!zoomed)
 	else if (e.target === image && dialog.classList.contains("zoomable"))
 		setZoom(!zoomed, e.clientX, e.clientY)
-	else if (!e.target.closest(".lightbox-toolbar") || e.target.closest(".lightbox-close"))
-		dialog.close()
+	else if (e.target.closest(".lightbox-close")) dialog.close()
+	else if (!e.target.closest(".lightbox-toolbar") && !onScrollbar(e)) dialog.close()
 })
 
 document.addEventListener("keydown", (e) => {

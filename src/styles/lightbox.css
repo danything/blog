@@ -9,9 +9,10 @@
     outline-offset: -3px;
 }
 
-/* 開いている間は後ろのページをスクロールさせない */
+/* 開いている間は後ろのページをスクロールさせない。スクロールバーが消えて横にずれないよう、その幅は残す */
 html:has(.lightbox[open]) {
     overflow: hidden;
+    scrollbar-gutter: stable;
 }
 
 .lightbox {
