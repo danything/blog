@@ -32,6 +32,17 @@
 	@tag path_regexp tag ^/tags/(.+?)/?$
 	redir @tag /archive/?tag={re.tag.1} permanent
 
+	# --- セキュリティヘッダ ---
+	# CSP はインラインスクリプトや Cloudflare の解析、コメント欄 (yk.doany.io)、Turnstile を
+	# 使うので全体には掛けず、フレーム埋め込みの禁止 (frame-ancestors) だけにする
+	header {
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "DENY"
+		Content-Security-Policy "frame-ancestors 'none'"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+	}
+
 	# --- キャッシュ ---
 	# ファイル名にハッシュが付くものだけ長期キャッシュ。Pagefind は索引の断片だけがハッシュ付きで、
 	# pagefind.js や wasm.*.pagefind・pagefind-entry.json は名前が変わらないまま中身が変わる
