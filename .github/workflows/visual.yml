@@ -21,6 +21,8 @@ jobs:
       # PR を先にビルドする(main を取り出す .base/ を Tailwind が走査しないように)
       - run: bun install --frozen-lockfile
       - run: bun run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub カードの情報を取るため
 
       - uses: actions/checkout@v7
         with:
@@ -28,6 +30,8 @@ jobs:
           path: .base
       - run: bun install --frozen-lockfile && bun run build
         working-directory: .base
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - run: bunx playwright install --with-deps chromium
 
