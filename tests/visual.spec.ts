@@ -6,7 +6,7 @@ const pages = [
 	"/archive/",
 	"/about/",
 	"/404.html",
-	"/posts/kadouhyou/",
+	"/posts/slack-search-read/",
 	"/posts/rdsecsdump/",
 	"/posts/svelte-bun-sqlite/",
 	"/posts/truck/",
