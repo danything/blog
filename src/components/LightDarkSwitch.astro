@@ -17,17 +17,17 @@ const { lang } = Astro.props;
 const modes = [
 	{
 		mode: LIGHT_MODE,
-		icon: "material-symbols:wb-sunny-outline-rounded",
+		icon: "lucide:sun",
 		label: i18n(I18nKey.lightMode, lang),
 	},
 	{
 		mode: DARK_MODE,
-		icon: "material-symbols:dark-mode-outline-rounded",
+		icon: "lucide:moon",
 		label: i18n(I18nKey.darkMode, lang),
 	},
 	{
 		mode: AUTO_MODE,
-		icon: "material-symbols:radio-button-partial-outline",
+		icon: "lucide:contrast",
 		label: i18n(I18nKey.systemMode, lang),
 	},
 ];

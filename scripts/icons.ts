@@ -1,10 +1,11 @@
-// src 内で使っているアイコン("material-symbols:search" のような名前)を集め、
+// src 内で使っているアイコン("lucide:search" のような名前)を集め、
 // Iconify の API から必要な分だけ取ってきて src/icons.json に保存する。
 //
 //   bun run icons
 //
 // アイコンを増やすときは、コードや設定に名前を書いてからこれを実行する。
-// 名前は https://icon-sets.iconify.design/ で探せる。
+// 画面の部品のアイコンは Lucide(https://icon-sets.iconify.design/lucide/)、
+// サービスのロゴは Simple Icons(https://icon-sets.iconify.design/simple-icons/)から選ぶ。
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,7 +14,7 @@ const SRC = fileURLToPath(new URL("../src", import.meta.url));
 const OUT = path.join(SRC, "icons.json");
 const NAME = /\b([a-z0-9]+(?:-[a-z0-9]+)*):([a-z0-9]+(?:-[a-z0-9]+)*)\b/g;
 // 名前の形をしているがアイコンではないもの(URL のスキームなど)を除くため、既知のセットだけ拾う
-const SETS = ["fa6-brands", "fa6-regular", "fa6-solid", "material-symbols"];
+const SETS = ["lucide", "simple-icons"];
 
 function* walk(dir: string): Generator<string> {
 	for (const e of fs.readdirSync(dir, { withFileTypes: true })) {

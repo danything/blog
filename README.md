@@ -128,13 +128,18 @@ bun scripts/translate-status.ts --hash <原文>   # sourceHash に書く値
 ## アイコン
 
 使っているアイコンだけを `src/icons.json` に持ち、`src/components/misc/Icon.astro` で埋め込む。
-新しいアイコンは名前(`material-symbols:search` など。https://icon-sets.iconify.design/ で探す)をコードや設定に書いてから、
+
+- 画面の部品(検索・メニュー・矢印・日付など)は [Lucide](https://lucide.dev/)(`lucide:search` など)
+- サービスのロゴ(GitHub・X・Threads・Bluesky・Ko-fi・Creative Commons など)は [Simple Icons](https://simpleicons.org/)(`simple-icons:github` など)。
+  Lucide にはロゴが無い(以前あった GitHub などは非推奨で、新しい版では消えている)ので、ロゴはすべて Simple Icons に揃える
+
+新しいアイコンは名前(https://icon-sets.iconify.design/lucide/ か https://icon-sets.iconify.design/simple-icons/ で探す)をコードや設定に書いてから、
 
 ```shell
 bun run icons
 ```
 
-を実行すると、src 内で使われている名前を集めて Iconify から取り込み直す。
+を実行すると、src 内で使われている名前を集めて Iconify から取り込み直す(この 2 つ以外のセットの名前は拾わない)。
 
 ## 見た目のテスト
 

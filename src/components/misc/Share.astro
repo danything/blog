@@ -20,17 +20,17 @@ const url = encodeURIComponent(postUrl);
 const links = [
 	{
 		name: "X",
-		icon: "fa6-brands:x-twitter",
+		icon: "simple-icons:x",
 		href: `https://x.com/intent/post?text=${text}&url=${url}`,
 	},
 	{
 		name: "Threads",
-		icon: "fa6-brands:threads",
+		icon: "simple-icons:threads",
 		href: `https://www.threads.net/intent/post?text=${text}%20${url}`,
 	},
 	{
 		name: "Bluesky",
-		icon: "fa6-brands:bluesky",
+		icon: "simple-icons:bluesky",
 		href: `https://bsky.app/intent/compose?text=${text}%20${url}`,
 	},
 ];
@@ -52,7 +52,7 @@ const hatena = `https://b.hatena.ne.jp/entry/${postUrl.replace(/^https?:\/\//, "
     <button type="button" class="share-copy btn-regular rounded-lg h-10 px-3 active:scale-90 flex items-center gap-2 text-sm"
             data-url={postUrl} data-copied={i18n(I18nKey.copied, lang)} data-failed={i18n(I18nKey.copyFailed, lang)}
             aria-label={i18n(I18nKey.copyUrl, lang)}>
-        <Icon name="fa6-solid:link" class="text-[1rem]"></Icon>
+        <Icon name="lucide:link" class="text-[1rem]"></Icon>
         <span class="share-copy-label">{i18n(I18nKey.copyUrl, lang)}</span>
     </button>
 </div>
