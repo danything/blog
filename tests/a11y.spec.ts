@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-import { pages, setupContext } from "./setup";
+import { a11yPages, setupContext } from "./setup";
 
 // アクセシビリティの検査(.github/workflows/a11y.yml)。axe で WCAG 2.1 A/AA の規則を調べ、
 // 影響が serious・critical の違反があると失敗する。ライト・ダーク・スマホの各プロジェクトで走る:
@@ -8,7 +8,7 @@ import { pages, setupContext } from "./setup";
 
 test.beforeEach(({ context }, info) => setupContext(context, info));
 
-for (const path of pages) {
+for (const path of a11yPages) {
 	test(path, async ({ page }) => {
 		// 読み込み時のフェードの途中だと文字が薄く測られるので、動きを止めて終わるのを待つ
 		await page.emulateMedia({ reducedMotion: "reduce" });

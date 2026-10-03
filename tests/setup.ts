@@ -1,7 +1,25 @@
 import type { BrowserContext, TestInfo } from "@playwright/test";
 
-// 見た目の比較(visual.spec.ts)とアクセシビリティの検査(a11y.spec.ts)で見るページ
-export const pages = [
+// 見た目の比較(visual.spec.ts)で見るページ。VISUAL_FIXTURES=1 でビルドした、固定の記事
+// (tests/fixtures/)だけのサイトを撮る。記事の追加・編集では差が出ず、デザインやコードの
+// 変更だけが差として出る
+export const visualPages: string[] = [
+	"/",
+	"/2/",
+	"/archive/",
+	"/about/",
+	"/404.html",
+	"/posts/markdown/",
+	"/posts/code/",
+	"/posts/alerts/",
+	"/posts/github-card/",
+	"/posts/cover/",
+	"/posts/long/",
+];
+
+// アクセシビリティの検査(a11y.spec.ts)で見るページ。実際の記事でビルドしたサイトを調べる
+// (記事の中身によるコントラスト不足なども見つけたいので、固定の記事ではなく本物を使う)
+export const a11yPages: string[] = [
 	"/",
 	"/2/",
 	"/archive/",

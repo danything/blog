@@ -13,6 +13,7 @@ import rehypeSlug from "rehype-slug";
 import remarkSectionize from "remark-sectionize";
 import { parsePost } from "./scripts/frontmatter";
 import { expressiveCodeConfig } from "./src/config";
+import { CONTENT_DIR } from "./src/constants/content-dir";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button";
 import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge";
 import { remarkAlerts } from "./src/plugins/remark-alerts";
@@ -22,7 +23,7 @@ import { remarkReadingTime } from "./src/plugins/remark-reading-time";
 
 // サイトマップの lastmod 用に、記事ごとの最終更新日(updated があればそれ、無ければ published)を集める。
 // 設定ファイルでは astro:content を使えないので、フロントマターを直接読む
-const POSTS_DIR = "src/content/posts";
+const POSTS_DIR = `${CONTENT_DIR}/posts`;
 const postLastmod = new Map<string, string>();
 for (const name of fs.readdirSync(POSTS_DIR)) {
 	if (!name.endsWith(".md")) continue;
