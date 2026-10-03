@@ -1,48 +1,32 @@
 ---
 import { render } from "astro:content";
-import path from "node:path";
 import Icon from "@components/misc/Icon.astro";
-import I18nKey from "../i18n/i18nKey";
-import { i18n, langFromPath } from "../i18n/translation";
-import type { PostEntry } from "../utils/content-utils";
-import { getDir } from "../utils/url-utils";
+import { langFromPath } from "../i18n/translation";
+import {
+	type PostEntry,
+	postImageBase,
+	readingStats,
+} from "../utils/content-utils";
+import { getPostUrlBySlug } from "../utils/url-utils";
 import ImageWrapper from "./misc/ImageWrapper.astro";
 import PostMetadata from "./PostMeta.astro";
 
 interface Props {
-	class?: string;
 	entry: PostEntry;
-	title: string;
-	url: string;
-	published: Date;
-	updated?: Date;
-	tags: string[];
-	category: string | null;
-	image: string;
-	description: string;
-	draft: boolean;
-	style: string;
+	class?: string;
+	style?: string;
 }
-const {
-	entry,
-	title,
-	url,
-	published,
-	updated,
-	tags,
-	category,
-	image,
-	description,
-	style,
-} = Astro.props;
-const className = Astro.props.class;
-
-const hasCover = image !== undefined && image !== null && image !== "";
+const { entry, class: className, style } = Astro.props;
+const { title, published, updated, tags, category, image, description } =
+	entry.data;
+const lang = langFromPath(Astro.url.pathname);
+const url = getPostUrlBySlug(entry.id, lang);
+const hasCover = image !== "";
 
 const coverWidth = "28%";
 
 const { remarkPluginFrontmatter } = await render(entry);
-const lang = langFromPath(Astro.url.pathname);
+const stats = readingStats(remarkPluginFrontmatter, lang);
 ---
 <div class:list={["card-base post-card", className]} style={style}>
     <div class:list={["content", {"has-cover": hasCover}]}>
@@ -62,13 +46,9 @@ const lang = langFromPath(Astro.url.pathname);
 
         <!-- word count and read time  -->
         <div class="stats">
-            <div>
-                {remarkPluginFrontmatter.words} {" " + i18n(remarkPluginFrontmatter.words === 1 ? I18nKey.wordCount : I18nKey.wordsCount, lang)}
-            </div>
+            <div>{stats.words}</div>
             <div>|</div>
-            <div>
-                {remarkPluginFrontmatter.minutes} {" " + i18n(remarkPluginFrontmatter.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount, lang)}
-            </div>
+            <div>{stats.minutes}</div>
         </div>
 
     </div>
@@ -79,7 +59,7 @@ const lang = langFromPath(Astro.url.pathname);
             <Icon name="lucide:chevron-right" class="cover-icon">
             </Icon>
         </div>
-        <ImageWrapper src={image} basePath={path.join(entry.collection === "postsEn" ? "content/posts-en/" : "content/posts/", getDir(entry.id))} alt="Cover Image of the Post"
+        <ImageWrapper src={image} basePath={postImageBase(entry)} alt="Cover Image of the Post"
                   class="cover-image">
         </ImageWrapper>
     </a>}

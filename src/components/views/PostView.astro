@@ -1,6 +1,5 @@
 ---
 import { render } from "astro:content";
-import path from "node:path";
 import Comments from "@components/Comments.astro";
 import Icon from "@components/misc/Icon.astro";
 import License from "@components/misc/License.astro";
@@ -9,8 +8,12 @@ import Share from "@components/misc/Share.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n, type Lang, siteText } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
-import type { PostEntry } from "@utils/content-utils";
-import { getDir, getPostUrlBySlug } from "@utils/url-utils";
+import {
+	type PostEntry,
+	postImageBase,
+	readingStats,
+} from "@utils/content-utils";
+import { getPostUrlBySlug } from "@utils/url-utils";
 import { licenseConfig } from "@/config";
 import { formatDateToYYYYMMDD } from "../../utils/date-utils";
 import ImageWrapper from "../misc/ImageWrapper.astro";
@@ -26,6 +29,7 @@ interface Props {
 const { entry, lang } = Astro.props;
 const isTranslation = entry.collection === "postsEn";
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const stats = readingStats(remarkPluginFrontmatter, lang);
 
 const jsonLd = {
 	"@context": "https://schema.org",
@@ -53,15 +57,13 @@ const jsonLd = {
                     <div class="stat-icon">
                         <Icon name="lucide:text"></Icon>
                     </div>
-                    <div class="stat-text">{remarkPluginFrontmatter.words} {" " + i18n(I18nKey.wordsCount, lang)}</div>
+                    <div class="stat-text">{stats.words}</div>
                 </div>
                 <div class="stat">
                     <div class="stat-icon">
                         <Icon name="lucide:clock"></Icon>
                     </div>
-                    <div class="stat-text">
-                        {remarkPluginFrontmatter.minutes} {" " + i18n(remarkPluginFrontmatter.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount, lang)}
-                    </div>
+                    <div class="stat-text">{stats.minutes}</div>
                 </div>
             </div>
 
@@ -87,7 +89,7 @@ const jsonLd = {
             <!-- always show cover as long as it has one -->
 
             {entry.data.image &&
-                <ImageWrapper id="post-cover" src={entry.data.image} basePath={path.join(isTranslation ? "content/posts-en/" : "content/posts/", getDir(entry.id))} class="cover onload-animation"/>
+                <ImageWrapper id="post-cover" src={entry.data.image} basePath={postImageBase(entry)} class="cover onload-animation"/>
             }
 
 
