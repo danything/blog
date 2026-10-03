@@ -16,7 +16,7 @@ export const siteConfig: SiteConfig = {
 	description:
 		"Linux やネットワーク、Web アプリ開発から、車のコーディングや登録手続きまで、実際に試して分かったことを書き留めている備忘録です。",
 	ogImage: "/static/images/x-card.png",
-	lang: "ja", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.
+	lang: "ja",
 	themeColor: {
 		// テーマ色の色相 (0-360)。Fuwari の既定は 250 だが、この配色は
 		// oklch(0.70 0.14 H) を使うため、170-230 と 250-290 は sRGB の色域から
@@ -53,6 +53,19 @@ export const siteConfig: SiteConfig = {
 			sizes: "180x180",
 		},
 	],
+};
+
+// 英語版 (/en/) で差し替える文言。ほかの設定は日本語版と同じものを使う
+export const siteTextEn = {
+	subtitle: "A casual notebook",
+	description:
+		"Notes on things I've actually tried and figured out — from Linux, networking, and web app development to car coding and vehicle registration paperwork in Japan.",
+	profileName: "Ryuki Maruyama",
+	bio: "A casual notebook",
+	kofi: {
+		description: "If a post helped you out, your support keeps me going.",
+		buttonLabel: "Support me on Ko-fi",
+	},
 };
 
 export const navBarConfig: NavBarConfig = {

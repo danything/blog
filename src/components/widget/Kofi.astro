@@ -1,6 +1,7 @@
 ---
-import { kofiConfig } from "@/config";
 import Icon from "@components/misc/Icon.astro";
+import { kofiConfig } from "@/config";
+import { langFromPath, siteText } from "../../i18n/translation";
 import WidgetLayout from "./WidgetLayout.astro";
 
 interface Props {
@@ -13,21 +14,22 @@ const style = Astro.props.style;
 // 外部スクリプトを読み込まず、Ko-fi のページへリンクするだけの実装。
 // 表示速度とテーマ追従を優先している。
 const url = `https://ko-fi.com/${kofiConfig.username}`;
+const text = siteText(langFromPath(Astro.url.pathname)).kofi;
 ---
 {kofiConfig.enable && kofiConfig.username && (
 <WidgetLayout name={kofiConfig.title} id="kofi" class={className} style={style}>
     <div class="text-sm text-black/75 dark:text-white/75 transition mb-3">
-        {kofiConfig.description}
+        {text.description}
     </div>
     <a
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={kofiConfig.buttonLabel}
+        aria-label={text.buttonLabel}
         class="btn-regular rounded-lg h-9 w-full text-sm font-bold flex items-center justify-center gap-2"
     >
         <Icon name="fa6-solid:mug-hot" class="text-[1.1rem]"></Icon>
-        {kofiConfig.buttonLabel}
+        {text.buttonLabel}
     </a>
 </WidgetLayout>
 )}

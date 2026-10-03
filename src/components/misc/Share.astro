@@ -1,5 +1,7 @@
 ---
 import Icon from "@components/misc/Icon.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n, langFromPath } from "@i18n/translation";
 
 // 記事のシェアボタン。外部スクリプトは読まず intent URL へのリンクだけで組む
 // (Ko-fi をただのリンクにしたのと同じ考え方。表示速度にもテーマ切替にも影響しない)。
@@ -9,35 +11,49 @@ interface Props {
 }
 
 const { title } = Astro.props;
+const lang = langFromPath(Astro.url.pathname);
 const className = Astro.props.class ?? "";
 const postUrl = Astro.url.toString();
 const text = encodeURIComponent(title);
 const url = encodeURIComponent(postUrl);
 
 const links = [
-	{ name: "X", icon: "fa6-brands:x-twitter", href: `https://x.com/intent/post?text=${text}&url=${url}` },
-	{ name: "Threads", icon: "fa6-brands:threads", href: `https://www.threads.net/intent/post?text=${text}%20${url}` },
-	{ name: "Bluesky", icon: "fa6-brands:bluesky", href: `https://bsky.app/intent/compose?text=${text}%20${url}` },
+	{
+		name: "X",
+		icon: "fa6-brands:x-twitter",
+		href: `https://x.com/intent/post?text=${text}&url=${url}`,
+	},
+	{
+		name: "Threads",
+		icon: "fa6-brands:threads",
+		href: `https://www.threads.net/intent/post?text=${text}%20${url}`,
+	},
+	{
+		name: "Bluesky",
+		icon: "fa6-brands:bluesky",
+		href: `https://bsky.app/intent/compose?text=${text}%20${url}`,
+	},
 ];
 // はてなブックマークは URL をそのまま後ろに付ける形式 (https:// は https:/ に縮める慣習だが素のままでも通る)
 const hatena = `https://b.hatena.ne.jp/entry/${postUrl.replace(/^https?:\/\//, "s/")}`;
 ---
 <div class={`flex flex-wrap items-center gap-2 ${className}`}>
-    <div class="transition text-30 text-sm mr-2">シェア</div>
+    <div class="transition text-30 text-sm mr-2">{i18n(I18nKey.share, lang)}</div>
     {links.map(l => (
-        <a href={l.href} target="_blank" rel="noopener noreferrer" aria-label={`${l.name} でシェア`} title={l.name}
+        <a href={l.href} target="_blank" rel="noopener noreferrer" aria-label={i18n(I18nKey.shareOn, lang).replace("{name}", l.name)} title={l.name}
            class="btn-regular rounded-lg h-10 w-10 active:scale-90">
             <Icon name={l.icon} class="text-[1.25rem]"></Icon>
         </a>
     ))}
-    <a href={hatena} target="_blank" rel="noopener noreferrer" aria-label="はてなブックマークに追加" title="はてなブックマーク"
+    <a href={hatena} target="_blank" rel="noopener noreferrer" aria-label={i18n(I18nKey.addToHatena, lang)} title="はてなブックマーク"
        class="btn-regular rounded-lg h-10 w-10 active:scale-90 font-bold text-[0.95rem] tracking-tight">
         B!
     </a>
     <button type="button" class="share-copy btn-regular rounded-lg h-10 px-3 active:scale-90 flex items-center gap-2 text-sm"
-            data-url={postUrl} aria-label="URL をコピー">
+            data-url={postUrl} data-copied={i18n(I18nKey.copied, lang)} data-failed={i18n(I18nKey.copyFailed, lang)}
+            aria-label={i18n(I18nKey.copyUrl, lang)}>
         <Icon name="fa6-solid:link" class="text-[1rem]"></Icon>
-        <span class="share-copy-label">URL をコピー</span>
+        <span class="share-copy-label">{i18n(I18nKey.copyUrl, lang)}</span>
     </button>
 </div>
 
@@ -49,13 +65,15 @@ if (!(window as Window & { __shareCopyBound?: boolean }).__shareCopyBound) {
 		const btn = (e.target as HTMLElement | null)?.closest<HTMLButtonElement>(".share-copy");
 		if (!btn) return;
 		const label = btn.querySelector<HTMLElement>(".share-copy-label");
+		// 文言はページの言語のものをボタンに持たせている
+		const original = label?.textContent ?? "";
 		try {
 			await navigator.clipboard.writeText(btn.dataset.url ?? location.href);
-			if (label) label.textContent = "コピーしました";
+			if (label) label.textContent = btn.dataset.copied ?? "";
 		} catch {
-			if (label) label.textContent = "コピーできませんでした";
+			if (label) label.textContent = btn.dataset.failed ?? "";
 		}
-		setTimeout(() => { if (label) label.textContent = "URL をコピー"; }, 1500);
+		setTimeout(() => { if (label) label.textContent = original; }, 1500);
 	});
 }
 </script>

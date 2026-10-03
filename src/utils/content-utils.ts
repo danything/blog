@@ -1,13 +1,25 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import I18nKey from "@i18n/i18nKey";
-import { i18n } from "@i18n/translation";
-import { getCategoryUrl } from "@utils/url-utils.ts";
+import { i18n, LANGS, type Lang } from "@i18n/translation";
+import { getCategoryUrl, localeUrl, stripLang } from "@utils/url-utils.ts";
 
-// // Retrieve posts and sort them by publication date
-async function getRawSortedPosts() {
-	const allBlogPosts = await getCollection("posts", ({ data }) => {
+/** 言語ごとの記事のコレクション。英語版は src/content/posts-en/ に同じ名前で置く */
+export type PostCollection = "posts" | "postsEn";
+export type PostEntry = CollectionEntry<PostCollection>;
+
+export function postCollection(lang: Lang): PostCollection {
+	return lang === "en" ? "postsEn" : "posts";
+}
+
+async function getPublishedPosts(lang: Lang): Promise<PostEntry[]> {
+	return getCollection(postCollection(lang), ({ data }) => {
 		return import.meta.env.PROD ? data.draft !== true : true;
 	});
+}
+
+// // Retrieve posts and sort them by publication date
+async function getRawSortedPosts(lang: Lang) {
+	const allBlogPosts = await getPublishedPosts(lang);
 
 	const sorted = allBlogPosts.sort((a, b) => {
 		const dateA = new Date(a.data.published);
@@ -17,8 +29,8 @@ async function getRawSortedPosts() {
 	return sorted;
 }
 
-export async function getSortedPosts() {
-	const sorted = await getRawSortedPosts();
+export async function getSortedPosts(lang: Lang) {
+	const sorted = await getRawSortedPosts(lang);
 
 	for (let i = 1; i < sorted.length; i++) {
 		sorted[i].data.nextSlug = sorted[i - 1].id;
@@ -33,10 +45,10 @@ export async function getSortedPosts() {
 }
 export type PostForList = {
 	slug: string;
-	data: CollectionEntry<"posts">["data"];
+	data: PostEntry["data"];
 };
-export async function getSortedPostsList(): Promise<PostForList[]> {
-	const sortedFullPosts = await getRawSortedPosts();
+export async function getSortedPostsList(lang: Lang): Promise<PostForList[]> {
+	const sortedFullPosts = await getRawSortedPosts(lang);
 
 	// delete post.body
 	const sortedPostsList = sortedFullPosts.map((post) => ({
@@ -51,10 +63,8 @@ export type Tag = {
 	count: number;
 };
 
-export async function getTagList(): Promise<Tag[]> {
-	const allBlogPosts = await getCollection<"posts">("posts", ({ data }) => {
-		return import.meta.env.PROD ? data.draft !== true : true;
-	});
+export async function getTagList(lang: Lang): Promise<Tag[]> {
+	const allBlogPosts = await getPublishedPosts(lang);
 
 	const countMap: { [key: string]: number } = {};
 	allBlogPosts.forEach((post: { data: { tags: string[] } }) => {
@@ -78,14 +88,12 @@ export type Category = {
 	url: string;
 };
 
-export async function getCategoryList(): Promise<Category[]> {
-	const allBlogPosts = await getCollection<"posts">("posts", ({ data }) => {
-		return import.meta.env.PROD ? data.draft !== true : true;
-	});
+export async function getCategoryList(lang: Lang): Promise<Category[]> {
+	const allBlogPosts = await getPublishedPosts(lang);
 	const count: { [key: string]: number } = {};
 	allBlogPosts.forEach((post: { data: { category: string | null } }) => {
 		if (!post.data.category) {
-			const ucKey = i18n(I18nKey.uncategorized);
+			const ucKey = i18n(I18nKey.uncategorized, lang);
 			count[ucKey] = count[ucKey] ? count[ucKey] + 1 : 1;
 			return;
 		}
@@ -107,8 +115,34 @@ export async function getCategoryList(): Promise<Category[]> {
 		ret.push({
 			name: c,
 			count: count[c],
-			url: getCategoryUrl(c),
+			url: getCategoryUrl(c, lang),
 		});
 	}
 	return ret;
+}
+
+// 日本語版と英語版の両方にあるページ(記事は訳があるものだけ)
+const PAIRED_PAGES = ["/", "/archive/", "/about/"];
+
+/**
+ * そのページの各言語版のパス。もう一方の言語に同じページが無ければ undefined。
+ * hreflang と言語の切り替えボタンに使う
+ */
+export async function getAlternates(
+	pathname: string,
+): Promise<Record<Lang, string> | undefined> {
+	const path = stripLang(pathname);
+	const slug = path.match(/^\/posts\/([^/]+)\/$/)?.[1];
+	if (slug) {
+		const id = decodeURIComponent(slug);
+		for (const lang of LANGS) {
+			const posts = await getPublishedPosts(lang);
+			if (!posts.some((p) => p.id === id)) return undefined;
+		}
+	} else if (!PAIRED_PAGES.includes(path)) {
+		return undefined;
+	}
+	return Object.fromEntries(
+		LANGS.map((lang) => [lang, localeUrl(path, lang)]),
+	) as Record<Lang, string>;
 }

@@ -1,5 +1,6 @@
 ---
 import type { MarkdownHeading } from "astro";
+import { langFromPath } from "../../i18n/translation";
 import Categories from "./Categories.astro";
 import Kofi from "./Kofi.astro";
 import Newsletter from "./Newsletter.astro";
@@ -12,15 +13,17 @@ interface Props {
 }
 
 const className = Astro.props.class;
+const lang = langFromPath(Astro.url.pathname);
 ---
-<div id="sidebar" class:list={[className, "w-full"]} transition:persist>
+<div id="sidebar" class:list={[className, "w-full"]} transition:persist={`sidebar-${lang}`}>
     <div class="flex flex-col w-full gap-4 mb-4">
         <Profile></Profile>
     </div>
     <div id="sidebar-sticky" class="transition-all duration-700 flex flex-col w-full gap-4 top-4 sticky top-4">
         <Categories class="onload-animation" style="animation-delay: 150ms"></Categories>
         <Tag class="onload-animation" style="animation-delay: 200ms"></Tag>
-        <Newsletter class="onload-animation" style="animation-delay: 250ms"></Newsletter>
+        <!-- ニュースレターは日本語の記事だけを送るので、英語版には出さない -->
+        {lang === "ja" && <Newsletter class="onload-animation" style="animation-delay: 250ms"></Newsletter>}
         <Kofi class="onload-animation" style="animation-delay: 300ms"></Kofi>
     </div>
 </div>

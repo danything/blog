@@ -3,7 +3,7 @@ import PostView from "@components/views/PostView.astro";
 import { getSortedPosts } from "@utils/content-utils";
 
 export async function getStaticPaths() {
-	const blogEntries = await getSortedPosts("ja");
+	const blogEntries = await getSortedPosts("en");
 	return blogEntries.map((entry) => ({
 		params: { slug: entry.id },
 		props: { entry },
@@ -12,4 +12,4 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 ---
-<PostView entry={entry} lang="ja"></PostView>
+<PostView entry={entry} lang="en"></PostView>

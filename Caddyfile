@@ -59,8 +59,8 @@
 
 	# --- 削除した記事 ---
 	# 意図的に消したので 404 ではなく 410 Gone を返し、検索エンジンにも
-	# 恒久的な削除として伝える。本文には 404 ページを流用する
-	@gone path_regexp gone ^/posts/(wpdevenv|hhvmlaravel|wpgit|ec-ajax|paypalmeetup|doodcron|zabbixifttt|mstdn|bbdhdeploy|dockerzabbix|kadouhyou|worklog-from-logs|ubuntulxdnet|op25b)/?$
+	# 恒久的な削除として伝える。本文には 404 ページを流用する。英語版 (/en/posts/...) も同じ扱い
+	@gone path_regexp gone ^/(?:en/)?posts/(wpdevenv|hhvmlaravel|wpgit|ec-ajax|paypalmeetup|doodcron|zabbixifttt|mstdn|bbdhdeploy|dockerzabbix|kadouhyou|worklog-from-logs|ubuntulxdnet|op25b)/?$
 	handle @gone {
 		rewrite * /404.html
 		file_server {
@@ -70,7 +70,10 @@
 
 	file_server
 
+	# 英語版 (/en/ 以下) は英語の 404 ページを返す
 	handle_errors {
+		@en path /en /en/*
+		rewrite @en /en/404/index.html
 		rewrite * /404.html
 		file_server
 	}

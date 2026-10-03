@@ -89,9 +89,14 @@ export default defineConfig({
 		}),
 		svelte(),
 		sitemap({
+			// 日本語版と英語版の両方があるページ(/en/ を除いて同じパス)に hreflang の対応を付ける
+			i18n: { defaultLocale: "ja", locales: { ja: "ja", en: "en" } },
+			// 英語版の 404 は普通のページとして作られるので外す
+			filter: (page) => !/\/404\/?$/.test(new URL(page).pathname),
 			serialize(item) {
+				// 英語版(/en/posts/...)も日付は原文と同じ
 				const id = new URL(item.url).pathname.match(
-					/^\/posts\/([^/]+)\/$/,
+					/^\/(?:en\/)?posts\/([^/]+)\/$/,
 				)?.[1];
 				const date = id && postLastmod.get(decodeURIComponent(id));
 				// 日付として読めない値(簡易パーサなので行末コメントなど)なら付けない

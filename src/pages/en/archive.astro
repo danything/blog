@@ -5,9 +5,9 @@ import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { getSortedPostsList } from "@utils/content-utils";
 
-const sortedPostsList = await getSortedPostsList("ja");
+const sortedPostsList = await getSortedPostsList("en");
 ---
 
-<MainGridLayout title={i18n(I18nKey.archive, "ja")}>
+<MainGridLayout title={i18n(I18nKey.archive, "en")}>
     <ArchivePanel sortedPosts={sortedPostsList}></ArchivePanel>
 </MainGridLayout>

@@ -1,0 +1,30 @@
+---
+import { getEntry, render } from "astro:content";
+import Markdown from "@components/misc/Markdown.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n, type Lang } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+
+// About のページ。本文は src/content/spec/about.md(英語版は about-en.md)
+interface Props {
+	lang: Lang;
+}
+const { lang } = Astro.props;
+
+const aboutPost = await getEntry("spec", lang === "en" ? "about-en" : "about");
+
+if (!aboutPost) {
+	throw new Error("About page content not found");
+}
+
+const { Content } = await render(aboutPost);
+---
+<MainGridLayout title={i18n(I18nKey.about, lang)} description={i18n(I18nKey.about, lang)}>
+    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-6 relative w-full ">
+            <Markdown class="mt-2">
+                <Content />
+            </Markdown>
+        </div>
+    </div>
+</MainGridLayout>

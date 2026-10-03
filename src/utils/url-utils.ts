@@ -1,5 +1,5 @@
 import I18nKey from "@i18n/i18nKey";
-import { i18n } from "@i18n/translation";
+import { DEFAULT_LANG, i18n, type Lang } from "@i18n/translation";
 
 export function pathsEqual(path1: string, path2: string) {
 	const normalizedPath1 = path1.replace(/^\/|\/$/g, "").toLowerCase();
@@ -12,23 +12,37 @@ function joinUrl(...parts: string[]): string {
 	return joined.replace(/\/+/g, "/");
 }
 
-export function getPostUrlBySlug(slug: string): string {
-	return url(`/posts/${slug}/`);
+/** サイト内のパスを、その言語のページのパスにする(英語は /en/ 以下) */
+export function localeUrl(path: string, lang: Lang): string {
+	return url(lang === DEFAULT_LANG ? path : `/${lang}/${path}`);
 }
 
-export function getTagUrl(tag: string): string {
-	if (!tag) return url("/archive/");
-	return url(`/archive/?tag=${encodeURIComponent(tag.trim())}`);
+/** 言語の部分(/en/)を除いたパス。日本語版と英語版で同じページなら同じ値になる */
+export function stripLang(pathname: string): string {
+	return pathname.replace(/^\/en(\/|$)/, "/");
 }
 
-export function getCategoryUrl(category: string | null): string {
+export function getPostUrlBySlug(slug: string, lang: Lang): string {
+	return localeUrl(`/posts/${slug}/`, lang);
+}
+
+export function getTagUrl(tag: string, lang: Lang): string {
+	if (!tag) return localeUrl("/archive/", lang);
+	return localeUrl(`/archive/?tag=${encodeURIComponent(tag.trim())}`, lang);
+}
+
+export function getCategoryUrl(category: string | null, lang: Lang): string {
 	if (
 		!category ||
 		category.trim() === "" ||
-		category.trim().toLowerCase() === i18n(I18nKey.uncategorized).toLowerCase()
+		category.trim().toLowerCase() ===
+			i18n(I18nKey.uncategorized, lang).toLowerCase()
 	)
-		return url("/archive/?uncategorized=true");
-	return url(`/archive/?category=${encodeURIComponent(category.trim())}`);
+		return localeUrl("/archive/?uncategorized=true", lang);
+	return localeUrl(
+		`/archive/?category=${encodeURIComponent(category.trim())}`,
+		lang,
+	);
 }
 
 export function getDir(path: string): string {

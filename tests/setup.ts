@@ -31,6 +31,13 @@ export const a11yPages: string[] = [
 	"/posts/truck/",
 	"/posts/renewal/",
 	"/posts/oss-transfer/",
+	// 英語版
+	"/en/",
+	"/en/archive/",
+	"/en/about/",
+	"/en/404/",
+	"/en/posts/slack-search-read/",
+	"/en/posts/truck/",
 ];
 
 export async function setupContext(

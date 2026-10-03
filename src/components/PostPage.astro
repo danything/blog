@@ -1,15 +1,17 @@
 ---
-import type { CollectionEntry } from "astro:content";
+import { langFromPath } from "@i18n/translation";
+import type { PostEntry } from "@utils/content-utils";
 import { getPostUrlBySlug } from "@utils/url-utils";
 import PostCard from "./PostCard.astro";
 
 const { page } = Astro.props;
+const lang = langFromPath(Astro.url.pathname);
 
 let delay = 0;
 const interval = 50;
 ---
 <div class="transition flex flex-col rounded-[var(--radius-large)] bg-[var(--card-bg)] py-1 md:py-0 md:bg-transparent md:gap-4 mb-4">
-    {page.data.map((entry: CollectionEntry<"posts">) => (
+    {page.data.map((entry: PostEntry) => (
         <PostCard
                 entry={entry}
                 title={entry.data.title}
@@ -17,7 +19,7 @@ const interval = 50;
                 category={entry.data.category}
                 published={entry.data.published}
                 updated={entry.data.updated}
-                url={getPostUrlBySlug(entry.id)}
+                url={getPostUrlBySlug(entry.id, lang)}
                 image={entry.data.image}
                 description={entry.data.description}
                 draft={entry.data.draft}

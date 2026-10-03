@@ -35,4 +35,20 @@ export const en: Translation = {
 	[Key.author]: "Author",
 	[Key.publishedAt]: "Published at",
 	[Key.license]: "License",
+
+	[Key.share]: "Share",
+	[Key.shareOn]: "Share on {name}",
+	[Key.addToHatena]: "Add to Hatena Bookmark",
+	[Key.copyUrl]: "Copy URL",
+	[Key.copied]: "Copied",
+	[Key.copyFailed]: "Couldn't copy",
+
+	[Key.notFound]: "Page not found",
+	[Key.backToHome]: "Back to home",
+
+	[Key.otherLanguage]: "日本語",
+	[Key.switchLanguage]: "日本語で読む",
+	[Key.translatedNotice]:
+		"This post was translated from the Japanese original with AI.",
+	[Key.readOriginal]: "Read the original (Japanese)",
 };

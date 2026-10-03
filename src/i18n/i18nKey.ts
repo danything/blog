@@ -32,6 +32,21 @@ enum I18nKey {
 	author = "author",
 	publishedAt = "publishedAt",
 	license = "license",
+
+	share = "share",
+	shareOn = "shareOn",
+	addToHatena = "addToHatena",
+	copyUrl = "copyUrl",
+	copied = "copied",
+	copyFailed = "copyFailed",
+
+	notFound = "notFound",
+	backToHome = "backToHome",
+
+	otherLanguage = "otherLanguage",
+	switchLanguage = "switchLanguage",
+	translatedNotice = "translatedNotice",
+	readOriginal = "readOriginal",
 }
 
 export default I18nKey;

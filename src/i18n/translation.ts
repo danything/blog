@@ -1,48 +1,39 @@
-import { siteConfig } from "../config";
+import { kofiConfig, profileConfig, siteConfig, siteTextEn } from "../config";
 import type I18nKey from "./i18nKey";
 import { en } from "./languages/en";
-import { es } from "./languages/es";
-import { id } from "./languages/id";
 import { ja } from "./languages/ja";
-import { ko } from "./languages/ko";
-import { th } from "./languages/th";
-import { tr } from "./languages/tr";
-import { vi } from "./languages/vi";
-import { zh_CN } from "./languages/zh_CN";
-import { zh_TW } from "./languages/zh_TW";
 
 export type Translation = {
 	[K in I18nKey]: string;
 };
 
-const defaultTranslation = en;
+/** サイトの言語。日本語が既定で、英語版は /en/ 以下に置く */
+export const LANGS = ["ja", "en"] as const;
+export type Lang = (typeof LANGS)[number];
+export const DEFAULT_LANG: Lang = siteConfig.lang;
 
-const map: { [key: string]: Translation } = {
-	es: es,
-	en: en,
-	en_us: en,
-	en_gb: en,
-	en_au: en,
-	zh_cn: zh_CN,
-	zh_tw: zh_TW,
-	ja: ja,
-	ja_jp: ja,
-	ko: ko,
-	ko_kr: ko,
-	th: th,
-	th_th: th,
-	vi: vi,
-	vi_vn: vi,
-	id: id,
-	tr: tr,
-	tr_tr: tr,
-};
+const map: Record<Lang, Translation> = { ja, en };
 
-export function getTranslation(lang: string): Translation {
-	return map[lang.toLowerCase()] || defaultTranslation;
+/** ページの URL のパスから言語を決める(/en/ 以下なら英語) */
+export function langFromPath(pathname: string): Lang {
+	return /^\/en(\/|$)/.test(pathname) ? "en" : DEFAULT_LANG;
 }
 
-export function i18n(key: I18nKey): string {
-	const lang = siteConfig.lang || "en";
-	return getTranslation(lang)[key];
+export function i18n(key: I18nKey, lang: Lang): string {
+	return map[lang][key];
+}
+
+/** 設定ファイルにある、言語ごとに変わる文言 */
+export function siteText(lang: Lang) {
+	if (lang === "en") return siteTextEn;
+	return {
+		subtitle: siteConfig.subtitle,
+		description: siteConfig.description,
+		profileName: profileConfig.name,
+		bio: profileConfig.bio,
+		kofi: {
+			description: kofiConfig.description,
+			buttonLabel: kofiConfig.buttonLabel,
+		},
+	};
 }

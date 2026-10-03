@@ -5,7 +5,7 @@ import { getSortedPosts } from "@utils/content-utils";
 import type { GetStaticPaths } from "astro";
 
 export const getStaticPaths = (async ({ paginate }) => {
-	const allBlogPosts = await getSortedPosts("ja");
+	const allBlogPosts = await getSortedPosts("en");
 	return paginate(allBlogPosts, { pageSize: PAGE_SIZE });
 }) satisfies GetStaticPaths;
 // https://github.com/withastro/astro/issues/6507#issuecomment-1489916992
@@ -13,4 +13,4 @@ export const getStaticPaths = (async ({ paginate }) => {
 const { page } = Astro.props;
 ---
 
-<HomeView page={page} lang="ja"></HomeView>
+<HomeView page={page} lang="en"></HomeView>
