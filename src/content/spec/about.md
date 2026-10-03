@@ -39,9 +39,9 @@ Slack / GitHub / GitLab / Backlog / Jira / OpenProject / Redmine の API ログ�
 
 テレビを録って観るための自作システムです。チューナーを掴んで素の TS を流すエージェントと、番組表・予約・録画・エンコード・配信・ライブ視聴を担う本体の 2 つで完結していて、別途メディアサーバを置きません。TypeScript と Svelte、チューナー側は C# で書いています。Docker と Kubernetes のどちらでも動きます。
 
-### [Smart QR Payment](https://github.com/5ym/smart-qr-payment)
+### [mogiri](https://github.com/5ym/mogiri)
 
-催事等で使える、事前注文と店頭受け取り、そしてセルフレジ機能をもったウェブアプリです。当初は Django REST Framework と Nuxt で作りましたが、Bun + SvelteKit + SQLite に全面的に書き換え、フロントとバックを 1 つのアプリに統合しました。
+もぎり。催事等で使える、QR を使った入場受付と、事前注文・店頭受け取り・セルフレジをまとめたウェブアプリです。入場受付の qes と、物販の Smart QR Payment を 1 つに統合しました。当初は Django REST Framework と Nuxt で作りましたが、Bun + SvelteKit + SQLite に全面的に書き換え、フロントとバックを 1 つのアプリに統合しました。
 
 ### [𝕏ool](https://x.doany.io/)
 

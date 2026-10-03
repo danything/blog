@@ -43,9 +43,9 @@ A service that goes across API logs from Slack / GitHub / GitLab / Backlog / Jir
 
 A homemade system for recording and watching TV. It's self-contained in two parts: an agent that grabs the tuner and streams the raw TS, and the main app, which handles the program guide, reservations, recording, encoding, streaming, and live viewing, so there's no separate media server. It's written in TypeScript and Svelte, with C# on the tuner side. It runs on either Docker or Kubernetes.
 
-### [Smart QR Payment](https://github.com/5ym/smart-qr-payment)
+### [mogiri](https://github.com/5ym/mogiri)
 
-A web app for events and the like, with pre-ordering, in-store pickup, and self-checkout. I originally built it with Django REST Framework and Nuxt, but rewrote it entirely in Bun + SvelteKit + SQLite, merging the frontend and backend into a single app.
+Mogiri, the ticket-taker at the gate. A web app for events and the like, with QR-based admission, pre-ordering, in-store pickup, and self-checkout. It merges qes (admission) and Smart QR Payment (sales) into one app. I originally built it with Django REST Framework and Nuxt, but rewrote it entirely in Bun + SvelteKit + SQLite, merging the frontend and backend into a single app.
 
 ### [𝕏ool](https://x.doany.io/)
 
