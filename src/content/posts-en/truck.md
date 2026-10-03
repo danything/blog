@@ -7,7 +7,7 @@ image: "/static/images/blog/br90.webp"
 tags: ["Cars", "Cargo Registration", "Government Procedures"]
 category: "Cars"
 draft: false
-sourceHash: "76d65f8edf2c750d"
+sourceHash: "c1ef6bfb5ac89cc6"
 ---
 
 It's been a while since my last post. Lately, instead of web stuff, I've been completely absorbed in cars.  
@@ -30,8 +30,25 @@ I'll skip the details of the tax system here, but for the vehicle I registered a
 |Difference|0|-48,900|
 
 As you can see, it gets quite a bit cheaper, but there are a few downsides.  
-The big one is that your ETC (electronic toll collection) toll class goes from standard to mid-size, so tolls go up. Let's work out how much driving it takes before the savings are wiped out, using the Shin-Tomei Expressway (standard section). NEXCO tolls are (terminal charge of 150 yen + 24.6 yen × distance) × vehicle class ratio × 1.1 (consumption tax), where mid-size is 1.2 times standard, and the portion beyond 100 km gets cheaper through the long-distance discount. A 100 km trip costs 2,871 yen for a standard car and 3,445 yen for a mid-size one, a difference of 574 yen, or about 5.7 yen per km. Dividing the 48,900 yen difference above by that gives about 8,500 km a year, and the longer each trip, the more the discount helps: at 300 km per trip it stretches to about 10,800 km. Unless you drive 8,000 km or more a year on expressways, it's not a problem.  
-That said, the holiday discount (30% off) applies only to standard cars and kei cars, not mid-size, so if you mostly drive on weekends and holidays, the gap widens to about 14.4 yen per km, and the savings are wiped out at about 3,400 km a year. (The late-night discount does apply to mid-size.)  
+The big one is that your ETC (electronic toll collection) toll class goes from standard to mid-size, so tolls go up. Let's work out how much driving it takes before the savings are wiped out, using the Shin-Tomei Expressway (standard section). NEXCO tolls are (terminal charge of 150 yen + 24.6 yen × distance) × vehicle class ratio × 1.1 (consumption tax), where mid-size is 1.2 times standard, and the portion beyond 100 km gets cheaper through the long-distance discount. Dividing the 48,900 yen difference above by the difference per km gives the yearly expressway mileage at which the savings are wiped out.
+
+|Distance per trip|Standard|Mid-size|Difference|Difference per km|Yearly distance where savings are wiped out|
+|---|---|---|---|---|---|
+|50 km|1,518 yen|1,822 yen|304 yen|about 6.1 yen|about 8,100 km|
+|100 km|2,871 yen|3,445 yen|574 yen|about 5.7 yen|about 8,500 km|
+|200 km|4,900 yen|5,881 yen|980 yen|about 4.9 yen|about 10,000 km|
+|300 km|6,795 yen|8,154 yen|1,359 yen|about 4.5 yen|about 10,800 km|
+
+The longer each trip, the more the discount helps and the smaller the gap gets. Unless you drive 8,000 km or more a year on expressways, it's not a problem.  
+That said, the holiday discount (30% off) applies only to standard cars and kei cars, not mid-size, so if you mostly drive on weekends and holidays, the gap widens. (The late-night discount does apply to mid-size.)
+
+|Distance per trip|Standard (holiday discount)|Mid-size|Difference|Difference per km|Yearly distance where savings are wiped out|
+|---|---|---|---|---|---|
+|50 km|1,063 yen|1,822 yen|759 yen|about 15.2 yen|about 3,200 km|
+|100 km|2,010 yen|3,445 yen|1,436 yen|about 14.4 yen|about 3,400 km|
+|200 km|3,430 yen|5,881 yen|2,450 yen|about 12.3 yen|about 4,000 km|
+|300 km|4,756 yen|8,154 yen|3,397 yen|about 11.3 yen|about 4,300 km|
+
 The other one is that the vehicle inspection (shaken) becomes yearly. That adds an inspection fee once a year, but it's only around 2,600 yen (the fee for bringing a standard-size car in for inspection yourself, after the April 2026 revision). Some of you probably leave your shaken to a dealer or a shop, but if it's a Japanese car, it'll pass the inspection with hardly any maintenance. If you're reading this article, you presumably want to save on running costs, so if you want to keep them down, buy your own tools and at least google the bare-minimum maintenance needed to keep a car going. If you can't do that, just do what the dealer says and pay up. That's what the service fee is for.
 
 ## The cargo registration process
