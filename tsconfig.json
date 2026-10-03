@@ -31,6 +31,8 @@
   "include": [
     "src/**/*",
     "scripts/**/*",
-    "astro.config.ts"
+    "tests/**/*",
+    "astro.config.ts",
+    "playwright.config.ts"
   ]
 }

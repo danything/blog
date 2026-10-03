@@ -1,0 +1,50 @@
+name: Visual Check
+
+# PR の見た目が main と変わっていないかを確かめる。main のビルドで撮ったスクリーンショットを基準に、
+# PR のビルドと 1 ピクセル単位で比べる(tests/visual.spec.ts)。差があると失敗し、差分の画像を
+# playwright-report として添付する。意図して見た目を変える PR では、差分を確認してからマージする。
+# Renovate の自動マージはこのチェックが通らないと止まる。
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+
+      # PR を先にビルドする(main を取り出す .base/ を Tailwind が走査しないように)
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: .base
+      - run: bun install --frozen-lockfile && bun run build
+        working-directory: .base
+
+      - run: bunx playwright install --with-deps chromium
+
+      - name: main のスクリーンショットを基準にする
+        run: |
+          (cd .base/dist && python3 -m http.server 4321 --bind 127.0.0.1 &)
+          until curl -s -o /dev/null http://127.0.0.1:4321/; do sleep 1; done
+          BASE_URL=http://127.0.0.1:4321 bunx playwright test --update-snapshots --reporter=dot
+
+      - name: PR と比べる
+        run: |
+          (cd dist && python3 -m http.server 4322 --bind 127.0.0.1 &)
+          until curl -s -o /dev/null http://127.0.0.1:4322/; do sleep 1; done
+          BASE_URL=http://127.0.0.1:4322 bunx playwright test
+
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
