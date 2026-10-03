@@ -32,7 +32,8 @@ Slackの投稿時刻から稼働表(勤務時間の一覧)を自動生成した�
 > This is a legacy scope
 > 参考: [search:read scope](https://docs.slack.dev/reference/scopes/search.read/)
 
-※ 廃止されたわけではありません。user tokenであれば`search.messages`は現役で動きます。掲載できないだけです。ここを混同すると「もう使えない」と誤解するので注意してください。
+> [!IMPORTANT]
+> 廃止されたわけではありません。user tokenであれば`search.messages`は現役で動きます。掲載できないだけです。ここを混同すると「もう使えない」と誤解するので注意してください。
 
 ## *:historyでの迂回に関して
 

@@ -12,6 +12,8 @@ draft: false
 このサイトは元々HUGOで作り、その後Next.js(tailwind-nextjs-starter-blog)で運用していましたが、このたびAstro製のテーマ[Fuwari](https://github.com/saicaca/fuwari)に全面移行しました。  
 せっかくなので現在の構成を最初から最後まで書いておきます。
 
+::github{repo="saicaca/fuwari"}
+
 ## 全体像
 
 ```
@@ -32,8 +34,10 @@ k3s + Traefik（Let's Encrypt / DNS-01）→ Cloudflare → 読者
 
 Astroなので出力は静的HTMLです。ページ遷移はSwupが担当していてフルリロードなしで切り替わります。
 
-全文検索にはPagefindを使っています。ビルド時に`dist/`を走査してインデックスを作る方式で、検索用のサーバーが要りません。日本語もちゃんと引っかかります。  
-※ Pagefindは日本語のステミングには対応していないので語形変化をまたいだ一致はしませんが、個人ブログの検索としては十分実用的だと思います。
+全文検索にはPagefindを使っています。ビルド時に`dist/`を走査してインデックスを作る方式で、検索用のサーバーが要りません。日本語もちゃんと引っかかります。
+
+> [!NOTE]
+> Pagefindは日本語のステミングには対応していないので語形変化をまたいだ一致はしませんが、個人ブログの検索としては十分実用的だと思います。
 
 ## 配信はCaddy
 
@@ -147,6 +151,8 @@ iframeではなくホストページのDOMに描画するのでCSSを当てる�
 
 それなら自分で書いたほうが早い、となって作ったのが[yosegaki](https://github.com/DAnything/yosegaki)です。SvelteKit + Bun + SQLiteで、構成は[別の記事](/posts/svelte-bun-sqlite/)に書いた通りいつものやつです。
 
+::github{repo="DAnything/yosegaki"}
+
 方針は下記の通りです。
 
 - スタイルを持たない。同梱のCSSは色を決めず、埋め込み先の文字色を薄めて罫線や背景にするだけなので、ライトとダークにも勝手に追従します。`data-css="false"`で丸ごと捨てて自分で書くこともできます
@@ -204,3 +210,5 @@ GitHub上のフォーク表示にはなりませんが、フォークにした�
 
 静的サイトなので落ちる要素がほとんどなく、記事を書いてpushするだけで公開されます。コメントだけは自前で面倒を見ることになりましたが、そのぶん読者はアカウントなしで書き込めるようになりました。  
 ソースコードは全部[GitHub](https://github.com/DAnything/blog)で公開しています。構成に関して気になる点などあればコメント頂けると助かります。
+
+::github{repo="DAnything/blog"}
