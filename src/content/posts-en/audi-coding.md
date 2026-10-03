@@ -32,7 +32,7 @@ Once you can launch the VCDS application, first grab the map data via Auto-Scan 
 To customize anything, plug the cable into the car's OBD2 port and the PC, then click Select under Select Control Module. The numbers below are the ones in that menu. Depending on the model, some items may not exist; in that case they may be under a different item, or the car may not support them.  
 These are for the A5 (B8).
 
-```text
+```text collapse={6-16, 18-21, 23-26, 28-32, 34-39, 41-48, 50-55}
 - Rebooting the MMI
 Pre-facelift: press SETUP + the center of the joystick + the top-right button at the same time
 Facelift: press MENU + the center of the joystick + the top-right button at the same time

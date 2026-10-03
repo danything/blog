@@ -92,7 +92,7 @@ hostname:port:database:username:password
 bitbucket-pipelines.yml is the file that defines the bitbucket pipeline. Write it as follows.  
 Fill in the `ロール ARN` (Role ARN) you noted earlier for execution-role-arn.
 
-```yml
+```yml collapse={26-34, 38-44}
 # enable Docker for your repository
 options:
   docker: true
