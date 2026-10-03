@@ -9,7 +9,7 @@
 @import "./markdown-extend.css";
 @import "./scrollbar.css";
 @import "./transition.css";
-@import "./photoswipe.css";
+@import "./lightbox.css";
 @import "./expressive-code.css";
 
 @plugin '@tailwindcss/typography';

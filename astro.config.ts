@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { unified } from "@astrojs/markdown-remark";
+import { rehypeHeadingIds, unified } from "@astrojs/markdown-remark";
 import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
@@ -8,18 +8,17 @@ import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeSlug from "rehype-slug";
-import remarkSectionize from "remark-sectionize";
 import { parsePost } from "./scripts/frontmatter";
 import { expressiveCodeConfig } from "./src/config";
 import { CONTENT_DIR } from "./src/constants/content-dir";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button";
 import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge";
+import { rehypeHeadingAnchors } from "./src/plugins/rehype-heading-anchors";
 import { remarkAlerts } from "./src/plugins/remark-alerts";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt";
 import { remarkGithubCard } from "./src/plugins/remark-github-card";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time";
+import { remarkSectionize } from "./src/plugins/remark-sectionize";
 
 // サイトマップの lastmod 用に、記事ごとの最終更新日(updated があればそれ、無ければ published)を集める。
 // 設定ファイルでは astro:content を使えないので、フロントマターを直接読む
@@ -134,30 +133,10 @@ export default defineConfig({
 				remarkSectionize,
 			],
 			rehypePlugins: [
-				rehypeSlug,
-				[
-					rehypeAutolinkHeadings,
-					{
-						behavior: "append",
-						properties: {
-							className: ["anchor"],
-						},
-						content: {
-							type: "element",
-							tagName: "span",
-							properties: {
-								className: ["anchor-icon"],
-								"data-pagefind-ignore": true,
-							},
-							children: [
-								{
-									type: "text",
-									value: "#",
-								},
-							],
-						},
-					},
-				],
+				// 見出しの id は Astro が付けるが、それは利用者のプラグインの後なので、
+				// 見出しにリンクを足すプラグインより前にも同じものを入れておく(id が付いていれば Astro は付け直さない)
+				rehypeHeadingIds,
+				rehypeHeadingAnchors,
 			],
 		}),
 	},

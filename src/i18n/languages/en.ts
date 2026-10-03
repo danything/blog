@@ -51,4 +51,9 @@ export const en: Translation = {
 	[Key.translatedNotice]:
 		"This post was translated from the Japanese original with AI.",
 	[Key.readOriginal]: "Read the original (Japanese)",
+
+	[Key.enlargeImage]: "Enlarge image",
+	[Key.imageViewer]: "Image viewer",
+	[Key.actualSize]: "View at actual size",
+	[Key.close]: "Close",
 };
