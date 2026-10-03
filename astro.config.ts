@@ -28,7 +28,7 @@ const postLastmod = new Map<string, string>();
 for (const name of fs.readdirSync(POSTS_DIR)) {
 	if (!name.endsWith(".md")) continue;
 	const fm = parsePost(path.join(POSTS_DIR, name))?.fm;
-	if (fm?.draft === true || fm?.draft === "true") continue;
+	if (fm?.draft === "true") continue;
 	const date = fm?.updated || fm?.published;
 	if (date) postLastmod.set(name.slice(0, -".md".length), date);
 }
