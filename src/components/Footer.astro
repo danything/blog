@@ -1,7 +1,9 @@
 ---
 
-import { profileConfig } from "../config";
-import { url } from "../utils/url-utils";
+import { langFromPath, siteText } from "../i18n/translation";
+import { localeUrl, url } from "../utils/url-utils";
+
+const lang = langFromPath(Astro.url.pathname);
 
 const currentYear = new Date().getFullYear();
 ---
@@ -9,8 +11,8 @@ const currentYear = new Date().getFullYear();
 <div class="transition border-t border-black/10 dark:border-white/15 my-10 border-dashed mx-32"></div>
 <div class="transition border-dashed border-[oklch(85%_0.01_var(--hue))] dark:border-white/15 rounded-2xl mb-12 flex flex-col items-center justify-center px-6">
     <div class="transition text-50 text-sm text-center">
-        &copy; <span id="copyright-year">{currentYear}</span> {profileConfig.name}. All Rights Reserved. /
-        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href={url('rss.xml')}>RSS</a> /
+        &copy; <span id="copyright-year">{currentYear}</span> {siteText(lang).profileName}. All Rights Reserved. /
+        <a class="transition link text-[var(--primary)] font-medium" target="_blank" href={localeUrl('/rss.xml', lang)}>RSS</a> /
         <a class="transition link text-[var(--primary)] font-medium" target="_blank" href={url('sitemap-index.xml')}>Sitemap</a><br>
         Powered by
         <a class="transition link text-[var(--primary)] font-medium" target="_blank" href="https://astro.build">Astro</a> &

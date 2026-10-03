@@ -1,7 +1,7 @@
 ---
 
 import ConfigCarrier from "@components/ConfigCarrier.astro";
-import { profileConfig, siteConfig } from "@/config";
+import { siteConfig } from "@/config";
 import {
 	AUTO_MODE,
 	BANNER_HEIGHT,
@@ -13,8 +13,10 @@ import {
 	PAGE_WIDTH,
 } from "../constants/constants";
 import { defaultFavicons } from "../constants/icon";
+import { langFromPath, siteText } from "../i18n/translation";
 import type { Favicon } from "../types/config";
-import { pathsEqual, url } from "../utils/url-utils";
+import { getAlternates } from "../utils/content-utils";
+import { localeUrl, pathsEqual, stripLang, url } from "../utils/url-utils";
 import "../styles/main.css";
 import { ClientRouter } from "astro:transitions";
 
@@ -28,12 +30,25 @@ interface Props {
 	ogImage?: string;
 }
 
-let { title, banner, description, lang, setOGTypeArticle, ogImage: ogImagePath } = Astro.props;
+let {
+	title,
+	banner,
+	description,
+	lang,
+	setOGTypeArticle,
+	ogImage: ogImagePath,
+} = Astro.props;
+
+// ページの言語(/en/ 以下なら英語)。UI の文言・RSS・hreflang はこれで決める
+const pageLang = langFromPath(Astro.url.pathname);
+const text = siteText(pageLang);
+// 日本語版と英語版の両方があるページなら、互いを hreflang で示す
+const alternates = await getAlternates(Astro.url.pathname);
 
 // 検索結果とシェア用。記事以外は description が無いのでサイトの説明を使う
-const metaDescription = description || siteConfig.description;
+const metaDescription = description || text.description;
 // 正規 URL(クエリや表記ゆれを除く)。404 には付けない
-const canonicalUrl = Astro.url.pathname.startsWith(url("/404"))
+const canonicalUrl = stripLang(Astro.url.pathname).startsWith(url("/404"))
 	? undefined
 	: new URL(Astro.url.pathname, Astro.site).href;
 // 記事のアイキャッチ(public 配下の絶対パス)があればそれ、次に記事ごとに作った画像、無ければサイト共通の画像
@@ -44,7 +59,7 @@ const ogImage = new URL(
 
 // apply a class to the body element to decide the height of the banner
 // ClientRouter swaps the body on each navigation, so the class follows the new page
-const isHomePage = pathsEqual(Astro.url.pathname, url("/"));
+const isHomePage = pathsEqual(Astro.url.pathname, localeUrl("/", pageLang));
 
 // defines global css variables
 // why doing this in Layout instead of GlobalStyles: https://github.com/withastro/astro/issues/6728#issuecomment-1502203757
@@ -62,14 +77,14 @@ let pageTitle: string;
 if (title) {
 	pageTitle = `${title} - ${siteConfig.title}`;
 } else {
-	pageTitle = `${siteConfig.title} - ${siteConfig.subtitle}`;
+	pageTitle = `${siteConfig.title} - ${text.subtitle}`;
 }
 
 const favicons: Favicon[] =
 	siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons;
 
 if (!lang) {
-	lang = `${siteConfig.lang}`;
+	lang = pageLang;
 }
 const siteLang = lang.replace("_", "-");
 
@@ -90,11 +105,16 @@ const bannerOffset =
 
 		<meta charset="UTF-8" />
 		<meta name="description" content={metaDescription}>
-		<meta name="author" content={profileConfig.name}>
+		<meta name="author" content={text.profileName}>
 
 		{canonicalUrl && <link rel="canonical" href={canonicalUrl}>}
+		{alternates && Object.entries(alternates).map(([l, path]) => (
+			<link rel="alternate" hreflang={l} href={new URL(path, Astro.site).href}>
+		))}
+		{alternates && <link rel="alternate" hreflang="x-default" href={new URL(alternates[siteConfig.lang], Astro.site).href}>}
 
 		<meta property="og:site_name" content={siteConfig.title}>
+		<meta property="og:locale" content={pageLang === "en" ? "en_US" : "ja_JP"}>
 		<meta property="og:url" content={Astro.url}>
 		<meta property="og:title" content={pageTitle}>
 		<meta property="og:description" content={metaDescription}>
@@ -164,7 +184,7 @@ const bannerOffset =
 
 		<ClientRouter />
 
-		<link rel="alternate" type="application/rss+xml" title={profileConfig.name} href={`${Astro.site}rss.xml`}/>
+		<link rel="alternate" type="application/rss+xml" title={text.profileName} href={new URL(localeUrl("/rss.xml", pageLang), Astro.site).href}/>
 
 	</head>
 	<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}>

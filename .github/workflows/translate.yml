@@ -1,0 +1,135 @@
+name: Translate
+
+# 記事の英訳(/en/)を Claude で作り、PR にする。決まりは .github/translate.md。
+# 原文と英訳の対応は scripts/translate-status.ts で調べる(英訳の sourceHash と原文のハッシュを比べる)。
+# 未訳・原文が変わった・原文が消えたものだけを直し、translate/auto ブランチの PR にまとめる(マージは手で)。
+#
+# GITHUB_TOKEN で作った PR や push では、ほかのワークフロー(Check・A11y Check など)が動かない。
+# PR の検査を走らせるときは、PR を一度閉じて開き直すか、空のコミットを push する。
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/content/posts/**.md"
+      - "src/content/spec/about.md"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+concurrency:
+  group: translate
+  cancel-in-progress: false
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    env:
+      BRANCH: translate/auto
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # 原文の変更点を git log / git diff で見るため
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+
+      # まだマージしていない前回の英訳 PR があれば、その英訳から続ける
+      # (同じ記事を訳し直さず、原文の変わった分だけを直すため)。
+      # 前回の PR で消したファイルは戻らないが、原文が無ければ次のステップで消える
+      - name: Restore the previous translations
+        run: |
+          if git fetch --quiet origin "$BRANCH"; then
+            git restore --source FETCH_HEAD -- src/content/posts-en || true
+            git restore --source FETCH_HEAD -- src/content/spec/about-en.md || true
+          fi
+
+      - name: Check translation status
+        id: status
+        run: |
+          bun scripts/translate-status.ts
+          json=$(bun scripts/translate-status.ts --json)
+          echo "json=$json" >> "$GITHUB_OUTPUT"
+          count=$(echo "$json" | jq '[.missing, .outdated, .orphaned] | map(length) | add')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          # 原文が無くなった英訳はここで消す(Claude には訳すことだけを頼む)
+          echo "$json" | jq -r '.orphaned[]' | xargs -r rm -v --
+          echo "todo=$(echo "$json" | jq -c '{missing, outdated}')" >> "$GITHUB_OUTPUT"
+
+      - name: Translate
+        if: steps.status.outputs.todo != '{"missing":[],"outdated":[]}'
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            このブログ(Astro 製、日本語)の記事の英訳を更新してください。
+            まず .github/translate.md を読み、その決まりに従ってください。
+
+            対象(scripts/translate-status.ts の出力。source が日本語の原文、target が英訳):
+            ${{ steps.status.outputs.todo }}
+
+            - missing: 英訳がまだ無い。原文を読んで target に英訳を新しく作る
+            - outdated: 原文が変わった。`git diff` などで原文の変更点を確かめ、既存の英訳を、
+              変わった箇所が反映されるよう最小限だけ直す(訳し直さない。変わっていない部分の訳文は変えない)。
+              原文の差分が分からないときは、原文と既存の英訳を突き合わせて食い違う箇所だけを直す
+            - 作った・直した英訳のフロントマターの sourceHash は、
+              `bun scripts/translate-status.ts --hash <原文のパス>` の値にする
+
+            守ること:
+            - 変更してよいのは src/content/posts-en/、src/content/spec/about-en.md、
+              .github/translate.md(カテゴリ・タグの対応表に足すときだけ)。原文やほかのファイルは変えない
+            - 上に挙がっていないファイルは触らない
+            - git の commit・push はしない(このあとのステップで PR にする)
+            - 最後に `bun scripts/translate-status.ts` を実行し、「英訳はすべて最新です」と出ることを確かめる
+          claude_args: |
+            --allowedTools "Read,Write,Edit,Glob,Grep,Bash(bun scripts/translate-status.ts:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*)"
+
+      # 訳が残っていないか、フロントマターや Markdown が壊れていないかを確かめる
+      - name: Verify
+        if: steps.status.outputs.count != '0'
+        run: |
+          bun scripts/translate-status.ts
+          json=$(bun scripts/translate-status.ts --json)
+          count=$(echo "$json" | jq '[.missing, .outdated, .orphaned] | map(length) | add')
+          if [ "$count" != "0" ]; then
+            echo "::error::英訳が終わっていないものがあります: $json"
+            exit 1
+          fi
+          # 英訳とその決まり以外のファイルを変えていないか
+          others=$(git status --porcelain --untracked-files=all | cut -c4- \
+            | grep -vE '^(src/content/posts-en/|src/content/spec/about-en\.md$|\.github/translate\.md$)' || true)
+          if [ -n "$others" ]; then
+            echo "::error::英訳以外のファイルが変わっています: $others"
+            exit 1
+          fi
+          bun run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub カードの情報を取るため
+
+      - name: Open a pull request
+        if: steps.status.outputs.count != '0'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: ${{ env.BRANCH }}
+          base: main
+          add-paths: |
+            src/content/posts-en
+            src/content/spec/about-en.md
+            .github/translate.md
+          commit-message: 英訳を更新
+          title: 英訳を更新
+          body: |
+            `.github/workflows/translate.yml` が ${{ github.sha }} の時点の原文から英訳を更新しました。
+
+            対象:
+            ```json
+            ${{ steps.status.outputs.todo }}
+            ```
+
+            - 訳文は .github/translate.md の決まりで Claude が作っています。目を通してからマージしてください
+            - この PR は GITHUB_TOKEN で作っているため、Check や A11y Check などのワークフローが自動では動きません。
+              検査を走らせるときは、PR を一度閉じて開き直すか、空のコミットを push してください
+          delete-branch: true

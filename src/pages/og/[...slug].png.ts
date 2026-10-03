@@ -2,12 +2,17 @@ import { getSortedPosts } from "@utils/content-utils";
 import { renderOgImage } from "@utils/og-image";
 import type { APIRoute, GetStaticPaths } from "astro";
 
-// 記事ごとの OG 画像 /og/<記事>.png をビルド時に作る
-export const getStaticPaths: GetStaticPaths = async () =>
-	(await getSortedPosts()).map((post) => ({
+// 記事ごとの OG 画像 /og/<記事>.png(英語版は /og/en/<記事>.png)をビルド時に作る
+export const getStaticPaths: GetStaticPaths = async () => [
+	...(await getSortedPosts("ja")).map((post) => ({
 		params: { slug: post.id },
 		props: { title: post.data.title },
-	}));
+	})),
+	...(await getSortedPosts("en")).map((post) => ({
+		params: { slug: `en/${post.id}` },
+		props: { title: post.data.title },
+	})),
+];
 
 export const GET: APIRoute = async ({ props }) =>
 	new Response(new Uint8Array(await renderOgImage(props.title as string)), {

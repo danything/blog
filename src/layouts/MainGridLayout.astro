@@ -1,10 +1,11 @@
 ---
+import { fade } from "astro:transitions";
 import BackToTop from "@components/control/BackToTop.astro";
 import Footer from "@components/Footer.astro";
+import Icon from "@components/misc/Icon.astro";
 import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
-import Icon from "@components/misc/Icon.astro";
 import ImageWrapper from "../components/misc/ImageWrapper.astro";
 import TOC from "../components/widget/TOC.astro";
 import { siteConfig } from "../config";
@@ -13,7 +14,7 @@ import {
 	BANNER_HEIGHT_EXTEND,
 	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
 } from "../constants/constants";
-import { fade } from "astro:transitions";
+import { langFromPath } from "../i18n/translation";
 import Layout from "./Layout.astro";
 
 interface Props {
@@ -44,6 +45,9 @@ const mainPanelTop = siteConfig.banner.enable
 	: "5.5rem";
 // ページ遷移で本文と目次だけをふわっと入れ替える(以前の swup と同じ 0.2 秒)
 const contentFade = fade({ duration: "0.2s" });
+// 残す要素は言語ごとに分ける(日本語版と英語版の間を移るときは作り直す)
+const persistKey = (name: string) =>
+	`${name}-${langFromPath(Astro.url.pathname)}`;
 ---
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} ogImage={ogImage}>
@@ -52,7 +56,7 @@ const contentFade = fade({ duration: "0.2s" });
 <slot slot="head" name="head"></slot>
 <div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-0 md:px-4 mx-auto" class:list={[""]}>
     <!-- ナビゲーションバー・サイドバー・フッターはページ遷移の間も残し、本文と目次だけ入れ替える -->
-    <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all" transition:persist>
+    <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all" transition:persist={persistKey("navbar")}>
         <Navbar></Navbar>
     </div>
 </div>
@@ -98,7 +102,7 @@ const contentFade = fade({ duration: "0.2s" });
                 </div>
             </main>
 
-            <div class="footer col-span-2 onload-animation block lg:hidden" transition:persist>
+            <div class="footer col-span-2 onload-animation block lg:hidden" transition:persist={persistKey("footer")}>
                 <Footer></Footer>
             </div>
         </div>

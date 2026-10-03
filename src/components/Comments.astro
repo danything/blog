@@ -42,7 +42,7 @@ function mount() {
 	instance = window.Yosegaki.init({
 		target,
 		server: conf.server,
-		lang: "ja",
+		lang: document.documentElement.lang === "en" ? "en" : "ja",
 		// クエリ文字列でスレッドが分かれないよう URL を明示する
 		page: location.origin + location.pathname,
 		title: document.title,

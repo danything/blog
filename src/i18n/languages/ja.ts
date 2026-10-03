@@ -35,4 +35,20 @@ export const ja: Translation = {
 	[Key.author]: "作者",
 	[Key.publishedAt]: "公開日",
 	[Key.license]: "ライセンス",
+
+	[Key.share]: "シェア",
+	[Key.shareOn]: "{name} でシェア",
+	[Key.addToHatena]: "はてなブックマークに追加",
+	[Key.copyUrl]: "URL をコピー",
+	[Key.copied]: "コピーしました",
+	[Key.copyFailed]: "コピーできませんでした",
+
+	[Key.notFound]: "ページが見つかりませんでした",
+	[Key.backToHome]: "トップへ戻る",
+
+	// 言語の切り替えボタンには、切り替え先の言語の名前を出す
+	[Key.otherLanguage]: "English",
+	[Key.switchLanguage]: "Read in English",
+	[Key.translatedNotice]: "この記事は日本語の原文を AI で翻訳したものです。",
+	[Key.readOriginal]: "原文を読む",
 };

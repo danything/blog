@@ -1,47 +1,16 @@
 ---
+import HomeView from "@components/views/HomeView.astro";
+import { PAGE_SIZE } from "@constants/constants";
+import { getSortedPosts } from "@utils/content-utils";
 import type { GetStaticPaths } from "astro";
-import Pagination from "../components/control/Pagination.astro";
-import PostPage from "../components/PostPage.astro";
-import { profileConfig, siteConfig } from "../config";
-import { PAGE_SIZE } from "../constants/constants";
-import MainGridLayout from "../layouts/MainGridLayout.astro";
-import { getSortedPosts } from "../utils/content-utils";
 
 export const getStaticPaths = (async ({ paginate }) => {
-	const allBlogPosts = await getSortedPosts();
+	const allBlogPosts = await getSortedPosts("ja");
 	return paginate(allBlogPosts, { pageSize: PAGE_SIZE });
 }) satisfies GetStaticPaths;
 // https://github.com/withastro/astro/issues/6507#issuecomment-1489916992
 
 const { page } = Astro.props;
-
-const len = page.data.length;
-
-// トップページ(1 ページ目)だけに、サイトと著者の構造化データを出す
-const person = {
-	"@type": "Person",
-	name: profileConfig.name,
-	url: Astro.site,
-	image: new URL(profileConfig.avatar ?? "", Astro.site).href,
-	sameAs: profileConfig.links.map((link) => link.url),
-};
-const jsonLd =
-	page.currentPage === 1
-		? {
-				"@context": "https://schema.org",
-				"@type": "WebSite",
-				name: siteConfig.title,
-				url: Astro.site,
-				description: siteConfig.description,
-				inLanguage: "ja",
-				author: person,
-				publisher: person,
-			}
-		: undefined;
 ---
 
-<MainGridLayout>
-    {jsonLd && <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>}
-    <PostPage page={page}></PostPage>
-    <Pagination class="mx-auto onload-animation" page={page} style={`animation-delay: calc(var(--content-delay) + ${(len)*50}ms)`}></Pagination>
-</MainGridLayout>
+<HomeView page={page} lang="ja"></HomeView>

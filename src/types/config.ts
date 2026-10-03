@@ -9,17 +9,8 @@ export type SiteConfig = {
 	/** OGP 画像の既定値(public 配下の絶対パス)。記事にアイキャッチがあればそちらを使う */
 	ogImage: string;
 
-	lang:
-		| "en"
-		| "zh_CN"
-		| "zh_TW"
-		| "ja"
-		| "ko"
-		| "es"
-		| "th"
-		| "vi"
-		| "tr"
-		| "id";
+	/** 既定の言語。英語版は /en/ 以下に置く(src/i18n/translation.ts) */
+	lang: "ja" | "en";
 
 	themeColor: {
 		hue: number;

@@ -15,6 +15,12 @@ export const visualPages: string[] = [
 	"/posts/github-card/",
 	"/posts/cover/",
 	"/posts/long/",
+	// 英語版(tests/fixtures/posts-en/。英訳の無い記事もある)
+	"/en/",
+	"/en/archive/",
+	"/en/about/",
+	"/en/404/",
+	"/en/posts/markdown/",
 ];
 
 // アクセシビリティの検査(a11y.spec.ts)で見るページ。実際の記事でビルドしたサイトを調べる
@@ -31,6 +37,13 @@ export const a11yPages: string[] = [
 	"/posts/truck/",
 	"/posts/renewal/",
 	"/posts/oss-transfer/",
+	// 英語版
+	"/en/",
+	"/en/archive/",
+	"/en/about/",
+	"/en/404/",
+	"/en/posts/slack-search-read/",
+	"/en/posts/truck/",
 ];
 
 export async function setupContext(

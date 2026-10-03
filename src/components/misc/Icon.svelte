@@ -9,7 +9,10 @@ export { className as class };
 
 $: data = (icons as Record<string, { viewBox: string; body: string }>)[icon];
 // client:only の部品はビルド時に描画されないので、名前の取り込み忘れは実行時に知らせる
-$: if (!data) console.warn(`アイコン ${icon} が src/icons.json にありません(bun run icons を実行)`);
+$: if (!data)
+	console.warn(
+		`アイコン ${icon} が src/icons.json にありません(bun run icons を実行)`,
+	);
 </script>
 
 {#if data}

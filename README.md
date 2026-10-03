@@ -99,6 +99,28 @@ Actions の画面から手動でも実行できる。ボットを弾くだけで
 lychee src/content/posts/*.md
 ```
 
+## 英語版
+
+`/en/` 以下に英語版を置いている(UI も英語)。記事は `src/content/posts-en/<日本語版と同じファイル名>.md`、About は `src/content/spec/about-en.md`。
+英訳のある記事は日本語版と `hreflang` で結ばれ、ナビゲーションバーのボタンで行き来できる(英訳が無ければもう一方の言語のトップへ)。
+Zenn への同期とニュースレターは日本語版だけ。
+
+英訳は Claude が作る(`.github/workflows/translate.yml`)。main の記事か About が変わると、未訳・原文が更新された・原文が消えた
+ものだけを `.github/translate.md` の決まりで訳し直し(更新は差分だけ直す)、`translate/auto` ブランチの PR「英訳を更新」にする。
+Actions の画面から手動でも実行できる。この PR は GITHUB_TOKEN で作るので Check などのワークフローは自動では動かない。
+走らせるときは PR を閉じて開き直すか、空のコミットを push する。
+
+英訳のフロントマターの `sourceHash` は訳した時点の原文のハッシュで、原文と食い違っているものは次で分かる。
+
+```shell
+bun scripts/translate-status.ts                 # 未訳・更新が必要・削除するもの
+bun scripts/translate-status.ts --hash <原文>   # sourceHash に書く値
+```
+
+手で訳を直したときも `sourceHash` を合わせておく(合っていないと CI が訳し直す)。
+記事を削除したときは英訳も CI が消す。`Caddyfile` の `@gone` は `/en/posts/...` にも効く。
+見た目の比較用の固定の英訳は `tests/fixtures/posts-en/` と `tests/fixtures/spec/about-en.md`(一部の記事だけ訳してある)。
+
 ## アイコン
 
 使っているアイコンだけを `src/icons.json` に持ち、`src/components/misc/Icon.astro`(Svelte からは `Icon.svelte`)で埋め込む。
