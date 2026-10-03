@@ -1,6 +1,5 @@
 ---
 
-import ConfigCarrier from "@components/ConfigCarrier.astro";
 import Icon from "@components/misc/Icon.astro";
 import { siteConfig } from "@/config";
 import {
@@ -195,7 +194,6 @@ const speculationRules = {
 
 	</head>
 	<body>
-		<ConfigCarrier></ConfigCarrier>
 		<slot />
 		<!-- 記事の画像の拡大表示(下のスクリプトと styles/lightbox.css) -->
 		<dialog id="lightbox" class="lightbox" aria-label={i18n(I18nKey.imageViewer, pageLang)} data-enlarge={i18n(I18nKey.enlargeImage, pageLang)}>
@@ -237,9 +235,7 @@ setClickOutsideToClose("display-setting", ["display-setting", "display-settings-
 setClickOutsideToClose("nav-menu-panel", ["nav-menu-panel", "nav-menu-switch"])
 setClickOutsideToClose("search-panel", ["search-panel", "search-bar", "search-switch"])
 
-// テーマ・色相は <head> のスクリプトで描画の前に付けている。ここでは Expressive Code のテーマなども合わせる
-setTheme(getStoredTheme());
-setHue(getHue());
+// テーマ・色相は <head> のスクリプトで描画の前に付けている。
 // 裏で描画してから開かれるまでの間に、テーマや色相が変えられていたら合わせ直す
 onActivatedFromPrerender(() => {
 	setTheme(getStoredTheme());

@@ -48,7 +48,7 @@ export default defineConfig({
 	// Speculation Rules(layouts/Layout.astro の <script type="speculationrules">)に任せる
 	integrations: [
 		expressiveCode({
-			themes: [expressiveCodeConfig.theme, expressiveCodeConfig.theme],
+			themes: [expressiveCodeConfig.theme],
 			plugins: [
 				pluginCollapsibleSections(),
 				pluginLineNumbers(),

@@ -167,7 +167,7 @@ const hue = siteConfig.themeColor.hue;
 
 <script>
 import { onActivatedFromPrerender } from "@utils/prerender";
-import { getDefaultHue, getHue, setHue } from "@utils/setting-utils";
+import { DEFAULT_HUE, getHue, setHue } from "@utils/setting-utils";
 
 function setup(panel: HTMLElement) {
 	const slider = panel.querySelector<HTMLInputElement>("#colorSlider");
@@ -175,13 +175,11 @@ function setup(panel: HTMLElement) {
 	const value = panel.querySelector<HTMLElement>("#hueValue");
 	if (!slider || !reset || !value) return;
 
-	const defaultHue = getDefaultHue();
-
 	const update = (hue: number) => {
 		setHue(hue);
 		slider.value = String(hue);
 		value.textContent = String(hue);
-		const isDefault = hue === defaultHue;
+		const isDefault = hue === DEFAULT_HUE;
 		reset.disabled = isDefault;
 	};
 
@@ -189,7 +187,7 @@ function setup(panel: HTMLElement) {
 	reset.addEventListener("click", () => {
 		// 戻すとこのボタンは押せなく(disabled に)なるので、キーボードで押したときはスライダーへ移す
 		const focused = document.activeElement === reset;
-		update(defaultHue);
+		update(DEFAULT_HUE);
 		if (focused) slider.focus();
 	});
 	// Esc で閉じて、開いたボタンへ戻る
