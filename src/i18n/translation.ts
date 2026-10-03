@@ -32,6 +32,7 @@ export function siteText(lang: Lang) {
 		profileName: profileConfig.name,
 		bio: profileConfig.bio,
 		kofi: {
+			title: kofiConfig.title,
 			description: kofiConfig.description,
 			buttonLabel: kofiConfig.buttonLabel,
 		},
