@@ -1,8 +1,9 @@
 /* サイト全体のスタイルの入口(Layout.astro で読み込む)。コンポーネントごとのスタイルは各 .astro の <style> に書く。
- * 層(@layer)は弱い順に reset(ブラウザの既定を打ち消す) → base(ページの土台) → components(共通の部品)。
- * 層に入れていない規則(変数・記事の本文の調整・各コンポーネントの <style>)は、詳細度に関係なく層の中の規則に勝つ。
- * Tailwind はまだ残っている部分のためのもの(theme・utilities の層) */
-@layer theme, reset, base, components, utilities;
+ * 層(@layer)は弱い順に reset(ブラウザの既定を打ち消す) → base(ページの土台) → components(共通の部品)
+ * → typography(記事の本文の基本の組版)。層に入れていない規則(変数・記事の本文の調整・各コンポーネントの
+ * <style>・Expressive Code)は、詳細度に関係なく層の中の規則に勝つ。
+ * Tailwind はアイコンの変数を足すプラグイン(icons-plugin.ts)のためだけに残っている */
+@layer theme, reset, base, components, utilities, typography;
 /* クラス名を探すのは src/ だけにする。記事(src/content/)の本文やコードに書かれた
  * class="…" の文字を拾うと、使っていないユーティリティまで CSS に入る。見た目の比較用の
  * 固定の記事(tests/fixtures/)も src/ の外なので、本番と同じ CSS になる */
@@ -12,6 +13,7 @@
 @import "./reset.css" layer(reset);
 @import "./base.css" layer(base);
 @import "./components.css" layer(components);
+@import "./typography.css" layer(typography);
 @import "./variables.css";
 @import "./markdown.css";
 @import "./markdown-extend.css";
@@ -20,11 +22,4 @@
 @import "./lightbox.css";
 @import "./expressive-code.css";
 
-@plugin '@tailwindcss/typography';
 @plugin './icons-plugin.ts';
-
-@custom-variant dark (&:is(.dark *));
-
-.custom-md img, #post-cover img {
-    @apply cursor-zoom-in
-}
