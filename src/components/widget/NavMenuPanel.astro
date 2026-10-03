@@ -41,21 +41,17 @@ const links = Astro.props.links;
         border-radius: 0.5rem;
         transition: var(--transition);
 
+        /* マウスを乗せると背景が付き、文字がテーマの色になる(ライト・ダークとも) */
         @media (hover: hover) {
             &:hover {
                 background-color: var(--btn-plain-bg-hover);
             }
-        }
-        &:active {
-            background-color: var(--btn-plain-bg-active);
-        }
-    }
-    /* 文字の色を変えるのはライトモードだけ(ダークモードでは変えない) */
-    :global(:root:not(.dark)) .menu-link {
-        @media (hover: hover) {
             &:hover .menu-label {
                 color: var(--primary);
             }
+        }
+        &:active {
+            background-color: var(--btn-plain-bg-active);
         }
         &:active .menu-label {
             color: var(--primary);
