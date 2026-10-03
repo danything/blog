@@ -8,13 +8,13 @@ import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import remarkSectionize from "remark-sectionize";
 import { parsePost } from "./scripts/frontmatter";
 import { expressiveCodeConfig } from "./src/config";
 import { CONTENT_DIR } from "./src/constants/content-dir";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button";
 import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge";
+import { rehypeHeadingAnchors } from "./src/plugins/rehype-heading-anchors";
 import { remarkAlerts } from "./src/plugins/remark-alerts";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt";
 import { remarkGithubCard } from "./src/plugins/remark-github-card";
@@ -136,29 +136,7 @@ export default defineConfig({
 				// 見出しの id は Astro が付けるが、それは利用者のプラグインの後なので、
 				// 見出しにリンクを足すプラグインより前にも同じものを入れておく(id が付いていれば Astro は付け直さない)
 				rehypeHeadingIds,
-				[
-					rehypeAutolinkHeadings,
-					{
-						behavior: "append",
-						properties: {
-							className: ["anchor"],
-						},
-						content: {
-							type: "element",
-							tagName: "span",
-							properties: {
-								className: ["anchor-icon"],
-								"data-pagefind-ignore": true,
-							},
-							children: [
-								{
-									type: "text",
-									value: "#",
-								},
-							],
-						},
-					},
-				],
+				rehypeHeadingAnchors,
 			],
 		}),
 	},
