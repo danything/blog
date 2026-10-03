@@ -102,7 +102,7 @@ const jsonLd = {
             {isTranslation && (
                 <div class="mb-6 rounded-xl bg-[var(--license-block-bg)] px-5 py-3 text-sm text-black/75 dark:text-white/75 transition onload-animation">
                     {i18n(I18nKey.translatedNotice, lang)}
-                    <a href={getPostUrlBySlug(entry.id, "ja")} hreflang="ja" data-astro-reload class="link text-[var(--primary)] font-medium">{i18n(I18nKey.readOriginal, lang)}</a>
+                    <a href={getPostUrlBySlug(entry.id, "ja")} hreflang="ja" class="link text-[var(--primary)] font-medium">{i18n(I18nKey.readOriginal, lang)}</a>
                 </div>
             )}
 

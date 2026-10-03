@@ -20,7 +20,6 @@ import type { Favicon } from "../types/config";
 import { getAlternates } from "../utils/content-utils";
 import { localeUrl, pathsEqual, stripLang, url } from "../utils/url-utils";
 import "../styles/main.css";
-import { ClientRouter } from "astro:transitions";
 
 interface Props {
 	title?: string;
@@ -60,7 +59,6 @@ const ogImage = new URL(
 ).href;
 
 // apply a class to the body element to decide the height of the banner
-// ClientRouter swaps the body on each navigation, so the class follows the new page
 const isHomePage = pathsEqual(Astro.url.pathname, localeUrl("/", pageLang));
 
 // defines global css variables
@@ -100,7 +98,7 @@ const bannerOffset =
 ---
 
 <!DOCTYPE html>
-<html lang={siteLang} class="bg-[var(--page-bg)] transition text-[14px] md:text-[16px]" transition:animate="none">
+<html lang={siteLang} class="bg-[var(--page-bg)] transition text-[14px] md:text-[16px]">
 	<head>
 
 		<title>{pageTitle}</title>
@@ -175,6 +173,12 @@ const bannerOffset =
 			let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
 			offset = offset - offset % 4;
 			document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
+
+			// 本文の出現を遅らせるのは最初の表示だけ。サイトの中でページを移ってきたとき(再読み込みは除く)は遅らせない
+			const activation = window.navigation?.activation;
+			if (activation?.from && activation.navigationType !== 'reload') {
+				document.documentElement.style.setProperty('--content-delay', '0ms');
+			}
 		</script>
 		<style define:vars={{
 			configHue,
@@ -183,8 +187,6 @@ const bannerOffset =
 
 
 		<slot name="head"></slot>
-
-		<ClientRouter />
 
 		<link rel="alternate" type="application/rss+xml" title={text.profileName} href={new URL(localeUrl("/rss.xml", pageLang), Astro.site).href}/>
 
@@ -280,26 +282,15 @@ function setBannerHeightExtend() {
 	document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
 }
 
-// テーマ・色相・バナーの高さは <html> に付けている。ClientRouter はページ遷移のたびに
-// <html> の属性を新しいページのもので置き換えるので、入れ替えの直後に付け直す
-function applySettings() {
-	setTheme(getStoredTheme());
-	setHue(getHue());
-	setBannerHeightExtend();
-}
-applySettings();
-document.addEventListener('astro:after-swap', () => {
-	applySettings();
-	// 本文の出現を遅らせるのは最初の表示だけ
-	document.documentElement.style.setProperty('--content-delay', '0ms');
-});
+// テーマ・色相は <head> のスクリプトで描画の前に付けている。ここでは Expressive Code のテーマなども合わせる
+setTheme(getStoredTheme());
+setHue(getHue());
 
 function showBanner() {
 	if (!siteConfig.banner.enable) return;
 	document.getElementById('banner')?.classList.remove('opacity-0', 'scale-105');
 }
 
-// 要素はページ遷移で入れ替わるので、毎回取り直す
 function scrollFunction() {
 	const bannerEnabled = !!document.getElementById('banner-wrapper')
 	const scrollTop = Math.max(document.body.scrollTop, document.documentElement.scrollTop)
@@ -322,10 +313,8 @@ function scrollFunction() {
 window.addEventListener('scroll', scrollFunction, { passive: true })
 window.addEventListener('resize', setBannerHeightExtend)
 
-document.addEventListener('astro:page-load', () => {
-	showBanner();
-	scrollFunction();
-});
+showBanner();
+scrollFunction();
 </script>
 
 <script>
@@ -383,19 +372,16 @@ function open(source: HTMLImageElement) {
 	else image.addEventListener("load", updateZoomable, { once: true })
 }
 
-// 本文はページ遷移で入れ替わるので、ページごとに印を付け直す
-document.addEventListener("astro:page-load", () => {
-	const label = getParts()?.dialog.dataset.enlarge ?? ""
-	for (const img of document.querySelectorAll<HTMLImageElement>(TRIGGERS)) {
-		img.classList.add("lightbox-trigger")
-		img.tabIndex = 0
-		img.setAttribute("role", "button")
-		img.setAttribute("aria-haspopup", "dialog")
-		img.setAttribute("aria-label", img.alt ? `${label}: ${img.alt}` : label)
-		// alt="" は飾りの画像という印で、ボタンの役割と矛盾する。名前は aria-label で付けたので外す
-		if (img.getAttribute("alt") === "") img.removeAttribute("alt")
-	}
-})
+const label = getParts()?.dialog.dataset.enlarge ?? ""
+for (const img of document.querySelectorAll<HTMLImageElement>(TRIGGERS)) {
+	img.classList.add("lightbox-trigger")
+	img.tabIndex = 0
+	img.setAttribute("role", "button")
+	img.setAttribute("aria-haspopup", "dialog")
+	img.setAttribute("aria-label", img.alt ? `${label}: ${img.alt}` : label)
+	// alt="" は飾りの画像という印で、ボタンの役割と矛盾する。名前は aria-label で付けたので外す
+	if (img.getAttribute("alt") === "") img.removeAttribute("alt")
+}
 
 /** 実際の大きさで出しているときのスクロールバーを押したか(押しても閉じない) */
 function onScrollbar(e: MouseEvent) {
@@ -405,7 +391,7 @@ function onScrollbar(e: MouseEvent) {
 	return e.clientX - rect.left >= el.clientWidth || e.clientY - rect.top >= el.clientHeight
 }
 
-// ダイアログもページ遷移で入れ替わるので、イベントは document で受ける
+// 画像は数が多いので、イベントは document でまとめて受ける
 document.addEventListener("click", (e) => {
 	if (!(e.target instanceof Element)) return
 	const trigger = e.target.closest<HTMLImageElement>(".lightbox-trigger")

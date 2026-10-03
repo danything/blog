@@ -118,14 +118,6 @@ function setup(panel: HTMLElement) {
 	update(getHue());
 }
 
-// ナビゲーションバーはページ遷移の間も残る(transition:persist)ので、まだ準備していないものだけ準備する
-document.addEventListener("astro:page-load", () => {
-	for (const panel of document.querySelectorAll<HTMLElement>(
-		"#display-setting",
-	)) {
-		if (panel.dataset.ready) continue;
-		panel.dataset.ready = "true";
-		setup(panel);
-	}
-});
+const panel = document.getElementById("display-setting");
+if (panel) setup(panel);
 </script>

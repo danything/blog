@@ -15,31 +15,21 @@ import { commentConfig } from "@/config";
 
 const { yosegaki: conf } = commentConfig;
 
-type Instance = { destroy: () => void };
-
 declare global {
 	interface Window {
 		Yosegaki?: {
-			init: (opts: Record<string, unknown>) => Instance | null;
+			init: (opts: Record<string, unknown>) => unknown;
 		};
 	}
 }
 
-let instance: Instance | null = null;
-
-function mount() {
-	const target = document.getElementById("yosegaki");
-	if (!target) return;
-
+function mount(target: HTMLElement) {
 	if (!window.Yosegaki) {
 		console.error(`[comments] yosegaki を読み込めませんでした (${conf.server}/embed.js)`);
 		return;
 	}
 
-	// 2 回目以降 (ページ遷移) は既存インスタンスを捨てて作り直す。
-	// 同梱 CSS は init のたびに <head> に無ければ入れ直される
-	instance?.destroy();
-	instance = window.Yosegaki.init({
+	window.Yosegaki.init({
 		target,
 		server: conf.server,
 		lang: document.documentElement.lang === "en" ? "en" : "ja",
@@ -49,22 +39,14 @@ function mount() {
 	});
 }
 
-// 初回だけ埋め込みスクリプトを読む。data-auto="false" で自動描画は止め、
+// コメント欄のあるページでだけ埋め込みスクリプトを読む。data-auto="false" で自動描画は止め、
 // こちらから init する
-function load() {
-	if (window.Yosegaki) {
-		mount();
-		return;
-	}
+const target = document.getElementById("yosegaki");
+if (target) {
 	const script = document.createElement("script");
 	script.src = `${conf.server}/embed.js`;
 	script.dataset.auto = "false";
-	script.onload = mount;
+	script.onload = () => mount(target);
 	document.head.appendChild(script);
-}
-
-// ページ遷移のたびにそのページのコメント欄を出す(初回の表示でも呼ばれる)
-if (commentConfig.enable) {
-	document.addEventListener("astro:page-load", load);
 }
 </script>

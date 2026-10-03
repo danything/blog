@@ -1,5 +1,4 @@
 ---
-import { fade } from "astro:transitions";
 import BackToTop from "@components/control/BackToTop.astro";
 import Footer from "@components/Footer.astro";
 import Icon from "@components/misc/Icon.astro";
@@ -14,7 +13,6 @@ import {
 	BANNER_HEIGHT_EXTEND,
 	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
 } from "../constants/constants";
-import { langFromPath } from "../i18n/translation";
 import Layout from "./Layout.astro";
 
 interface Props {
@@ -43,11 +41,6 @@ const hasBannerLink = !!siteConfig.banner.credit.url;
 const mainPanelTop = siteConfig.banner.enable
 	? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
 	: "5.5rem";
-// ページ遷移で本文と目次だけをふわっと入れ替える(以前の swup と同じ 0.2 秒)
-const contentFade = fade({ duration: "0.2s" });
-// 残す要素は言語ごとに分ける(日本語版と英語版の間を移るときは作り直す)
-const persistKey = (name: string) =>
-	`${name}-${langFromPath(Astro.url.pathname)}`;
 ---
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} ogImage={ogImage}>
@@ -55,8 +48,7 @@ const persistKey = (name: string) =>
 <!-- Navbar -->
 <slot slot="head" name="head"></slot>
 <div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-0 md:px-4 mx-auto" class:list={[""]}>
-    <!-- ナビゲーションバー・サイドバー・フッターはページ遷移の間も残し、本文と目次だけ入れ替える -->
-    <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all" transition:persist={persistKey("navbar")}>
+    <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all">
         <Navbar></Navbar>
     </div>
 </div>
@@ -92,7 +84,7 @@ const persistKey = (name: string) =>
 
             <SideBar class="mb-4 row-start-2 row-end-3 col-span-2 lg:row-start-1 lg:row-end-2 lg:col-span-1 lg:max-w-[17.5rem] onload-animation" headings={headings}></SideBar>
 
-            <main id="main-content" class="col-span-2 lg:col-span-1 overflow-hidden" transition:animate={contentFade}>
+            <main id="main-content" class="col-span-2 lg:col-span-1 overflow-hidden">
                 <div id="content-wrapper" class="onload-animation">
                     <!-- the overflow-hidden here prevent long text break the layout-->
                     <slot></slot>
@@ -102,7 +94,7 @@ const persistKey = (name: string) =>
                 </div>
             </main>
 
-            <div class="footer col-span-2 onload-animation block lg:hidden" transition:persist={persistKey("footer")}>
+            <div class="footer col-span-2 onload-animation block lg:hidden">
                 <Footer></Footer>
             </div>
         </div>
@@ -119,7 +111,7 @@ const persistKey = (name: string) =>
             {"toc-hide": siteConfig.banner.enable}]}
         >
             <div id="toc-inner-wrapper" class="fixed top-14 w-[var(--toc-width)] h-[calc(100vh_-_20rem)] overflow-y-scroll overflow-x-hidden hide-scrollbar">
-                <div id="toc" class="w-full h-full" transition:animate={contentFade}>
+                <div id="toc" class="w-full h-full">
                     <div class="h-8 w-full"></div>
                     <TOC headings={headings}></TOC>
                     <div class="h-8 w-full"></div>

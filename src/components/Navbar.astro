@@ -17,8 +17,7 @@ const className = Astro.props.class;
 const lang = langFromPath(Astro.url.pathname);
 const LinkPresets = getLinkPresets(lang);
 
-// 言語の切り替え先。同じページのもう一方の言語版、無ければもう一方のトップ。
-// ナビゲーションバーはページ遷移の間も残るので、遷移のたびに下のスクリプトで <head> の hreflang から付け直す
+// 言語の切り替え先。同じページのもう一方の言語版、無ければもう一方のトップ
 const otherLang = lang === "ja" ? "en" : "ja";
 const switchUrl =
 	(await getAlternates(Astro.url.pathname))?.[otherLang] ??
@@ -58,9 +57,7 @@ let links: NavBarLink[] = navBarConfig.links.map(
         </div>
         <div class="flex">
             <Search lang={lang} />
-            <!-- 言語を切り替えると検索の索引(Pagefind は言語ごと)も変わるので、ページを読み直す -->
-            <a id="lang-switch" href={switchUrl} hreflang={otherLang} lang={otherLang} data-astro-reload
-               data-other-lang={otherLang} data-fallback={localeUrl("/", otherLang)}
+            <a href={switchUrl} hreflang={otherLang} lang={otherLang}
                aria-label={i18n(I18nKey.switchLanguage, lang)} title={i18n(I18nKey.switchLanguage, lang)}
                class="btn-plain scale-animation rounded-lg h-11 px-3 gap-1 font-bold text-sm active:scale-90">
                 <Icon name="lucide:languages" class="text-[1.25rem]"></Icon>
@@ -82,48 +79,20 @@ let links: NavBarLink[] = navBarConfig.links.map(
 </div>
 
 <script>
-// ナビゲーションバーはページ遷移の間も残る(transition:persist)ので、まだ準備していないボタンだけ準備する
-function setupOnce(id: string, setup: (el: HTMLElement) => void) {
-    const el = document.getElementById(id);
-    if (!el || el.dataset.ready) return;
-    el.dataset.ready = "true";
-    setup(el);
-}
+document.getElementById("display-settings-switch")?.addEventListener("click", (e) => {
+    const settingPanel = document.getElementById("display-setting");
+    if (settingPanel) {
+        const opened = !settingPanel.classList.toggle("float-panel-closed");
+        // キーボードで開いたとき(Enter / Space だと detail が 0)は、中のスライダーへ移す
+        if (opened && e.detail === 0) {
+            document.getElementById("colorSlider")?.focus();
+        }
+    }
+});
 
-function loadButtonScript() {
-    setupOnce("display-settings-switch", (settingBtn) => {
-        settingBtn.addEventListener("click", (e) => {
-            const settingPanel = document.getElementById("display-setting");
-            if (settingPanel) {
-                const opened = !settingPanel.classList.toggle("float-panel-closed");
-                // キーボードで開いたとき(Enter / Space だと detail が 0)は、中のスライダーへ移す
-                if (opened && e.detail === 0) {
-                    document.getElementById("colorSlider")?.focus();
-                }
-            }
-        });
-    });
-
-    setupOnce("nav-menu-switch", (menuBtn) => {
-        menuBtn.addEventListener("click", () => {
-            document.getElementById("nav-menu-panel")?.classList.toggle("float-panel-closed");
-        });
-    });
-}
-
-document.addEventListener("astro:page-load", loadButtonScript);
-
-// 言語の切り替えボタンの行き先を、今のページのもう一方の言語版にする
-function updateLangSwitch() {
-    const link = document.getElementById("lang-switch");
-    if (!(link instanceof HTMLAnchorElement)) return;
-    const alt = document.querySelector<HTMLLinkElement>(
-        `link[rel="alternate"][hreflang="${link.dataset.otherLang}"]`,
-    );
-    // hreflang は本番の絶対 URL なので、パスだけ使う(プレビューなど別のホストでも動くように)
-    link.href = alt ? new URL(alt.href).pathname : (link.dataset.fallback ?? "/");
-}
-document.addEventListener("astro:page-load", updateLangSwitch);
+document.getElementById("nav-menu-switch")?.addEventListener("click", () => {
+    document.getElementById("nav-menu-panel")?.classList.toggle("float-panel-closed");
+});
 </script>
 
 {import.meta.env.PROD && <script is:inline define:vars={{scriptUrl: `${url('/pagefind/pagefind.js')}?v=${BUILD_ID}`}}>

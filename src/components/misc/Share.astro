@@ -58,12 +58,8 @@ const hatena = `https://b.hatena.ne.jp/entry/${postUrl.replace(/^https?:\/\//, "
 </div>
 
 <script>
-// ページ遷移で本文が入れ替わっても効くよう、document に 1 回だけ委譲で付ける
-if (!(window as Window & { __shareCopyBound?: boolean }).__shareCopyBound) {
-	(window as Window & { __shareCopyBound?: boolean }).__shareCopyBound = true;
-	document.addEventListener("click", async (e) => {
-		const btn = (e.target as HTMLElement | null)?.closest<HTMLButtonElement>(".share-copy");
-		if (!btn) return;
+for (const btn of document.querySelectorAll<HTMLButtonElement>(".share-copy")) {
+	btn.addEventListener("click", async () => {
 		const label = btn.querySelector<HTMLElement>(".share-copy-label");
 		// 文言はページの言語のものをボタンに持たせている
 		const original = label?.textContent ?? "";
