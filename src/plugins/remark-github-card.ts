@@ -7,15 +7,49 @@ import { h } from "./hast";
 // Astro の smartypants がこのプラグインより先に " を “ ” に変えるので両方を受け付ける
 const PATTERN = /^::github\{repo=["“]([\w.-]+)\/([\w.-]+)["”]\}$/;
 
+type Repo = {
+	description: string | null;
+	language: string | null;
+	forks: number;
+	stargazers_count: number;
+	license: { spdx_id: string } | null;
+	owner: { avatar_url: string };
+};
+
+// 同じリポジトリはビルド中に 1 回だけ取りに行く
+const cache = new Map<string, Promise<Repo | null>>();
+
+function fetchRepo(repo: string): Promise<Repo | null> {
+	let p = cache.get(repo);
+	if (!p) {
+		// CI では GITHUB_TOKEN で回数制限(未認証は 1 時間に 60 回)を緩める
+		const token = process.env.GITHUB_TOKEN;
+		p = fetch(`https://api.github.com/repos/${repo}`, {
+			headers: token ? { Authorization: `Bearer ${token}` } : {},
+		})
+			.then((r) => (r.ok ? (r.json() as Promise<Repo>) : null))
+			.catch(() => null);
+		cache.set(repo, p);
+	}
+	return p;
+}
+
+const compact = (n: number) =>
+	Intl.NumberFormat("en-us", { notation: "compact", maximumFractionDigits: 1 })
+		.format(n)
+		.replaceAll(" ", "");
+
 /**
  * GitHub リポジトリのカード。記事中に次の 1 行を書く。
  *
  *   ::github{repo="owner/repo"}
  *
- * 説明・スター数などはページを開いたときに api.github.com から取ってくる。
+ * 説明・スター数などはビルド時に api.github.com から取ってきて HTML に埋め込む
+ * (取れなかったときは「取得失敗」の見た目になるだけでビルドは止めない)。
  * scripts/zenn-sync.ts も同じ書き方を Zenn の @[card](...) に変換する。
  */
-export const remarkGithubCard: RemarkPlugin = () => (tree) => {
+export const remarkGithubCard: RemarkPlugin = () => async (tree) => {
+	const jobs: Promise<void>[] = [];
 	visit(tree, "paragraph", (node) => {
 		const text = node.children[0];
 		if (node.children.length !== 1 || text.type !== "text") return;
@@ -24,56 +58,57 @@ export const remarkGithubCard: RemarkPlugin = () => (tree) => {
 
 		const [, owner, name] = match;
 		const repo = `${owner}/${name}`;
-		const id = `GC${Math.random().toString(36).slice(-6)}`; // 衝突しても実害は無い
-		const part = (key: string, tag = "div", children: string[] = []) =>
-			h(tag, { id: `${id}-${key}`, className: [`gc-${key}`] }, children);
-
-		node.data = {
-			hName: "a",
-			hProperties: {
-				id: `${id}-card`,
-				className: ["card-github", "fetch-waiting", "no-styling"],
-				href: `https://github.com/${repo}`,
-				target: "_blank",
-				rel: ["noopener"],
-				repo,
-			},
-			hChildren: [
-				h("div", { className: ["gc-titlebar"] }, [
-					h("div", { className: ["gc-titlebar-left"] }, [
-						h("div", { className: ["gc-owner"] }, [
-							part("avatar"),
-							h("div", { className: ["gc-user"] }, [owner]),
+		jobs.push(
+			fetchRepo(repo).then((data) => {
+				node.data = {
+					hName: "a",
+					hProperties: {
+						className: [
+							"card-github",
+							"no-styling",
+							...(data ? [] : ["fetch-error"]),
+						],
+						href: `https://github.com/${repo}`,
+						target: "_blank",
+						rel: ["noopener"],
+					},
+					hChildren: [
+						h("div", { className: ["gc-titlebar"] }, [
+							h("div", { className: ["gc-titlebar-left"] }, [
+								h("div", { className: ["gc-owner"] }, [
+									h("div", {
+										className: ["gc-avatar"],
+										style: data
+											? `background-image: url(${data.owner.avatar_url}); background-color: transparent`
+											: undefined,
+									}),
+									h("div", { className: ["gc-user"] }, [owner]),
+								]),
+								h("div", { className: ["gc-divider"] }, ["/"]),
+								h("div", { className: ["gc-repo"] }, [name]),
+							]),
+							h("div", { className: ["github-logo"] }),
 						]),
-						h("div", { className: ["gc-divider"] }, ["/"]),
-						h("div", { className: ["gc-repo"] }, [name]),
-					]),
-					h("div", { className: ["github-logo"] }),
-				]),
-				part("description", "div", ["Waiting for api.github.com..."]),
-				h("div", { className: ["gc-infobar"] }, [
-					part("stars", "div", ["00K"]),
-					part("forks", "div", ["0K"]),
-					part("license", "div", ["0K"]),
-					part("language", "span", ["Waiting..."]),
-				]),
-				h("script", { type: "text/javascript", defer: true }, [
-					`
-fetch('https://api.github.com/repos/${repo}', { referrerPolicy: "no-referrer" }).then(r => r.json()).then(data => {
-  const $ = (k) => document.getElementById('${id}-' + k);
-  const compact = (n) => Intl.NumberFormat('en-us', { notation: "compact", maximumFractionDigits: 1 }).format(n).replaceAll("\\u202f", '');
-  $('description').innerText = data.description?.replace(/:[a-zA-Z0-9_]+:/g, '') || "Description not set";
-  $('language').innerText = data.language;
-  $('forks').innerText = compact(data.forks);
-  $('stars').innerText = compact(data.stargazers_count);
-  $('avatar').style.backgroundImage = 'url(' + data.owner.avatar_url + ')';
-  $('avatar').style.backgroundColor = 'transparent';
-  $('license').innerText = data.license?.spdx_id || "no-license";
-  $('card').classList.remove("fetch-waiting");
-}).catch(() => document.getElementById('${id}-card')?.classList.add("fetch-error"));
-`,
-				]),
-			],
-		};
+						h("div", { className: ["gc-description"] }, [
+							data?.description?.replace(/:[a-zA-Z0-9_]+:/g, "") ||
+								"Description not set",
+						]),
+						h("div", { className: ["gc-infobar"] }, [
+							h("div", { className: ["gc-stars"] }, [
+								data ? compact(data.stargazers_count) : "-",
+							]),
+							h("div", { className: ["gc-forks"] }, [
+								data ? compact(data.forks) : "-",
+							]),
+							h("div", { className: ["gc-license"] }, [
+								data?.license?.spdx_id ?? "no-license",
+							]),
+							h("span", { className: ["gc-language"] }, [data?.language ?? ""]),
+						]),
+					],
+				};
+			}),
+		);
 	});
+	await Promise.all(jobs);
 };

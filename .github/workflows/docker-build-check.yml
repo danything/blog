@@ -19,5 +19,6 @@ jobs:
         with:
           context: .
           push: false
+          secrets: github_token=${{ secrets.GITHUB_TOKEN }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
