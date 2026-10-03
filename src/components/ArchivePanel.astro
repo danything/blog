@@ -1,97 +1,36 @@
-<script lang="ts">
-import { onMount } from "svelte";
-
+---
 import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
+import type { PostForList } from "../utils/content-utils";
 import { getPostUrlBySlug } from "../utils/url-utils";
 
-export let sortedPosts: Post[] = [];
-
-// 絞り込みは URL の ?tag= / ?category= で決まる(props では受け取らない)
-const params = new URLSearchParams(window.location.search);
-const tags: string[] = params.has("tag") ? params.getAll("tag") : [];
-const categories: string[] = params.has("category")
-	? params.getAll("category")
-	: [];
-const uncategorized = params.get("uncategorized");
-
-interface Post {
-	slug: string;
-	data: {
-		title: string;
-		tags: string[];
-		category?: string | null;
-		published: Date;
-	};
+interface Props {
+	sortedPosts: PostForList[];
 }
 
-interface Group {
-	year: number;
-	posts: Post[];
+// 一覧はビルド時に HTML で出す(検索エンジンや JavaScript の無い環境でも読める)。
+// ?tag= / ?category= / ?uncategorized=true での絞り込みだけ下のスクリプトで行う
+const { sortedPosts } = Astro.props;
+
+const groups = new Map<number, PostForList[]>();
+for (const post of sortedPosts) {
+	const year = post.data.published.getFullYear();
+	groups.set(year, [...(groups.get(year) ?? []), post]);
 }
+const years = [...groups.keys()].sort((a, b) => b - a);
 
-let groups: Group[] = [];
+const formatDate = (date: Date) =>
+	`${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+---
 
-function formatDate(date: Date) {
-	const month = (date.getMonth() + 1).toString().padStart(2, "0");
-	const day = date.getDate().toString().padStart(2, "0");
-	return `${month}-${day}`;
-}
-
-function formatTag(tagList: string[]) {
-	return tagList.map((t) => `#${t}`).join(" ");
-}
-
-onMount(async () => {
-	let filteredPosts: Post[] = sortedPosts;
-
-	if (tags.length > 0) {
-		filteredPosts = filteredPosts.filter(
-			(post) =>
-				Array.isArray(post.data.tags) &&
-				post.data.tags.some((tag) => tags.includes(tag)),
-		);
-	}
-
-	if (categories.length > 0) {
-		filteredPosts = filteredPosts.filter(
-			(post) => post.data.category && categories.includes(post.data.category),
-		);
-	}
-
-	if (uncategorized) {
-		filteredPosts = filteredPosts.filter((post) => !post.data.category);
-	}
-
-	const grouped = filteredPosts.reduce(
-		(acc, post) => {
-			const year = post.data.published.getFullYear();
-			if (!acc[year]) {
-				acc[year] = [];
-			}
-			acc[year].push(post);
-			return acc;
-		},
-		{} as Record<number, Post[]>,
-	);
-
-	const groupedPostsArray = Object.keys(grouped).map((yearStr) => ({
-		year: Number.parseInt(yearStr, 10),
-		posts: grouped[Number.parseInt(yearStr, 10)],
-	}));
-
-	groupedPostsArray.sort((a, b) => b.year - a.year);
-
-	groups = groupedPostsArray;
-});
-</script>
-
-<div class="card-base px-8 py-6">
-    {#each groups as group}
-        <div>
+<div class="card-base px-8 py-6" id="archive-panel">
+    {years.map((year) => {
+        const posts = groups.get(year) ?? [];
+        return (
+        <div data-archive-group>
             <div class="flex flex-row w-full items-center h-[3.75rem]">
                 <div class="w-[15%] md:w-[10%] transition text-2xl font-bold text-right text-75">
-                    {group.year}
+                    {year}
                 </div>
                 <div class="w-[15%] md:w-[10%]">
                     <div
@@ -100,15 +39,17 @@ onMount(async () => {
                     ></div>
                 </div>
                 <div class="w-[70%] md:w-[80%] transition text-left text-50">
-                    {group.posts.length} {i18n(group.posts.length === 1 ? I18nKey.postCount : I18nKey.postsCount)}
+                    <span data-archive-count>{posts.length}</span> {i18n(posts.length === 1 ? I18nKey.postCount : I18nKey.postsCount)}
                 </div>
             </div>
 
-            {#each group.posts as post}
+            {posts.map((post) => (
                 <a
                         href={getPostUrlBySlug(post.slug)}
                         aria-label={post.data.title}
                         class="group btn-plain !block h-10 w-full rounded-lg hover:text-[initial]"
+                        data-tags={JSON.stringify(post.data.tags)}
+                        data-category={post.data.category ?? ""}
                 >
                     <div class="flex flex-row justify-start items-center h-full">
                         <!-- date -->
@@ -142,11 +83,44 @@ onMount(async () => {
                                 class="hidden md:block md:w-[15%] text-left text-sm transition
                      whitespace-nowrap text-ellipsis overflow-hidden text-30"
                         >
-                            {formatTag(post.data.tags)}
+                            {post.data.tags.map((t) => `#${t}`).join(" ")}
                         </div>
                     </div>
                 </a>
-            {/each}
+            ))}
         </div>
-    {/each}
+        );
+    })}
 </div>
+
+<script>
+// URL の条件に合わない記事を隠し、年ごとの件数を数え直す
+function filterArchive() {
+	const panel = document.getElementById("archive-panel");
+	if (!panel) return;
+	const params = new URLSearchParams(location.search);
+	const tags = params.getAll("tag");
+	const categories = params.getAll("category");
+	const uncategorized = params.has("uncategorized");
+
+	for (const group of panel.querySelectorAll<HTMLElement>("[data-archive-group]")) {
+		let visible = 0;
+		for (const post of group.querySelectorAll<HTMLElement>("a[data-tags]")) {
+			const postTags: string[] = JSON.parse(post.dataset.tags ?? "[]");
+			const category = post.dataset.category ?? "";
+			const show =
+				(tags.length === 0 || postTags.some((t) => tags.includes(t))) &&
+				(categories.length === 0 || categories.includes(category)) &&
+				(!uncategorized || category === "");
+			// リンクには !block が付いているので、hidden 属性ではなく同じく !important の hidden! で隠す
+			post.classList.toggle("hidden!", !show);
+			if (show) visible++;
+		}
+		group.classList.toggle("hidden!", visible === 0);
+		const count = group.querySelector("[data-archive-count]");
+		if (count) count.textContent = String(visible);
+	}
+}
+
+document.addEventListener("astro:page-load", filterArchive);
+</script>
