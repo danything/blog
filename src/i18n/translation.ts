@@ -14,6 +14,20 @@ export const DEFAULT_LANG: Lang = siteConfig.lang;
 
 const map: Record<Lang, Translation> = { ja, en };
 
+/**
+ * src/pages/[...lang]/ のページを言語ごとに作る(getStaticPaths)。日本語版は言語の部分の無い
+ * パス(/about/)、英語版は /en/ 以下(/en/about/)
+ */
+export function langPaths(): {
+	params: { lang?: string };
+	props: { lang: Lang };
+}[] {
+	return LANGS.map((lang) => ({
+		params: { lang: lang === DEFAULT_LANG ? undefined : lang },
+		props: { lang },
+	}));
+}
+
 /** ページの URL のパスから言語を決める(/en/ 以下なら英語) */
 export function langFromPath(pathname: string): Lang {
 	return /^\/en(\/|$)/.test(pathname) ? "en" : DEFAULT_LANG;

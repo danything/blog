@@ -2,31 +2,39 @@
 import { render } from "astro:content";
 import Comments from "@components/Comments.astro";
 import Icon from "@components/misc/Icon.astro";
+import ImageWrapper from "@components/misc/ImageWrapper.astro";
 import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import Share from "@components/misc/Share.astro";
+import PostMetadata from "@components/PostMeta.astro";
+import Kofi from "@components/widget/Kofi.astro";
 import I18nKey from "@i18n/i18nKey";
-import { i18n, type Lang, siteText } from "@i18n/translation";
+import { i18n, type Lang, langPaths, siteText } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import {
+	getSortedPosts,
 	type PostEntry,
 	postImageBase,
 	readingStats,
 } from "@utils/content-utils";
+import { formatDateToYYYYMMDD } from "@utils/date-utils";
 import { getPostUrlBySlug } from "@utils/url-utils";
 import { licenseConfig } from "@/config";
-import { formatDateToYYYYMMDD } from "../../utils/date-utils";
-import ImageWrapper from "../misc/ImageWrapper.astro";
-import PostMetadata from "../PostMeta.astro";
-import Kofi from "../widget/Kofi.astro";
 
-// 記事のページ(日本語版 pages/posts/、英語版 pages/en/posts/ の中身)
-interface Props {
-	entry: PostEntry;
-	lang: Lang;
+// 記事のページ(/posts/<記事>/ と、英訳の /en/posts/<記事>/)
+export async function getStaticPaths() {
+	const paths = await Promise.all(
+		langPaths().map(async ({ params, props }) =>
+			(await getSortedPosts(props.lang)).map((entry) => ({
+				params: { ...params, slug: entry.id },
+				props: { ...props, entry },
+			})),
+		),
+	);
+	return paths.flat();
 }
 
-const { entry, lang } = Astro.props;
+const { entry, lang } = Astro.props as { entry: PostEntry; lang: Lang };
 const isTranslation = entry.collection === "postsEn";
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 const stats = readingStats(remarkPluginFrontmatter, lang);

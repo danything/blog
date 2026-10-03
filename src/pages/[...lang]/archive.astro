@@ -1,0 +1,17 @@
+---
+import ArchivePanel from "@components/ArchivePanel.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n, type Lang, langPaths } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { getSortedPosts } from "@utils/content-utils";
+
+// アーカイブ(/archive/ と /en/archive/)
+export const getStaticPaths = langPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const posts = await getSortedPosts(lang);
+---
+
+<MainGridLayout title={i18n(I18nKey.archive, lang)}>
+    <ArchivePanel sortedPosts={posts}></ArchivePanel>
+</MainGridLayout>
