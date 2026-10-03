@@ -102,10 +102,14 @@ function loadButtonScript() {
 
     let settingBtn = document.getElementById("display-settings-switch");
     if (settingBtn) {
-        settingBtn.onclick = function () {
+        settingBtn.onclick = function (e) {
             let settingPanel = document.getElementById("display-setting");
             if (settingPanel) {
-                settingPanel.classList.toggle("float-panel-closed");
+                const opened = !settingPanel.classList.toggle("float-panel-closed");
+                // キーボードで開いたとき(Enter / Space だと detail が 0)は、中のスライダーへ移す
+                if (opened && e.detail === 0) {
+                    document.getElementById("colorSlider")?.focus();
+                }
             }
         };
     }
