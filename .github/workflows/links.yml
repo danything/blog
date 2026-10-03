@@ -1,0 +1,82 @@
+name: Link Check
+
+# 記事の外部リンクが切れていないかを週に一度 lychee で調べる(設定は lychee.toml)。
+# 切れたリンクがあると「リンク切れ」の Issue を作り(開いたものがあれば本文を更新し)、
+# すべて通ればその Issue を閉じる。ワークフロー自体は lychee が動かなかったときだけ失敗させる。
+# 設定を変える PR では、Issue は触らずに切れたリンクがあれば失敗させる。
+on:
+  schedule:
+    - cron: "0 0 * * 1" # 毎週月曜 9:00 (JST)
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - lychee.toml
+      - .github/workflows/links.yml
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: links-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  ISSUE_TITLE: リンク切れ
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: リンクを調べる
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --config lychee.toml --no-progress 'src/content/posts/*.md'
+          output: lychee/out.md
+          fail: false
+          # api.github.com・github.com の回数制限を緩めるため
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 結果を確かめる (PR)
+        if: github.event_name == 'pull_request'
+        run: exit ${{ steps.lychee.outputs.exit_code }}
+
+      - name: Issue を作る・更新する・閉じる
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EXIT_CODE: ${{ steps.lychee.outputs.exit_code }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          # lychee の終了コード: 0 = すべて通過、2 = 切れたリンクあり、それ以外 = 実行の失敗
+          if [ "$EXIT_CODE" != 0 ] && [ "$EXIT_CODE" != 2 ]; then
+            echo "::error::lychee が失敗しました (exit $EXIT_CODE)"
+            exit 1
+          fi
+
+          number=$(gh issue list --state open --search "\"$ISSUE_TITLE\" in:title" \
+            --json number,title --jq "map(select(.title == env.ISSUE_TITLE)) | .[0].number // empty")
+
+          if [ "$EXIT_CODE" = 2 ]; then
+            {
+              echo "記事の外部リンクの確認で、切れたリンクが見つかりました(週に一度の確認: $RUN_URL)。"
+              echo
+              echo "直すか、ボットを弾くだけのサイトなら \`lychee.toml\` の \`exclude\` に足してください。"
+              echo "すべて通ると、次の確認でこの Issue は自動で閉じます。"
+              echo
+              cat lychee/out.md
+            } > body.md
+            if [ -n "$number" ]; then
+              gh issue edit "$number" --body-file body.md
+              echo "Issue #$number を更新しました"
+            else
+              gh issue create --title "$ISSUE_TITLE" --body-file body.md
+            fi
+          elif [ -n "$number" ]; then
+            gh issue close "$number" --comment "すべてのリンクが通りました($RUN_URL)。"
+            echo "Issue #$number を閉じました"
+          fi

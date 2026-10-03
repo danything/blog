@@ -1,0 +1,39 @@
+# 記事 (src/content/posts/*.md) の外部リンクの死活確認の設定。
+# .github/workflows/links.yml から使う。手元では `lychee src/content/posts/*.md` で同じことができる。
+
+# --- 何を調べるか ---
+# http(s) のリンクだけを見る
+scheme = ["https", "http"]
+# /posts/... や /static/... のようなサイト内のリンク (ルート相対) は、解決できないと
+# エラーになるので doany.io を基準に URL にしてから、下の exclude で外す
+# (サイト内のリンクはビルドとテストで確かめる)
+base_url = "https://doany.io"
+include_mail = false
+# コードブロックの中の URL (例示やコマンド) は見ない
+include_verbatim = false
+# localhost・127.0.0.1・社内向けアドレスは見ない
+exclude_all_private = true
+
+exclude = [
+  # サイト内のリンク (サブドメインの別サービスは外部リンクとして調べる)
+  '^https?://(www\.)?doany\.io(/|$)',
+  # 例示用のドメイン
+  '^https?://([^/]+\.)?example\.(com|net|org)',
+  '^https?://[^/]+\.(example|invalid|test|localhost)(/|:|$)',
+  # ボットには 403 を返すサイト (ブラウザでは開ける)
+  '^https?://(www\.)?mhhauto\.com',
+]
+
+# --- リクエスト ---
+user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36 (lychee; +https://github.com/danything/blog)"
+timeout = 30
+max_retries = 3
+retry_wait_time = 5
+max_redirects = 10
+max_concurrency = 8
+host_concurrency = 2
+host_request_interval = "500ms"
+# 429 (アクセスが多すぎる) は相手の都合なのでリンク切れ扱いにしない。
+# 403 は本当に消えた (権限がなくなった) 場合もあるので受け入れず、ボットを弾くと
+# わかっているサイトだけを上の exclude に足す
+accept = ["100..=103", "200..=299", "429"]

@@ -78,6 +78,27 @@ GitHub と同じ書き方。種類は `NOTE` / `TIP` / `IMPORTANT` / `WARNING` /
 
 どちらも Zenn へ同期するとき(`bun run zenn-sync`)に Zenn の記法(`:::message` / `@[card](...)`)へ変換される。
 
+### 記事の削除
+
+`src/content/posts/` から Markdown を消すだけでは足りない。あわせて次をする:
+
+- [ ] `Caddyfile` の `@gone` の一覧にスラッグ(ファイル名から `.md` を除いたもの)を足し、404 ではなく 410 Gone を返す
+- [ ] `tests/setup.ts` の `pages` に入っていれば外す
+- [ ] Zenn 側の記事を手で削除する。zenn ブランチからファイルが消えても Zenn は記事を消さない。
+      Zenn のスラッグはフロントマターの `zennSlug`、なければ `scripts/zenn-sync.ts` の `toZennSlug` で決まる
+      (12 文字以上ならそのまま(50 文字まで)、短ければハッシュを足したもの)。zenn ブランチの `articles/` にあるファイル名を見るのが早い
+      (同期のあとならその履歴で、削除のコミットで消えたファイルを探す)
+
+### リンク切れの確認
+
+記事の外部リンクは週に一度 [lychee](https://github.com/lycheeverse/lychee) で調べている(`.github/workflows/links.yml`、設定は `lychee.toml`)。
+切れたリンクがあると「リンク切れ」の Issue が作られ(開いていれば本文が更新され)、すべて通ると閉じられる。
+Actions の画面から手動でも実行できる。ボットを弾くだけで実際には開けるサイトは `lychee.toml` の `exclude` に足す。手元では次で同じことができる(カレントディレクトリの `lychee.toml` を読む)。
+
+```shell
+lychee src/content/posts/*.md
+```
+
 ## アイコン
 
 使っているアイコンだけを `src/icons.json` に持ち、`src/components/misc/Icon.astro`(Svelte からは `Icon.svelte`)で埋め込む。
