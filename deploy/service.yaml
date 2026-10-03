@@ -9,4 +9,6 @@ spec:
   ports:
     - name: http
       port: 80
-      targetPort: 80
+      # コンテナは 8080 番で待つ (HTTPRoute からは 80 番のまま)。名前 (http) ではなく番号で書くのは、
+      # 切り替えの間に残る古い Pod (80 と 8080 の両方で待つ、ポートに名前が無い) にも届くようにするため
+      targetPort: 8080

@@ -19,16 +19,37 @@ spec:
       labels:
         app: blog
     spec:
+      # Caddy は root ではない uid (Dockerfile の USER と同じ) で、8080 番で待つ
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: blog
           image: ghcr.io/danything/blog:c3e892f0b679e92f5a3c5827ea3e9b8225517d90
           ports:
-            - containerPort: 80
+            - name: http
+              containerPort: 8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
           readinessProbe:
             httpGet:
               path: /
-              port: 80
+              port: http
           livenessProbe:
             httpGet:
               path: /
-              port: 80
+              port: http
+          # ルートは読み取り専用。Caddy が書く XDG_DATA_HOME (instance.uuid やロック) だけ書けるようにする
+          volumeMounts:
+            - name: caddy-data
+              mountPath: /data
+      volumes:
+        - name: caddy-data
+          emptyDir:
+            sizeLimit: 16Mi

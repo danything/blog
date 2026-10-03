@@ -195,6 +195,7 @@ BASE_URL=http://127.0.0.1:4321 bunx playwright test tests/visual.spec.ts        
 
 `main` への push で GitHub Actions(`.github/workflows/docker.yml`)がイメージをビルドし `ghcr.io` へ push、
 `deploy/deployment.yaml` のタグを自動更新する(PR ではビルドが通るかだけを確かめる)。配信は Caddy（`Caddyfile`）。
+コンテナは root ではない uid 65532 で 8080 番で待ち、ルートは読み取り専用(書けるのは emptyDir の `/data` だけ)。
 
 ## 依存の更新
 

@@ -1,12 +1,17 @@
 {
+	# root ではない uid で読み取り専用のファイルシステムでも動くように、管理 API と
+	# 設定の自動保存 (/config/caddy/autosave.json) を止める。設定は Caddyfile だけで変えない
+	admin off
+	persist_config off
+
 	# TLS は前段の Cilium Gateway が終端するため、転送元ヘッダを信頼する
 	servers {
 		trusted_proxies static private_ranges
 	}
 }
 
-# 8080 は root ではない uid で動かすための移行用。次の変更で 8080 だけにする
-:80, :8080 {
+# 特権ポートを避けて 8080 で待つ (Service が 80 → 8080 に転送する)
+:8080 {
 	root * /srv
 	encode zstd gzip
 
