@@ -20,7 +20,7 @@ function* walk(dir: string): Generator<string> {
 		const p = path.join(dir, e.name);
 		if (e.isDirectory()) {
 			if (e.name !== "content") yield* walk(p);
-		} else if (/\.(astro|svelte|ts)$/.test(e.name)) yield p;
+		} else if (/\.(astro|ts)$/.test(e.name)) yield p;
 	}
 }
 

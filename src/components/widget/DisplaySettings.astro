@@ -1,0 +1,131 @@
+---
+import Icon from "@components/misc/Icon.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n, type Lang } from "@i18n/translation";
+import { siteConfig } from "@/config";
+
+interface Props {
+	lang: Lang;
+}
+
+const title = i18n(I18nKey.themeColor, Astro.props.lang);
+// 保存された色相はスクリプトで反映する。ここでは既定の色相で描いておく
+const hue = siteConfig.themeColor.hue;
+---
+<div id="display-setting" class="float-panel float-panel-closed absolute w-80 right-4 px-4 py-4" role="group"
+     aria-label={title}>
+    <div class="flex flex-row gap-2 mb-3 items-center justify-between">
+        <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
+            before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
+            before:absolute before:-left-3 before:top-[0.33rem]"
+        >
+            {title}
+            <!-- 既定の色のときは見えないので、Tab で止まらないよう disabled にする -->
+            <button id="hue-reset" aria-label="Reset to Default" class="btn-regular w-7 h-7 rounded-md  active:scale-90 will-change-transform opacity-0 pointer-events-none"
+                    disabled>
+                <div class="text-[var(--btn-content)]">
+                    <Icon name="fa6-solid:arrow-rotate-left" class="text-[0.875rem]" />
+                </div>
+            </button>
+        </div>
+        <div class="flex gap-1">
+            <div id="hueValue" class="transition bg-[var(--btn-regular-bg)] w-10 h-7 rounded-md flex justify-center
+            font-bold text-sm items-center text-[var(--btn-content)]">
+                {hue}
+            </div>
+        </div>
+    </div>
+    <div class="w-full h-6 px-1 bg-[oklch(0.80_0.10_0)] dark:bg-[oklch(0.70_0.10_0)] rounded-sm select-none">
+        <input aria-label={title} type="range" min="0" max="360" value={hue}
+               class="slider" id="colorSlider" step="5" style="width: 100%">
+    </div>
+</div>
+
+<style>
+	#display-setting input[type="range"] {
+	  -webkit-appearance: none;
+	  height: 1.5rem;
+	  background-image: var(--color-selection-bar);
+	  transition: background-image 0.15s ease-in-out;
+	/* Input Thumb */
+	}
+	#display-setting input[type="range"]::-webkit-slider-thumb {
+	  -webkit-appearance: none;
+	  height: 1rem;
+	  width: 0.5rem;
+	  border-radius: 0.125rem;
+	  background: rgba(255,255,255,0.7);
+	  box-shadow: none;
+	}
+	#display-setting input[type="range"]::-webkit-slider-thumb:hover {
+	  background: rgba(255,255,255,0.8);
+	}
+	#display-setting input[type="range"]::-webkit-slider-thumb:active {
+	  background: rgba(255,255,255,0.6);
+	}
+	#display-setting input[type="range"]::-moz-range-thumb {
+	  -webkit-appearance: none;
+	  height: 1rem;
+	  width: 0.5rem;
+	  border-radius: 0.125rem;
+	  border-width: 0;
+	  background: rgba(255,255,255,0.7);
+	  box-shadow: none;
+	}
+	#display-setting input[type="range"]::-moz-range-thumb:hover {
+	  background: rgba(255,255,255,0.8);
+	}
+	#display-setting input[type="range"]::-moz-range-thumb:active {
+	  background: rgba(255,255,255,0.6);
+	}
+</style>
+
+<script>
+import { getDefaultHue, getHue, setHue } from "@utils/setting-utils";
+
+function setup(panel: HTMLElement) {
+	const slider = panel.querySelector<HTMLInputElement>("#colorSlider");
+	const reset = panel.querySelector<HTMLButtonElement>("#hue-reset");
+	const value = panel.querySelector<HTMLElement>("#hueValue");
+	if (!slider || !reset || !value) return;
+
+	const defaultHue = getDefaultHue();
+
+	const update = (hue: number) => {
+		setHue(hue);
+		slider.value = String(hue);
+		value.textContent = String(hue);
+		const isDefault = hue === defaultHue;
+		reset.classList.toggle("opacity-0", isDefault);
+		reset.classList.toggle("pointer-events-none", isDefault);
+		reset.disabled = isDefault;
+	};
+
+	slider.addEventListener("input", () => update(Number(slider.value)));
+	reset.addEventListener("click", () => {
+		// 戻すとこのボタンは押せなく(disabled に)なるので、キーボードで押したときはスライダーへ移す
+		const focused = document.activeElement === reset;
+		update(defaultHue);
+		if (focused) slider.focus();
+	});
+	// Esc で閉じて、開いたボタンへ戻る
+	panel.addEventListener("keydown", (e) => {
+		if (e.key !== "Escape") return;
+		panel.classList.add("float-panel-closed");
+		document.getElementById("display-settings-switch")?.focus();
+	});
+
+	update(getHue());
+}
+
+// ナビゲーションバーはページ遷移の間も残る(transition:persist)ので、まだ準備していないものだけ準備する
+document.addEventListener("astro:page-load", () => {
+	for (const panel of document.querySelectorAll<HTMLElement>(
+		"#display-setting",
+	)) {
+		if (panel.dataset.ready) continue;
+		panel.dataset.ready = "true";
+		setup(panel);
+	}
+});
+</script>

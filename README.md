@@ -127,7 +127,7 @@ bun scripts/translate-status.ts --hash <原文>   # sourceHash に書く値
 
 ## アイコン
 
-使っているアイコンだけを `src/icons.json` に持ち、`src/components/misc/Icon.astro`(Svelte からは `Icon.svelte`)で埋め込む。
+使っているアイコンだけを `src/icons.json` に持ち、`src/components/misc/Icon.astro` で埋め込む。
 新しいアイコンは名前(`material-symbols:search` など。https://icon-sets.iconify.design/ で探す)をコードや設定に書いてから、
 
 ```shell

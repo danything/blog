@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { rehypeHeadingIds, unified } from "@astrojs/markdown-remark";
 import sitemap from "@astrojs/sitemap";
-import svelte from "@astrojs/svelte";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import tailwindcss from "@tailwindcss/vite";
@@ -92,7 +91,6 @@ export default defineConfig({
 				showCopyToClipboardButton: false,
 			},
 		}),
-		svelte(),
 		sitemap({
 			// 日本語版と英語版の両方があるページ(/en/ を除いて同じパス)に hreflang の対応を付ける
 			i18n: { defaultLocale: "ja", locales: { ja: "ja", en: "en" } },
