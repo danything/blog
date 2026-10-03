@@ -78,8 +78,12 @@
   @apply top-21 rounded-(--radius-large) overflow-hidden bg-(--float-panel-bg) transition shadow-xl dark:shadow-none;
 }
 
+/* 閉じているパネルは visibility: hidden にして、中のボタンや入力欄に Tab で入れないようにする。
+   閉じた状態でだけ visibility も遷移させるので、閉じるときは消えきるまで見えたまま、開くときはすぐ見える
+   (すぐ中へフォーカスを移せる)。そのためパネルに transition-all は付けない(付けると開くときも遷移する) */
 @utility float-panel-closed {
-  @apply -translate-y-1 opacity-0 pointer-events-none;
+  @apply -translate-y-1 opacity-0 pointer-events-none invisible;
+  transition-property: all !important;
 }
 
 @utility search-panel {

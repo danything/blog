@@ -15,4 +15,5 @@ jobs:
       - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
-      - run: bun run check
+      # Biome の検査と型チェック(biome check . && astro check && tsc --noEmit)
+      - run: bun run lint

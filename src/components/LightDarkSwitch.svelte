@@ -57,11 +57,28 @@ function hidePanel() {
 	const panel = document.querySelector("#light-dark-panel");
 	panel.classList.add("float-panel-closed");
 }
+
+// キーボードでも使えるよう、ボタンにフォーカスが来たら開き、外へ出たら閉じる
+// (閉じたパネルは visibility: hidden なので、開いていないと Tab で中に入れない)
+function hidePanelOnFocusOut(e: FocusEvent & { currentTarget: HTMLElement }) {
+	const group = e.currentTarget;
+	if (e.relatedTarget instanceof Node && group.contains(e.relatedTarget)) {
+		return;
+	}
+	if (!group.matches(":hover")) hidePanel();
+}
+
+function hidePanelOnEscape(e: KeyboardEvent) {
+	if (e.key !== "Escape") return;
+	// ボタンへ戻すと focus で開くので、戻してから閉じる
+	document.getElementById("scheme-switch")?.focus();
+	hidePanel();
+}
 </script>
 
 <!-- z-50 make the panel higher than other float panels -->
-<div class="relative z-50" role="group" onmouseleave={hidePanel}>
-    <button aria-label="Light/Dark Mode" class="relative btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="scheme-switch" onclick={toggleScheme} onmouseenter={showPanel}>
+<div class="relative z-50" role="group" onmouseleave={hidePanel} onfocusout={hidePanelOnFocusOut} onkeydown={hidePanelOnEscape}>
+    <button aria-label="Light/Dark Mode" class="relative btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="scheme-switch" onclick={toggleScheme} onmouseenter={showPanel} onfocus={showPanel}>
         <div class="absolute" class:opacity-0={mode !== LIGHT_MODE}>
             <Icon icon="material-symbols:wb-sunny-outline-rounded" class="text-[1.25rem]"></Icon>
         </div>
