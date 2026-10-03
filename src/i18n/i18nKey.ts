@@ -47,6 +47,11 @@ enum I18nKey {
 	switchLanguage = "switchLanguage",
 	translatedNotice = "translatedNotice",
 	readOriginal = "readOriginal",
+
+	enlargeImage = "enlargeImage",
+	imageViewer = "imageViewer",
+	actualSize = "actualSize",
+	close = "close",
 }
 
 export default I18nKey;

@@ -51,4 +51,10 @@ export const ja: Translation = {
 	[Key.switchLanguage]: "Read in English",
 	[Key.translatedNotice]: "この記事は日本語の原文を AI で翻訳したものです。",
 	[Key.readOriginal]: "原文を読む",
+
+	// 記事の画像の拡大表示
+	[Key.enlargeImage]: "画像を拡大",
+	[Key.imageViewer]: "画像の拡大表示",
+	[Key.actualSize]: "実際の大きさで表示",
+	[Key.close]: "閉じる",
 };

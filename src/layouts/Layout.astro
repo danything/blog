@@ -13,7 +13,8 @@ import {
 	PAGE_WIDTH,
 } from "../constants/constants";
 import { defaultFavicons } from "../constants/icon";
-import { langFromPath, siteText } from "../i18n/translation";
+import I18nKey from "../i18n/i18nKey";
+import { i18n, langFromPath, siteText } from "../i18n/translation";
 import type { Favicon } from "../types/config";
 import { getAlternates } from "../utils/content-utils";
 import { localeUrl, pathsEqual, stripLang, url } from "../utils/url-utils";
@@ -190,6 +191,20 @@ const bannerOffset =
 	<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}>
 		<ConfigCarrier></ConfigCarrier>
 		<slot />
+		<!-- 記事の画像の拡大表示(下のスクリプトと styles/lightbox.css) -->
+		<dialog id="lightbox" class="lightbox" aria-label={i18n(I18nKey.imageViewer, pageLang)} data-enlarge={i18n(I18nKey.enlargeImage, pageLang)}>
+			<div class="lightbox-scroller">
+				<img class="lightbox-image" alt="">
+			</div>
+			<div class="lightbox-toolbar">
+				<button type="button" class="lightbox-zoom" aria-pressed="false" aria-label={i18n(I18nKey.actualSize, pageLang)} hidden>
+					<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff" aria-hidden="true"><path d="M340-540h-40q-17 0-28.5-11.5T260-580q0-17 11.5-28.5T300-620h40v-40q0-17 11.5-28.5T380-700q17 0 28.5 11.5T420-660v40h40q17 0 28.5 11.5T500-580q0 17-11.5 28.5T460-540h-40v40q0 17-11.5 28.5T380-460q-17 0-28.5-11.5T340-500v-40Zm40 220q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l224 224q11 11 11 28t-11 28q-11 11-28 11t-28-11L532-372q-30 24-69 38t-83 14Zm0-80q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
+				</button>
+				<button type="button" class="lightbox-close" aria-label={i18n(I18nKey.close, pageLang)} autofocus>
+					<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff" aria-hidden="true"><path d="M480-424 284-228q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536-480l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480-424Z"/></svg>
+				</button>
+			</div>
+		</dialog>
 
 	</body>
 </html>
@@ -313,47 +328,100 @@ document.addEventListener('astro:page-load', () => {
 </script>
 
 <script>
-import PhotoSwipeLightbox from "photoswipe/lightbox"
-import "photoswipe/style.css"
+// 記事の画像を押す(Enter・Space でも)と、#lightbox に画面いっぱいで出す。
+// 画面に収まらない大きな画像は、画像か虫眼鏡のボタンを押すと実際の大きさになり、スクロールして見られる。
+// 閉じるのは閉じるボタン・Esc・画像の外側を押したとき(実際の大きさにできない画像は、画像を押しても閉じる)。
+// リンクになっている画像はリンクのまま動かす
+const TRIGGERS = ".custom-md img:not(a img), #post-cover img"
 
-let lightbox: PhotoSwipeLightbox | undefined
-const pswp = import("photoswipe")
-
-function createPhotoSwipe() {
-	lightbox = new PhotoSwipeLightbox({
-		gallery: ".custom-md img, #post-cover img",
-		pswpModule: () => pswp,
-		closeSVG: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M480-424 284-228q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536-480l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480-424Z"/></svg>',
-		zoomSVG: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M340-540h-40q-17 0-28.5-11.5T260-580q0-17 11.5-28.5T300-620h40v-40q0-17 11.5-28.5T380-700q17 0 28.5 11.5T420-660v40h40q17 0 28.5 11.5T500-580q0 17-11.5 28.5T460-540h-40v40q0 17-11.5 28.5T380-460q-17 0-28.5-11.5T340-500v-40Zm40 220q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l224 224q11 11 11 28t-11 28q-11 11-28 11t-28-11L532-372q-30 24-69 38t-83 14Zm0-80q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>',
-		padding: { top: 20, bottom: 20, left: 20, right: 20 },
-		wheelToZoom: true,
-		arrowPrev: false,
-		arrowNext: false,
-		imageClickAction: 'close',
-		tapAction: 'close',
-		doubleTapAction: 'zoom',
-	})
-
-	lightbox.addFilter("domItemData", (itemData, element) => {
-		if (element instanceof HTMLImageElement) {
-			itemData.src = element.src
-
-			itemData.w = Number(element.naturalWidth || window.innerWidth)
-			itemData.h = Number(element.naturalHeight || window.innerHeight)
-
-			itemData.msrc = element.src
-		}
-
-		return itemData
-	})
-
-	lightbox.init()
+function getParts() {
+	const dialog = document.getElementById("lightbox")
+	if (!(dialog instanceof HTMLDialogElement)) return
+	const image = dialog.querySelector<HTMLImageElement>(".lightbox-image")
+	const zoom = dialog.querySelector<HTMLButtonElement>(".lightbox-zoom")
+	if (!image || !zoom) return
+	return { dialog, image, zoom }
 }
 
-// 本文はページ遷移で入れ替わるので、ページごとに作り直す
-document.addEventListener('astro:page-load', createPhotoSwipe)
-document.addEventListener('astro:before-swap', () => {
-	lightbox?.destroy()
-	lightbox = undefined
+/** 実際の大きさにすると、画面に合わせたときより大きくなるか */
+function updateZoomable() {
+	const parts = getParts()
+	if (!parts || parts.dialog.classList.contains("zoomed")) return
+	const { dialog, image, zoom } = parts
+	const zoomable =
+		image.naturalWidth > image.clientWidth + 1 || image.naturalHeight > image.clientHeight + 1
+	dialog.classList.toggle("zoomable", zoomable)
+	zoom.hidden = !zoomable
+}
+
+/** 実際の大きさとの切り替え。x, y(画面上の位置)にある画像の点が、切り替えた後も同じ位置に来るようにする */
+function setZoom(on: boolean, x = innerWidth / 2, y = innerHeight / 2) {
+	const parts = getParts()
+	if (!parts) return
+	const { dialog, image, zoom } = parts
+	const before = image.getBoundingClientRect()
+	dialog.classList.toggle("zoomed", on)
+	zoom.setAttribute("aria-pressed", String(on))
+	if (!on) return
+	const after = image.getBoundingClientRect()
+	const scroller = image.parentElement
+	if (!scroller) return
+	scroller.scrollLeft += after.left + ((x - before.left) / before.width) * after.width - x
+	scroller.scrollTop += after.top + ((y - before.top) / before.height) * after.height - y
+}
+
+function open(source: HTMLImageElement) {
+	const parts = getParts()
+	if (!parts) return
+	const { dialog, image } = parts
+	setZoom(false)
+	image.alt = source.alt
+	image.src = source.currentSrc || source.src
+	dialog.showModal()
+	if (image.complete) updateZoomable()
+	else image.addEventListener("load", updateZoomable, { once: true })
+}
+
+// 本文はページ遷移で入れ替わるので、ページごとに印を付け直す
+document.addEventListener("astro:page-load", () => {
+	const label = getParts()?.dialog.dataset.enlarge ?? ""
+	for (const img of document.querySelectorAll<HTMLImageElement>(TRIGGERS)) {
+		img.classList.add("lightbox-trigger")
+		img.tabIndex = 0
+		img.setAttribute("role", "button")
+		img.setAttribute("aria-haspopup", "dialog")
+		img.setAttribute("aria-label", img.alt ? `${label}: ${img.alt}` : label)
+		// alt="" は飾りの画像という印で、ボタンの役割と矛盾する。名前は aria-label で付けたので外す
+		if (img.getAttribute("alt") === "") img.removeAttribute("alt")
+	}
 })
+
+// ダイアログもページ遷移で入れ替わるので、イベントは document で受ける
+document.addEventListener("click", (e) => {
+	if (!(e.target instanceof Element)) return
+	const trigger = e.target.closest<HTMLImageElement>(".lightbox-trigger")
+	if (trigger) {
+		e.preventDefault()
+		open(trigger)
+		return
+	}
+	const parts = getParts()
+	if (!parts?.dialog.contains(e.target)) return
+	const { dialog, image } = parts
+	const zoomed = dialog.classList.contains("zoomed")
+	if (e.target.closest(".lightbox-zoom")) setZoom(!zoomed)
+	else if (e.target === image && dialog.classList.contains("zoomable"))
+		setZoom(!zoomed, e.clientX, e.clientY)
+	else if (!e.target.closest(".lightbox-toolbar") || e.target.closest(".lightbox-close"))
+		dialog.close()
+})
+
+document.addEventListener("keydown", (e) => {
+	if (e.key !== "Enter" && e.key !== " ") return
+	if (!(e.target instanceof Element) || !e.target.matches(".lightbox-trigger")) return
+	e.preventDefault()
+	open(e.target as HTMLImageElement)
+})
+
+window.addEventListener("resize", updateZoomable)
 </script>
