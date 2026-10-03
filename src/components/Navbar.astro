@@ -45,7 +45,6 @@ let links: NavBarLink[] = navBarConfig.links.map(
             })}
         </div>
         <div class="flex">
-            <!--<SearchPanel client:load>-->
             <Search client:only="svelte"></Search>
             {!siteConfig.themeColor.fixed && (
                     <button aria-label="Display Settings" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" id="display-settings-switch">
@@ -122,7 +121,6 @@ async function loadPagefind() {
         window.pagefind = pagefind;
 
         document.dispatchEvent(new CustomEvent('pagefindready'));
-        console.log('Pagefind loaded and initialized successfully, event dispatched.');
     } catch (error) {
         console.error('Failed to load Pagefind:', error);
         window.pagefind = {
@@ -130,7 +128,6 @@ async function loadPagefind() {
             options: () => Promise.resolve(),
         };
         document.dispatchEvent(new CustomEvent('pagefindloaderror'));
-        console.log('Pagefind load error, event dispatched.');
     }
 }
 

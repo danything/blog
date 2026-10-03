@@ -1,6 +1,6 @@
 // 新規追加された記事を Buttondown のメールとして作成する。
 //
-//   bun scripts/newsletter.mjs <追加されたファイル...>
+//   bun scripts/newsletter.ts <追加されたファイル...>
 //
 // 環境変数:
 //   BUTTONDOWN_API_KEY  必須
@@ -13,7 +13,10 @@ import path from "node:path";
 const API = "https://api.buttondown.com/v1/emails";
 const KEY = process.env.BUTTONDOWN_API_KEY;
 const STATUS = process.env.NEWSLETTER_STATUS || "draft";
-const SITE_URL = (process.env.SITE_URL || "https://doany.io").replace(/\/$/, "");
+const SITE_URL = (process.env.SITE_URL || "https://doany.io").replace(
+	/\/$/,
+	"",
+);
 
 if (!KEY) {
 	console.error("BUTTONDOWN_API_KEY が設定されていません");
@@ -65,13 +68,9 @@ for (const file of files) {
 	const slug = path.basename(file, ".md");
 	const url = `${SITE_URL}/posts/${slug}/`;
 	// 記事本文をそのまま送ると相対パスの画像が壊れるため、概要とリンクにとどめる
-	const body = [
-		fm.description || "",
-		"",
-		`続きはこちらです。`,
-		"",
-		url,
-	].join("\n");
+	const body = [fm.description || "", "", "続きはこちらです。", "", url].join(
+		"\n",
+	);
 
 	const res = await fetch(API, {
 		method: "POST",
