@@ -2,6 +2,8 @@ import {
 	definePlugin,
 	type PostprocessRenderedBlockContext,
 } from "astro-expressive-code";
+import I18nKey from "../../i18n/i18nKey";
+import { i18n } from "../../i18n/translation";
 import { getIcon } from "../../utils/icons";
 import { h } from "../hast";
 
@@ -43,14 +45,25 @@ const icon = (kind: string, name: string) => {
 	);
 };
 
-// コードブロックの右上に出すコピーボタン(押したときの処理は Markdown.astro のスクリプト)
-const copyButton = () =>
-	h("button", { className: ["copy-btn"], "aria-label": "Copy code" }, [
-		h("div", { className: ["copy-btn-icon"] }, [
-			icon("copy-icon", "lucide:copy"),
-			icon("success-icon", "lucide:check"),
-		]),
-	]);
+// コードブロックの右上に出すコピーボタン(押したときの処理は Markdown.astro のスクリプト)。
+// 名前は記事の言語にする(英訳は posts-en/ と about-en.md)
+const copyButton = (sourceFilePath = "") =>
+	h(
+		"button",
+		{
+			className: ["copy-btn"],
+			"aria-label": i18n(
+				I18nKey.copyCode,
+				/(\/posts-en\/|-en\.md$)/.test(sourceFilePath) ? "en" : "ja",
+			),
+		},
+		[
+			h("div", { className: ["copy-btn-icon"] }, [
+				icon("copy-icon", "lucide:copy"),
+				icon("success-icon", "lucide:check"),
+			]),
+		],
+	);
 
 export function pluginCustomCopyButton() {
 	return definePlugin({
@@ -59,7 +72,9 @@ export function pluginCustomCopyButton() {
 			postprocessRenderedBlock: (context) => {
 				const addToPre = (node: Element) => {
 					if (node.tagName === "pre") {
-						node.children.push(copyButton());
+						node.children.push(
+							copyButton(context.codeBlock.parentDocument?.sourceFilePath),
+						);
 						return;
 					}
 					for (const child of node.children) {

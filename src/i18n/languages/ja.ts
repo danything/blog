@@ -54,4 +54,21 @@ export const ja: Translation = {
 	[Key.imageViewer]: "画像の拡大表示",
 	[Key.actualSize]: "実際の大きさで表示",
 	[Key.close]: "閉じる",
+
+	// 読み上げ用の名前(aria-label・alt)
+	[Key.viewCategory]: "カテゴリ「{name}」の記事一覧",
+	[Key.viewTag]: "タグ「{name}」の記事一覧",
+	[Key.displaySettings]: "表示の設定",
+	[Key.menu]: "メニュー",
+	[Key.openSearch]: "検索を開く",
+	[Key.themeMode]: "ライト・ダークの切り替え",
+	[Key.resetToDefault]: "既定の色に戻す",
+	[Key.goToAbout]: "プロフィールを見る",
+	[Key.authorImage]: "作者のアイコン",
+	[Key.coverImage]: "記事のアイキャッチ画像",
+	[Key.previousPage]: "前のページ",
+	[Key.nextPage]: "次のページ",
+	[Key.pageNumber]: "{n} ページ目",
+	[Key.backToTop]: "ページの先頭へ戻る",
+	[Key.copyCode]: "コードをコピー",
 };

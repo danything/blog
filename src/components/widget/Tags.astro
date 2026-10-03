@@ -24,7 +24,7 @@ const style = Astro.props.style;
 <WidgetLayout name={i18n(I18nKey.tags, lang)} id="tags" isCollapsed={isCollapsed} collapsedHeight={COLLAPSED_HEIGHT} class={className} style={style}>
     <div class="tags">
         {tags.map(t => (
-            <ButtonTag href={getTagUrl(t.name, lang)} label={`View all posts with the ${t.name.trim()} tag`}>
+            <ButtonTag href={getTagUrl(t.name, lang)} label={i18n(I18nKey.viewTag, lang).replace("{name}", t.name.trim())}>
                 {t.name.trim()}
             </ButtonTag>
         ))}

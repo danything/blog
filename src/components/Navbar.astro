@@ -54,12 +54,12 @@ const links: NavBarLink[] = navBarConfig.links.map((link) =>
                 <span class="lang-label">{i18n(I18nKey.otherLanguage, lang)}</span>
             </a>
             {!siteConfig.themeColor.fixed && (
-                    <button aria-label="Display Settings" class="btn-plain scale-animation nav-button" id="display-settings-switch">
+                    <button aria-label={i18n(I18nKey.displaySettings, lang)} class="btn-plain scale-animation nav-button" id="display-settings-switch">
                         <Icon name="lucide:palette" class="nav-icon"></Icon>
                     </button>
             )}
             <LightDarkSwitch lang={lang} />
-            <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation nav-button" id="nav-menu-switch">
+            <button aria-label={i18n(I18nKey.menu, lang)} class="btn-plain scale-animation nav-button" id="nav-menu-switch">
                 <Icon name="lucide:menu" class="nav-icon"></Icon>
             </button>
         </div>

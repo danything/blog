@@ -1,7 +1,8 @@
 ---
 import { render } from "astro:content";
 import Icon from "@components/misc/Icon.astro";
-import { langFromPath } from "../i18n/translation";
+import I18nKey from "../i18n/i18nKey";
+import { i18n, langFromPath } from "../i18n/translation";
 import {
 	type PostEntry,
 	postImageBase,
@@ -59,7 +60,7 @@ const stats = readingStats(remarkPluginFrontmatter, lang);
             <Icon name="lucide:chevron-right" class="cover-icon">
             </Icon>
         </div>
-        <ImageWrapper src={image} basePath={postImageBase(entry)} alt="Cover Image of the Post"
+        <ImageWrapper src={image} basePath={postImageBase(entry)} alt={i18n(I18nKey.coverImage, lang)}
                   class="cover-image">
         </ImageWrapper>
     </a>}

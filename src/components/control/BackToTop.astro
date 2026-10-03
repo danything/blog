@@ -1,11 +1,15 @@
 ---
 import Icon from "@components/misc/Icon.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n, langFromPath } from "@i18n/translation";
+
+const lang = langFromPath(Astro.url.pathname);
 ---
 
 <!-- There can't be a filter on parent element, or it will break `fixed` -->
 <div class="back-to-top-wrapper">
     <div id="back-to-top-btn" class="back-to-top-btn hide">
-        <button aria-label="Back to Top" class="btn-card">
+        <button aria-label={i18n(I18nKey.backToTop, lang)} class="btn-card">
             <Icon name="lucide:chevron-up" class="icon"></Icon>
         </button>
     </div>

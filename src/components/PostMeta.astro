@@ -53,7 +53,7 @@ const lang = langFromPath(Astro.url.pathname);
             <Icon name="lucide:book" class="icon text-xl"></Icon>
         </div>
         <div class="values">
-            <a href={getCategoryUrl(category, lang)} aria-label={`View all posts in the ${category} category`}
+            <a href={getCategoryUrl(category, lang)} aria-label={i18n(I18nKey.viewCategory, lang).replace("{name}", category || i18n(I18nKey.uncategorized, lang))}
                class="link-lg text value-link text-sm">
                 {category || i18n(I18nKey.uncategorized, lang)}
             </a>
@@ -68,7 +68,7 @@ const lang = langFromPath(Astro.url.pathname);
         <div class="values">
             {(tags && tags.length > 0) && tags.map((tag, i) => (
                 <div class:list={["separator text-sm", {"first": i == 0}]}>/</div>
-                <a href={getTagUrl(tag, lang)} aria-label={`View all posts with the ${tag.trim()} tag`}
+                <a href={getTagUrl(tag, lang)} aria-label={i18n(I18nKey.viewTag, lang).replace("{name}", tag.trim())}
                    class="link-lg text value-link text-sm">
                     {tag.trim()}
                 </a>

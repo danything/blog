@@ -18,7 +18,7 @@ const hue = siteConfig.themeColor.hue;
         <div class="title text-lg">
             {title}
             <!-- 既定の色のときは見えないので、Tab で止まらないよう disabled にする -->
-            <button id="hue-reset" aria-label="Reset to Default" class="btn-regular" disabled>
+            <button id="hue-reset" aria-label={i18n(I18nKey.resetToDefault, Astro.props.lang)} class="btn-regular" disabled>
                 <div class="reset-icon">
                     <Icon name="lucide:rotate-ccw" class="reset-icon-svg" />
                 </div>

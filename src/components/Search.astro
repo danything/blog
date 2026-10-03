@@ -27,7 +27,7 @@ const unavailable = import.meta.env.DEV
 </div>
 
 <!-- toggle btn for phone/tablet view -->
-<button aria-label="Search Panel" id="search-switch" class="btn-plain scale-animation">
+<button aria-label={i18n(I18nKey.openSearch, Astro.props.lang)} id="search-switch" class="btn-plain scale-animation">
     <Icon name="lucide:search" class="switch-icon" />
 </button>
 
