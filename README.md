@@ -109,7 +109,8 @@ Zenn への同期とニュースレターは日本語版だけ。
 ものだけを `.github/translate.md` の決まりで訳し直し(更新は差分だけ直す)、`translate/auto` ブランチの PR「英訳を更新」にする。
 Actions の画面から手動でも実行できる。この PR は GITHUB_TOKEN で作るので PR のイベントではほかのワークフローが動かない。
 代わりに translate.yml が PR を作った・更新したあとに Check・A11y Check・Visual Check・Docker Build Check を
-`workflow_dispatch` で `translate/auto` ブランチに対して実行し、結果が PR の Checks に出る(Claude Code Review は動かない)。
+`workflow_dispatch` で `translate/auto` ブランチに対して実行する。workflow_dispatch の実行は PR の Checks に出ないので、
+終わるのを待って結果をコミットのステータスとして PR の head に付ける(Claude Code Review は動かない)。
 
 英訳のフロントマターの `sourceHash` は訳した時点の原文のハッシュで、原文と食い違っているものは次で分かる。
 
