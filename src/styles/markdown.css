@@ -23,10 +23,8 @@
 		opacity: 1 !important;
 	}
 
-	/* リンク。点線の下線を引き、マウスを乗せると周りに背景が広がる(components.css の .link と同じ動き) */
+	/* リンク。点線の下線を引き、マウスを乗せると周りに背景が広がる(広がる動きは components.css の .link と同じ) */
 	a:not(.no-styling) {
-		position: relative;
-		z-index: 0;
 		display: inline-block;
 		margin: -0.25rem;
 		padding: 0.25rem;
@@ -39,25 +37,6 @@
 		box-decoration-break: clone;
 		transition: var(--transition);
 
-		&::before {
-			content: "";
-			position: absolute;
-			inset: 0;
-			z-index: -10;
-			border-radius: inherit;
-			scale: 0.85;
-			transition: var(--transition);
-			transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-		}
-		@media (hover: hover) {
-			&:hover::before {
-				scale: 1;
-				background-color: var(--btn-plain-bg-hover);
-			}
-		}
-		&:active::before {
-			background-color: var(--btn-plain-bg-active);
-		}
 		&:hover,
 		&:active {
 			background: var(--btn-plain-bg-hover);

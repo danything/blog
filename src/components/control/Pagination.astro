@@ -1,7 +1,8 @@
 ---
 import Icon from "@components/misc/Icon.astro";
 import type { Page } from "astro";
-import { langFromPath } from "../../i18n/translation";
+import I18nKey from "../../i18n/i18nKey";
+import { i18n, langFromPath } from "../../i18n/translation";
 import { localeUrl } from "../../utils/url-utils";
 
 interface Props {
@@ -50,7 +51,7 @@ const getPageUrl = (p: number) => localeUrl(p === 1 ? "/" : `/${p}/`, lang);
 ---
 
 <div class:list={[className, "pagination"]} {...rest}>
-    <a href={page.url.prev ?? undefined} aria-label={page.url.prev ? "Previous Page" : null}
+    <a href={page.url.prev ?? undefined} aria-label={page.url.prev ? i18n(I18nKey.previousPage, lang) : null}
        class:list={["btn-card arrow", {"disabled": page.url.prev == undefined}]}
     >
         <Icon name="lucide:chevron-left" class="arrow-icon"></Icon>
@@ -63,11 +64,11 @@ const getPageUrl = (p: number) => localeUrl(p === 1 ? "/" : `/${p}/`, lang);
                 return <div class="current">
                     {p}
                 </div>
-            return <a href={getPageUrl(p)} aria-label={`Page ${p}`} class="btn-card page"
+            return <a href={getPageUrl(p)} aria-label={i18n(I18nKey.pageNumber, lang).replace("{n}", String(p))} class="btn-card page"
             >{p}</a>
         })}
     </div>
-    <a href={page.url.next ?? undefined} aria-label={page.url.next ? "Next Page" : null}
+    <a href={page.url.next ?? undefined} aria-label={page.url.next ? i18n(I18nKey.nextPage, lang) : null}
        class:list={["btn-card arrow", {"disabled": page.url.next == undefined}]}
     >
         <Icon name="lucide:chevron-right" class="arrow-icon"></Icon>
@@ -103,11 +104,7 @@ const getPageUrl = (p: number) => localeUrl(p === 1 ? "/" : `/${p}/`, lang);
         border-radius: 0.5rem;
         background-color: var(--card-bg);
         font-weight: 700;
-        color: var(--neutral-700);
-
-        :global(.dark) & {
-            color: var(--neutral-300);
-        }
+        color: var(--label-color);
     }
     .ellipsis {
         margin-inline: 0.25rem;

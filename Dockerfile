@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM oven/bun:1.4.2-slim AS builder
+FROM oven/bun:1.4.2-slim@sha256:cb3bbbb08e13a4a2ff400f24c7a2a1d5efa83f6ef8544d52d95a519631e2fc61 AS builder
 WORKDIR /usr/src/app
 
 COPY package.json bun.lock ./
@@ -10,7 +10,7 @@ COPY . .
 # トークンを secret で渡す(イメージには残らない)。無くてもビルドはできる
 RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN bun run build
 
-FROM caddy:2-alpine
+FROM caddy:2-alpine@sha256:881bbc60f9986d5ab8e7cfd6cf7e4ef3c9c0439fef2429d035d065577882f028
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=builder /usr/src/app/dist /srv
 EXPOSE 80

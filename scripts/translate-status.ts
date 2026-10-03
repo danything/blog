@@ -1,6 +1,7 @@
 // 英訳(.github/translate.md)が原文に追いついているかを調べる。
 //
 //   bun scripts/translate-status.ts            # 人が読む形で出す
+//   bun scripts/translate-status.ts --check    # 同じものを出し、終わっていないものがあれば終了コード 1
 //   bun scripts/translate-status.ts --json     # CI 用(.github/workflows/translate.yml)
 //   bun scripts/translate-status.ts --hash <原文のパス>  # sourceHash に書く値
 //
@@ -86,15 +87,15 @@ if (import.meta.main) {
 			console.log(JSON.stringify(status));
 		} else {
 			const { missing, outdated, orphaned } = status;
-			if (!missing.length && !outdated.length && !orphaned.length) {
-				console.log("英訳はすべて最新です");
-			}
+			const done = !missing.length && !outdated.length && !orphaned.length;
+			if (done) console.log("英訳はすべて最新です");
 			for (const { source, target } of missing)
 				console.log(`未訳: ${source} → ${target}`);
 			for (const { source, target } of outdated)
 				console.log(`原文が更新された: ${source} → ${target}`);
 			for (const target of orphaned)
 				console.log(`原文が無い(削除する): ${target}`);
+			if (args.includes("--check") && !done) process.exit(1);
 		}
 	}
 }

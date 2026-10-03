@@ -2,22 +2,32 @@
 import Icon from "@components/misc/Icon.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n, type Lang } from "@i18n/translation";
+import { url } from "@utils/url-utils";
+import { BUILD_ID } from "../constants/build";
 
 interface Props {
 	lang: Lang;
 }
 
 const placeholder = i18n(I18nKey.search, Astro.props.lang);
+// 検索の索引を読むスクリプトの URL(下のスクリプトが読む)。開発サーバーには索引が無いので付けない
+const pagefind = import.meta.env.PROD
+	? `${url("/pagefind/pagefind.js")}?v=${BUILD_ID}`
+	: undefined;
+// 検索できないとき(開発サーバーや、索引を読み込めなかったとき)に出す文言
+const unavailable = import.meta.env.DEV
+	? "開発サーバーでは検索できません(bun run build のあと bun run preview で試せます)"
+	: i18n(I18nKey.searchUnavailable, Astro.props.lang);
 ---
-<div data-search class="search">
+<div data-search data-pagefind={pagefind} class="search">
 <!-- search bar for desktop view -->
 <div id="search-bar" class="search-bar">
     <Icon name="lucide:search" class="search-icon" />
-    <input placeholder={placeholder} data-search-input="desktop" class="search-input">
+    <input placeholder={placeholder} data-search-input="desktop" class="search-input text-sm">
 </div>
 
 <!-- toggle btn for phone/tablet view -->
-<button aria-label="Search Panel" id="search-switch" class="btn-plain scale-animation">
+<button aria-label={i18n(I18nKey.openSearch, Astro.props.lang)} id="search-switch" class="btn-plain scale-animation">
     <Icon name="lucide:search" class="switch-icon" />
 </button>
 
@@ -27,18 +37,20 @@ const placeholder = i18n(I18nKey.search, Astro.props.lang);
     <!-- search bar inside panel for phone/tablet -->
     <div id="search-bar-inside" class="search-bar">
         <Icon name="lucide:search" class="search-icon" />
-        <input placeholder={placeholder} data-search-input="mobile" class="search-input">
+        <input placeholder={placeholder} data-search-input="mobile" class="search-input text-sm">
     </div>
+
+    <div data-search-message class="message text-sm" hidden>{unavailable}</div>
 
     <!-- search results(下のテンプレートを複製して、この後ろに並べる) -->
 </div>
 
 <template data-search-result>
-    <a class="result">
+    <a class="result text-lg">
         <div class="result-title">
             <span data-title></span><Icon name="lucide:chevron-right" class="result-chevron" />
         </div>
-        <div class="result-excerpt" data-excerpt></div>
+        <div class="result-excerpt text-sm" data-excerpt></div>
     </a>
 </template>
 </div>
@@ -52,28 +64,16 @@ const placeholder = i18n(I18nKey.search, Astro.props.lang);
     display: flex;
     align-items: center;
     height: 2.75rem;
-    background-color: color-mix(in oklab, var(--black) 4%, transparent);
+    background-color: var(--search-bg);
     transition: all 0.15s var(--ease);
 
     @media (hover: hover) {
       &:hover {
-        background-color: color-mix(in oklab, var(--black) 6%, transparent);
+        background-color: var(--search-bg-hover);
       }
     }
     &:focus-within {
-      background-color: color-mix(in oklab, var(--black) 6%, transparent);
-    }
-    :global(.dark) & {
-      background-color: color-mix(in oklab, var(--white) 5%, transparent);
-
-      @media (hover: hover) {
-        &:hover {
-          background-color: color-mix(in oklab, var(--white) 10%, transparent);
-        }
-      }
-      &:focus-within {
-        background-color: color-mix(in oklab, var(--white) 10%, transparent);
-      }
+      background-color: var(--search-bg-hover);
     }
   }
   #search-bar {
@@ -98,18 +98,12 @@ const placeholder = i18n(I18nKey.search, Astro.props.lang);
     margin-block: auto;
     margin-left: 0.75rem;
     font-size: 1.25rem;
-    color: color-mix(in oklab, var(--black) 30%, transparent);
+    color: var(--fg-30);
     pointer-events: none;
     transition: var(--transition);
-
-    :global(.dark) & {
-      color: color-mix(in oklab, var(--white) 30%, transparent);
-    }
   }
   .search-input {
     padding-left: 2.5rem;
-    font-size: var(--text-sm);
-    line-height: var(--text-sm-lh);
     color: var(--text-50);
     background-color: transparent;
     outline: 0 solid;
@@ -169,12 +163,14 @@ const placeholder = i18n(I18nKey.search, Astro.props.lang);
     }
   }
 
+  .message {
+    padding: 0.5rem 0.75rem;
+    color: var(--text-50);
+  }
   .result {
     display: block;
     padding: 0.5rem 0.75rem;
     border-radius: 0.75rem;
-    font-size: var(--text-lg);
-    line-height: var(--text-lg-lh);
     transition: var(--transition);
 
     &:first-of-type {
@@ -210,8 +206,6 @@ const placeholder = i18n(I18nKey.search, Astro.props.lang);
     transition: var(--transition);
   }
   .result-excerpt {
-    font-size: var(--text-sm);
-    line-height: var(--text-sm-lh);
     color: var(--text-50);
     transition: var(--transition);
 
@@ -224,44 +218,27 @@ const placeholder = i18n(I18nKey.search, Astro.props.lang);
 </style>
 
 <script>
-import type { SearchResult } from "@/global";
+// 検索(Pagefind)。索引を読むスクリプトはビルドで dist/pagefind/ に作られるので、開発サーバーには無い
+// (data-pagefind を付けない)。読み込むのは同じサイトのファイルだけで副作用は無いので、
+// 裏で描画している(prerender)間も、ページを開いたらすぐ読み始める
+type SearchResult = { url: string; meta: { title: string }; excerpt: string };
+type Pagefind = {
+	options: (options: { excerptLength: number }) => Promise<void>;
+	search: (query: string) => Promise<{
+		results: { data: () => Promise<SearchResult> }[];
+	}>;
+};
 
-const fakeResult: SearchResult[] = [
-	{
-		url: import.meta.env.BASE_URL,
-		meta: {
-			title: "This Is a Fake Search Result",
-		},
-		excerpt:
-			"Because the search cannot work in the <mark>dev</mark> environment.",
-	},
-	{
-		url: import.meta.env.BASE_URL,
-		meta: {
-			title: "If You Want to Test the Search",
-		},
-		excerpt: "Try running <mark>npm build && npm preview</mark> instead.",
-	},
-];
-
-// Pagefind は Navbar.astro のスクリプトが読み込み、終わると pagefindready(失敗なら pagefindloaderror)を出す
-let pagefindDone = import.meta.env.DEV;
-const pagefindWaiters: (() => void)[] = [];
-function onPagefindDone() {
-	if (pagefindDone) return;
-	pagefindDone = true;
-	for (const f of pagefindWaiters.splice(0)) f();
-}
-if (!pagefindDone) {
-	document.addEventListener("pagefindready", onPagefindDone);
-	document.addEventListener("pagefindloaderror", () => {
-		console.warn(
-			"Pagefind load error event received. Search functionality will be limited.",
-		);
-		onPagefindDone();
-	});
-	// Fallback in case events are not caught or pagefind is already loaded by the time this script runs
-	setTimeout(onPagefindDone, 2000);
+async function loadPagefind(url: string | undefined): Promise<Pagefind | undefined> {
+	if (!url) return undefined;
+	try {
+		const pagefind: Pagefind = await import(/* @vite-ignore */ url);
+		await pagefind.options({ excerptLength: 20 });
+		return pagefind;
+	} catch (error) {
+		console.error("Failed to load Pagefind:", error);
+		return undefined;
+	}
 }
 
 function setup(root: HTMLElement) {
@@ -269,15 +246,16 @@ function setup(root: HTMLElement) {
 	const template = root.querySelector<HTMLTemplateElement>(
 		"template[data-search-result]",
 	);
+	const message = root.querySelector<HTMLElement>("[data-search-message]");
 	const desktop = root.querySelector<HTMLInputElement>(
 		'[data-search-input="desktop"]',
 	);
 	const mobile = root.querySelector<HTMLInputElement>(
 		'[data-search-input="mobile"]',
 	);
-	if (!panel || !template || !desktop || !mobile) return;
+	if (!panel || !template || !message || !desktop || !mobile) return;
 
-	let initialized = false;
+	const pagefind = loadPagefind(root.dataset.pagefind);
 	// 遅れて返ってきた古い検索の結果で、新しい結果を上書きしないように
 	let latest = 0;
 
@@ -307,29 +285,27 @@ function setup(root: HTMLElement) {
 		if (!keyword) {
 			setPanelVisibility(false, isDesktop);
 			render([]);
+			message.hidden = true;
 			return;
 		}
-		if (!initialized) return;
-
+		// 索引を読み込む前に打った語は、読み込めてから検索する
+		const pf = await pagefind;
 		let result: SearchResult[] = [];
+		let failed = !pf;
 		try {
-			if (import.meta.env.PROD && window.pagefind) {
-				const response = await window.pagefind.search(keyword);
-				result = await Promise.all(
-					response.results.map((item) => item.data()),
-				);
-			} else if (import.meta.env.DEV) {
-				result = fakeResult;
-			} else {
-				console.error("Pagefind is not available in production environment.");
+			if (pf) {
+				const response = await pf.search(keyword);
+				result = await Promise.all(response.results.map((item) => item.data()));
 			}
 		} catch (error) {
 			console.error("Search error:", error);
-			result = [];
+			failed = true;
 		}
 		if (id !== latest) return;
 		render(result);
-		setPanelVisibility(result.length > 0, isDesktop);
+		// 開発サーバーや、索引を読み込めなかったときは、検索できないことを出す
+		message.hidden = !failed;
+		setPanelVisibility(failed || result.length > 0, isDesktop);
 	};
 
 	// 空にしたときは検索し直さない(結果はそのまま残る)。入力欄にフォーカスし直すと閉じる。
@@ -345,14 +321,6 @@ function setup(root: HTMLElement) {
 	root.querySelector("#search-switch")?.addEventListener("click", () => {
 		panel.classList.toggle("float-panel-closed");
 	});
-
-	const init = () => {
-		initialized = true;
-		if (desktop.value) search(desktop.value, true);
-		if (mobile.value) search(mobile.value, false);
-	};
-	if (pagefindDone) init();
-	else pagefindWaiters.push(init);
 }
 
 for (const root of document.querySelectorAll<HTMLElement>("[data-search]")) {

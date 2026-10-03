@@ -1,37 +1,31 @@
 import { type CollectionEntry, getCollection } from "astro:content";
+import path from "node:path";
 import { PAGE_SIZE } from "@constants/constants";
 import I18nKey from "@i18n/i18nKey";
 import { i18n, LANGS, type Lang } from "@i18n/translation";
-import { getCategoryUrl, localeUrl, stripLang } from "@utils/url-utils.ts";
+import {
+	getCategoryUrl,
+	getDir,
+	localeUrl,
+	stripLang,
+} from "@utils/url-utils.ts";
 
 /** 言語ごとの記事のコレクション。英語版は src/content/posts-en/ に同じ名前で置く */
 export type PostCollection = "posts" | "postsEn";
 export type PostEntry = CollectionEntry<PostCollection>;
 
-export function postCollection(lang: Lang): PostCollection {
-	return lang === "en" ? "postsEn" : "posts";
-}
-
 async function getPublishedPosts(lang: Lang): Promise<PostEntry[]> {
-	return getCollection(postCollection(lang), ({ data }) => {
+	const collection = lang === "en" ? "postsEn" : "posts";
+	return getCollection(collection, ({ data }) => {
 		return import.meta.env.PROD ? data.draft !== true : true;
 	});
 }
 
-// // Retrieve posts and sort them by publication date
-async function getRawSortedPosts(lang: Lang) {
-	const allBlogPosts = await getPublishedPosts(lang);
-
-	const sorted = allBlogPosts.sort((a, b) => {
-		const dateA = new Date(a.data.published);
-		const dateB = new Date(b.data.published);
-		return dateA > dateB ? -1 : 1;
-	});
-	return sorted;
-}
-
-export async function getSortedPosts(lang: Lang) {
-	const sorted = await getRawSortedPosts(lang);
+/** 新しい順の記事。前後の記事(prev / next)も付ける */
+export async function getSortedPosts(lang: Lang): Promise<PostEntry[]> {
+	const sorted = (await getPublishedPosts(lang)).sort((a, b) =>
+		a.data.published > b.data.published ? -1 : 1,
+	);
 
 	for (let i = 1; i < sorted.length; i++) {
 		sorted[i].data.nextSlug = sorted[i - 1].id;
@@ -44,82 +38,57 @@ export async function getSortedPosts(lang: Lang) {
 
 	return sorted;
 }
-export type PostForList = {
-	slug: string;
-	data: PostEntry["data"];
-};
-export async function getSortedPostsList(lang: Lang): Promise<PostForList[]> {
-	const sortedFullPosts = await getRawSortedPosts(lang);
 
-	// delete post.body
-	const sortedPostsList = sortedFullPosts.map((post) => ({
-		slug: post.id,
-		data: post.data,
-	}));
-
-	return sortedPostsList;
-}
 export type Tag = {
 	name: string;
 	count: number;
 };
 
-export async function getTagList(lang: Lang): Promise<Tag[]> {
-	const allBlogPosts = await getPublishedPosts(lang);
-
-	const countMap: { [key: string]: number } = {};
-	allBlogPosts.forEach((post: { data: { tags: string[] } }) => {
-		post.data.tags.forEach((tag: string) => {
-			if (!countMap[tag]) countMap[tag] = 0;
-			countMap[tag]++;
-		});
-	});
-
-	// sort tags
-	const keys: string[] = Object.keys(countMap).sort((a, b) => {
-		return a.toLowerCase().localeCompare(b.toLowerCase());
-	});
-
-	return keys.map((key) => ({ name: key, count: countMap[key] }));
+/** 名前ごとの数を、名前の順(大文字・小文字を区別しない)に並べる */
+function countByName(names: string[]): Tag[] {
+	const count = new Map<string, number>();
+	for (const name of names) count.set(name, (count.get(name) ?? 0) + 1);
+	return [...count.keys()]
+		.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+		.map((name) => ({ name, count: count.get(name) ?? 0 }));
 }
 
-export type Category = {
-	name: string;
-	count: number;
+export async function getTagList(lang: Lang): Promise<Tag[]> {
+	const posts = await getPublishedPosts(lang);
+	return countByName(posts.flatMap((post) => post.data.tags));
+}
+
+export type Category = Tag & {
 	url: string;
 };
 
 export async function getCategoryList(lang: Lang): Promise<Category[]> {
-	const allBlogPosts = await getPublishedPosts(lang);
-	const count: { [key: string]: number } = {};
-	allBlogPosts.forEach((post: { data: { category: string | null } }) => {
-		if (!post.data.category) {
-			const ucKey = i18n(I18nKey.uncategorized, lang);
-			count[ucKey] = count[ucKey] ? count[ucKey] + 1 : 1;
-			return;
-		}
+	const posts = await getPublishedPosts(lang);
+	const uncategorized = i18n(I18nKey.uncategorized, lang);
+	return countByName(
+		posts.map((post) => post.data.category?.trim() || uncategorized),
+	).map((c) => ({ ...c, url: getCategoryUrl(c.name, lang) }));
+}
 
-		const categoryName =
-			typeof post.data.category === "string"
-				? post.data.category.trim()
-				: String(post.data.category).trim();
+/** 記事のフロントマターの相対パスの画像(image)を探す基準(src/ からのパス) */
+export function postImageBase(entry: PostEntry): string {
+	const dir =
+		entry.collection === "postsEn" ? "content/posts-en/" : "content/posts/";
+	return path.join(dir, getDir(entry.id));
+}
 
-		count[categoryName] = count[categoryName] ? count[categoryName] + 1 : 1;
-	});
-
-	const lst = Object.keys(count).sort((a, b) => {
-		return a.toLowerCase().localeCompare(b.toLowerCase());
-	});
-
-	const ret: Category[] = [];
-	for (const c of lst) {
-		ret.push({
-			name: c,
-			count: count[c],
-			url: getCategoryUrl(c, lang),
-		});
-	}
-	return ret;
+/** 記事の文字数と読了時間の表示(remark-reading-time.ts が数えたもの) */
+export function readingStats(
+	frontmatter: Record<string, unknown>,
+	lang: Lang,
+): { words: string; minutes: string } {
+	const { words, minutes } = frontmatter as { words: number; minutes: number };
+	const unit = (n: number, one: I18nKey, many: I18nKey) =>
+		`${n} ${i18n(n === 1 ? one : many, lang)}`;
+	return {
+		words: unit(words, I18nKey.wordCount, I18nKey.wordsCount),
+		minutes: unit(minutes, I18nKey.minuteCount, I18nKey.minutesCount),
+	};
 }
 
 // 日本語版と英語版の両方にあるページ(記事は訳があるものだけ)

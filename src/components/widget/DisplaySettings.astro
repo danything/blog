@@ -15,17 +15,17 @@ const hue = siteConfig.themeColor.hue;
 <div id="display-setting" class="float-panel float-panel-closed" role="group"
      aria-label={title}>
     <div class="header">
-        <div class="title">
+        <div class="title text-lg">
             {title}
             <!-- 既定の色のときは見えないので、Tab で止まらないよう disabled にする -->
-            <button id="hue-reset" aria-label="Reset to Default" class="btn-regular" disabled>
+            <button id="hue-reset" aria-label={i18n(I18nKey.resetToDefault, Astro.props.lang)} class="btn-regular" disabled>
                 <div class="reset-icon">
                     <Icon name="lucide:rotate-ccw" class="reset-icon-svg" />
                 </div>
             </button>
         </div>
         <div class="hue-value-wrapper">
-            <div id="hueValue">
+            <div id="hueValue" class="text-sm">
                 {hue}
             </div>
         </div>
@@ -56,15 +56,9 @@ const hue = siteConfig.themeColor.hue;
 	  display: flex;
 	  gap: 0.5rem;
 	  margin-left: 0.75rem;
-	  font-size: var(--text-lg);
-	  line-height: var(--text-lg-lh);
 	  font-weight: 700;
-	  color: var(--neutral-900);
+	  color: var(--heading-color);
 	  transition: var(--transition);
-
-	  :global(.dark) & {
-	    color: var(--neutral-100);
-	  }
 	  &::before {
 	    content: "";
 	    position: absolute;
@@ -109,8 +103,6 @@ const hue = siteConfig.themeColor.hue;
 	  height: 1.75rem;
 	  border-radius: 0.375rem;
 	  background-color: var(--btn-regular-bg);
-	  font-size: var(--text-sm);
-	  line-height: var(--text-sm-lh);
 	  font-weight: 700;
 	  color: var(--btn-content);
 	  transition: var(--transition);
@@ -167,7 +159,7 @@ const hue = siteConfig.themeColor.hue;
 
 <script>
 import { onActivatedFromPrerender } from "@utils/prerender";
-import { getDefaultHue, getHue, setHue } from "@utils/setting-utils";
+import { DEFAULT_HUE, getHue, setHue } from "@utils/setting-utils";
 
 function setup(panel: HTMLElement) {
 	const slider = panel.querySelector<HTMLInputElement>("#colorSlider");
@@ -175,13 +167,11 @@ function setup(panel: HTMLElement) {
 	const value = panel.querySelector<HTMLElement>("#hueValue");
 	if (!slider || !reset || !value) return;
 
-	const defaultHue = getDefaultHue();
-
 	const update = (hue: number) => {
 		setHue(hue);
 		slider.value = String(hue);
 		value.textContent = String(hue);
-		const isDefault = hue === defaultHue;
+		const isDefault = hue === DEFAULT_HUE;
 		reset.disabled = isDefault;
 	};
 
@@ -189,7 +179,7 @@ function setup(panel: HTMLElement) {
 	reset.addEventListener("click", () => {
 		// 戻すとこのボタンは押せなく(disabled に)なるので、キーボードで押したときはスライダーへ移す
 		const focused = document.activeElement === reset;
-		update(defaultHue);
+		update(DEFAULT_HUE);
 		if (focused) slider.focus();
 	});
 	// Esc で閉じて、開いたボタンへ戻る

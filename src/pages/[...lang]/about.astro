@@ -2,14 +2,13 @@
 import { getEntry, render } from "astro:content";
 import Markdown from "@components/misc/Markdown.astro";
 import I18nKey from "@i18n/i18nKey";
-import { i18n, type Lang } from "@i18n/translation";
+import { i18n, type Lang, langPaths } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 
-// About のページ。本文は src/content/spec/about.md(英語版は about-en.md)
-interface Props {
-	lang: Lang;
-}
-const { lang } = Astro.props;
+// プロフィールのページ(/about/ と /en/about/)。本文は src/content/spec/about.md(英語版は about-en.md)
+export const getStaticPaths = langPaths;
+
+const { lang } = Astro.props as { lang: Lang };
 
 const aboutPost = await getEntry("spec", lang === "en" ? "about-en" : "about");
 

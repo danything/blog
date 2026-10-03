@@ -2,42 +2,41 @@
   "name": "blog",
   "type": "module",
   "version": "0.0.1",
+  "packageManager": "bun@1.4.2",
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev",
     "check": "astro check",
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
-    "type-check": "tsc --noEmit",
     "new-post": "bun scripts/new-post.ts",
     "zenn-sync": "bun scripts/zenn-sync.ts",
-    "format": "biome format --write .",
-    "lint": "biome check . && astro check && tsc --noEmit",
+    "lint": "biome check . && astro check",
     "lint:fix": "biome check --write .",
     "images": "bun scripts/images.ts"
   },
-  "dependencies": {
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@astrojs/markdown-remark": "^7.3.1",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
+    "@axe-core/playwright": "^4.13.0",
+    "@biomejs/biome": "2.5.15",
     "@expressive-code/plugin-collapsible-sections": "^0.44.2",
     "@expressive-code/plugin-line-numbers": "^0.44.2",
     "@iconify-json/lucide": "^1.2.139",
     "@iconify-json/simple-icons": "^1.2.98",
-    "astro": "^7.3.5",
-    "astro-expressive-code": "^0.44.2",
-    "pagefind": "^1.5.2",
-    "satori": "^0.35.0"
-  },
-  "devDependencies": {
-    "@astrojs/check": "^0.9.10",
-    "@axe-core/playwright": "^4.13.0",
-    "@biomejs/biome": "2.5.15",
+    "@iconify/types": "^2.0.0",
     "@playwright/test": "^1.63.0",
     "@types/bun": "^1.4.2",
     "@types/hast": "^3.0.5",
+    "@types/mdast": "^4.0.4",
+    "astro": "^7.3.5",
+    "astro-expressive-code": "^0.44.2",
+    "pagefind": "^1.5.2",
+    "satori": "^0.35.0",
     "sharp": "^0.35.5",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vite": "^8.3.2"
   }
 }

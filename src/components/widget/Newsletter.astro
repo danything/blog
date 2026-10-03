@@ -15,7 +15,7 @@ const profileUrl = `https://buttondown.com/${newsletterConfig.username}`;
 ---
 {newsletterConfig.enable && newsletterConfig.username && (
 <WidgetLayout name={newsletterConfig.title} id="newsletter" class={className} style={style}>
-    <div class="description">
+    <div class="widget-description">
         {newsletterConfig.description}
     </div>
     <form
@@ -29,10 +29,11 @@ const profileUrl = `https://buttondown.com/${newsletterConfig.username}`;
             type="email"
             name="email"
             id="bd-email"
+            class="text-sm"
             required
             placeholder={newsletterConfig.placeholder}
         />
-        <button type="submit" class="btn-regular">
+        <button type="submit" class="btn-regular text-sm">
             {newsletterConfig.buttonLabel}
         </button>
     </form>
@@ -40,13 +41,6 @@ const profileUrl = `https://buttondown.com/${newsletterConfig.username}`;
 )}
 
 <style>
-    .description {
-        margin-bottom: 0.75rem;
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
-        color: var(--text-75);
-        transition: var(--transition);
-    }
     form {
         display: flex;
         flex-direction: column;
@@ -56,25 +50,16 @@ const profileUrl = `https://buttondown.com/${newsletterConfig.username}`;
     button {
         height: 2.25rem;
         border-radius: 0.5rem;
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
     }
     input {
         width: 100%;
         padding-inline: 0.75rem;
-        background-color: color-mix(in oklab, var(--black) 5%, transparent);
+        background-color: var(--tint-bg);
         color: var(--text-75);
         transition: var(--transition);
 
         &::placeholder {
-            color: color-mix(in oklab, var(--black) 35%, transparent);
-        }
-        :global(.dark) & {
-            background-color: color-mix(in oklab, var(--white) 10%, transparent);
-
-            &::placeholder {
-                color: color-mix(in oklab, var(--white) 35%, transparent);
-            }
+            color: var(--fg-35);
         }
         &:focus {
             outline-style: none;

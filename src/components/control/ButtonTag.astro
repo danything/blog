@@ -7,7 +7,7 @@ interface Props {
 }
 const { dot, href, label }: Props = Astro.props;
 ---
-<a href={href} aria-label={label} class="btn-regular tag">
+<a href={href} aria-label={label} class="btn-regular tag text-sm">
     {dot && <div class="dot"></div>}
     <slot></slot>
 </a>
@@ -17,8 +17,6 @@ const { dot, href, label }: Props = Astro.props;
         height: 2rem;
         padding-inline: 0.75rem;
         border-radius: 0.5rem;
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
     }
     .dot {
         width: 0.25rem;

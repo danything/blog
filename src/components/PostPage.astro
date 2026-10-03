@@ -1,29 +1,21 @@
 ---
-import { langFromPath } from "@i18n/translation";
 import type { PostEntry } from "@utils/content-utils";
-import { getPostUrlBySlug } from "@utils/url-utils";
+import type { Page } from "astro";
 import PostCard from "./PostCard.astro";
 
+interface Props {
+	page: Page<PostEntry>;
+}
 const { page } = Astro.props;
-const lang = langFromPath(Astro.url.pathname);
 
 let delay = 0;
 const interval = 50;
 ---
 <div class="post-list">
-    {page.data.map((entry: PostEntry) => (
+    {page.data.map((entry) => (
         <PostCard
                 entry={entry}
-                title={entry.data.title}
-                tags={entry.data.tags}
-                category={entry.data.category}
-                published={entry.data.published}
-                updated={entry.data.updated}
-                url={getPostUrlBySlug(entry.id, lang)}
-                image={entry.data.image}
-                description={entry.data.description}
-                draft={entry.data.draft}
-                class:list="onload-animation"
+                class="onload-animation"
                 style={`animation-delay: calc(var(--content-delay) + ${delay++ * interval}ms);`}
         ></PostCard>
     ))}

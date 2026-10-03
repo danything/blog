@@ -1,7 +1,8 @@
 ---
 import Icon from "@components/misc/Icon.astro";
 import { profileConfig } from "../../config";
-import { langFromPath, siteText } from "../../i18n/translation";
+import I18nKey from "../../i18n/i18nKey";
+import { i18n, langFromPath, siteText } from "../../i18n/translation";
 import { localeUrl } from "../../utils/url-utils";
 import ImageWrapper from "../misc/ImageWrapper.astro";
 
@@ -10,14 +11,14 @@ const lang = langFromPath(Astro.url.pathname);
 const text = siteText(lang);
 ---
 <div class="card-base profile">
-    <a aria-label="Go to About Page" href={localeUrl('/about/', lang)} class="avatar-link">
+    <a aria-label={i18n(I18nKey.goToAbout, lang)} href={localeUrl('/about/', lang)} class="avatar-link">
         <div class="avatar-overlay">
             <Icon name="lucide:id-card" class="avatar-icon"></Icon>
         </div>
-        <ImageWrapper src={config.avatar || ""} alt="Profile Image of the Author" class="avatar"></ImageWrapper>
+        <ImageWrapper src={config.avatar || ""} alt={i18n(I18nKey.authorImage, lang)} class="avatar"></ImageWrapper>
     </a>
     <div class="info">
-        <div class="name">{text.profileName}</div>
+        <div class="name text-xl">{text.profileName}</div>
         <div class="divider"></div>
         <div class="bio">{text.bio}</div>
         <div class="links">
@@ -104,8 +105,6 @@ const text = siteText(lang);
     }
     .name {
         margin-bottom: 0.25rem;
-        font-size: var(--text-xl);
-        line-height: var(--text-xl-lh);
         font-weight: 700;
         text-align: center;
         transition: var(--transition);

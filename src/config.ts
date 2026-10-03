@@ -1,3 +1,4 @@
+import I18nKey from "./i18n/i18nKey";
 import type {
 	CommentConfig,
 	ExpressiveCodeConfig,
@@ -8,7 +9,6 @@ import type {
 	ProfileConfig,
 	SiteConfig,
 } from "./types/config";
-import { LinkPreset } from "./types/config";
 
 export const siteConfig: SiteConfig = {
 	title: "Doa",
@@ -24,16 +24,6 @@ export const siteConfig: SiteConfig = {
 		// 色域に収まり、かつボタン文字のコントラストが最大に近い暖色域から選んだ。
 		hue: 40,
 		fixed: false, // Hide the theme color picker for visitors
-	},
-	banner: {
-		enable: false,
-		src: "assets/images/demo-banner.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-		position: "center", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
-		credit: {
-			enable: false, // Display the credit text of the banner image
-			text: "", // Credit text to be displayed
-			url: "", // (Optional) URL link to the original artwork or artist's page
-		},
 	},
 	toc: {
 		enable: true, // Display the table of contents on the right side of the post
@@ -71,13 +61,13 @@ export const siteTextEn = {
 
 export const navBarConfig: NavBarConfig = {
 	links: [
-		LinkPreset.Home,
-		LinkPreset.Archive,
-		LinkPreset.About,
+		{ i18nKey: I18nKey.home, url: "/" },
+		{ i18nKey: I18nKey.archive, url: "/archive/" },
+		{ i18nKey: I18nKey.about, url: "/about/" },
 		{
 			name: "GitHub",
-			url: "https://github.com/DAnything/blog", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
+			url: "https://github.com/DAnything/blog",
+			external: true, // 外部リンクの印を付け、新しいタブで開く
 		},
 	],
 };

@@ -35,7 +35,7 @@ const maxLevel = siteConfig.toc.depth;
 <table-of-contents class={className}>
     {headings.filter((heading) => heading.depth < minDepth + maxLevel).map((heading) =>
             <a href={`#${heading.slug}`} class="entry">
-                <div class:list={["marker", {
+                <div class:list={["marker text-xs", {
                     "level-1": heading.depth == minDepth,
                     "level-2": heading.depth == minDepth + 1,
                     "level-3": heading.depth == minDepth + 2,
@@ -45,7 +45,7 @@ const maxLevel = siteConfig.toc.depth;
                     {heading.depth == minDepth + 1 && <div class="dot-2"></div>}
                     {heading.depth == minDepth + 2 && <div class="dot-3"></div>}
                 </div>
-                <div class:list={["text", { "text-deep": heading.depth == minDepth + 2 }]}>{removeTailingHash(heading.text)}</div>
+                <div class:list={["text text-sm", { "text-deep": heading.depth == minDepth + 2 }]}>{removeTailingHash(heading.text)}</div>
             </a>
     )}
     <div id="active-indicator" style="opacity: 0" hidden={headings.length == 0}></div>
@@ -80,8 +80,6 @@ const maxLevel = siteConfig.toc.depth;
         width: 1.25rem;
         height: 1.25rem;
         border-radius: 0.5rem;
-        font-size: var(--text-xs);
-        line-height: var(--text-xs-lh);
         font-weight: 700;
         transition: var(--transition);
     }
@@ -106,16 +104,10 @@ const maxLevel = siteConfig.toc.depth;
         width: 0.375rem;
         height: 0.375rem;
         border-radius: 0.125rem;
-        background-color: color-mix(in oklab, var(--black) 5%, transparent);
+        background-color: var(--tint-bg);
         transition: var(--transition);
-
-        :global(.dark) & {
-            background-color: color-mix(in oklab, var(--white) 10%, transparent);
-        }
     }
     .text {
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
         color: var(--text-50);
         transition: var(--transition);
 

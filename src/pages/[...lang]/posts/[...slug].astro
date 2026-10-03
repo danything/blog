@@ -1,31 +1,43 @@
 ---
 import { render } from "astro:content";
-import path from "node:path";
 import Comments from "@components/Comments.astro";
 import Icon from "@components/misc/Icon.astro";
-import KofiPostEnd from "@components/misc/KofiPostEnd.astro";
+import ImageWrapper from "@components/misc/ImageWrapper.astro";
 import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import Share from "@components/misc/Share.astro";
+import PostMetadata from "@components/PostMeta.astro";
+import Kofi from "@components/widget/Kofi.astro";
 import I18nKey from "@i18n/i18nKey";
-import { i18n, type Lang, siteText } from "@i18n/translation";
+import { i18n, type Lang, langPaths, siteText } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
-import type { PostEntry } from "@utils/content-utils";
-import { getDir, getPostUrlBySlug } from "@utils/url-utils";
+import {
+	getSortedPosts,
+	type PostEntry,
+	postImageBase,
+	readingStats,
+} from "@utils/content-utils";
+import { formatDateToYYYYMMDD } from "@utils/date-utils";
+import { getPostUrlBySlug } from "@utils/url-utils";
 import { licenseConfig } from "@/config";
-import { formatDateToYYYYMMDD } from "../../utils/date-utils";
-import ImageWrapper from "../misc/ImageWrapper.astro";
-import PostMetadata from "../PostMeta.astro";
 
-// 記事のページ(日本語版 pages/posts/、英語版 pages/en/posts/ の中身)
-interface Props {
-	entry: PostEntry;
-	lang: Lang;
+// 記事のページ(/posts/<記事>/ と、英訳の /en/posts/<記事>/)
+export async function getStaticPaths() {
+	const paths = await Promise.all(
+		langPaths().map(async ({ params, props }) =>
+			(await getSortedPosts(props.lang)).map((entry) => ({
+				params: { ...params, slug: entry.id },
+				props: { ...props, entry },
+			})),
+		),
+	);
+	return paths.flat();
 }
 
-const { entry, lang } = Astro.props;
+const { entry, lang } = Astro.props as { entry: PostEntry; lang: Lang };
 const isTranslation = entry.collection === "postsEn";
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const stats = readingStats(remarkPluginFrontmatter, lang);
 
 const jsonLd = {
 	"@context": "https://schema.org",
@@ -43,7 +55,7 @@ const jsonLd = {
 	// TODO include cover image here
 };
 ---
-<MainGridLayout banner={entry.data.image} title={entry.data.title} description={entry.data.description} lang={entry.data.lang} setOGTypeArticle={true} ogImage={isTranslation ? `/og/en/${entry.id}.png` : `/og/${entry.id}.png`} headings={headings}>
+<MainGridLayout cover={entry.data.image} title={entry.data.title} description={entry.data.description} lang={entry.data.lang} setOGTypeArticle={true} ogImage={isTranslation ? `/og/en/${entry.id}.png` : `/og/${entry.id}.png`} headings={headings}>
     <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
     <div class="post-card">
         <div id="post-container" class="card-base">
@@ -53,21 +65,19 @@ const jsonLd = {
                     <div class="stat-icon">
                         <Icon name="lucide:text"></Icon>
                     </div>
-                    <div class="stat-text">{remarkPluginFrontmatter.words} {" " + i18n(I18nKey.wordsCount, lang)}</div>
+                    <div class="stat-text text-sm">{stats.words}</div>
                 </div>
                 <div class="stat">
                     <div class="stat-icon">
                         <Icon name="lucide:clock"></Icon>
                     </div>
-                    <div class="stat-text">
-                        {remarkPluginFrontmatter.minutes} {" " + i18n(remarkPluginFrontmatter.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount, lang)}
-                    </div>
+                    <div class="stat-text text-sm">{stats.minutes}</div>
                 </div>
             </div>
 
             <!-- title -->
             <div class="title-wrapper onload-animation">
-                <div data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title" class="title">
+                <div data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title" class="title text-3xl">
                     {entry.data.title}
                 </div>
             </div>
@@ -87,12 +97,12 @@ const jsonLd = {
             <!-- always show cover as long as it has one -->
 
             {entry.data.image &&
-                <ImageWrapper id="post-cover" src={entry.data.image} basePath={path.join(isTranslation ? "content/posts-en/" : "content/posts/", getDir(entry.id))} class="cover onload-animation"/>
+                <ImageWrapper id="post-cover" src={entry.data.image} basePath={postImageBase(entry)} class="cover onload-animation"/>
             }
 
 
             {isTranslation && (
-                <div class="translated-notice onload-animation">
+                <div class="translated-notice onload-animation text-sm">
                     {i18n(I18nKey.translatedNotice, lang)}
                     <a href={getPostUrlBySlug(entry.id, "ja")} hreflang="ja" class="link">{i18n(I18nKey.readOriginal, lang)}</a>
                 </div>
@@ -106,7 +116,7 @@ const jsonLd = {
 
             <Share title={entry.data.title} class="section onload-animation"></Share>
 
-            <KofiPostEnd class="section onload-animation"></KofiPostEnd>
+            <Kofi variant="post-end" class="section onload-animation"></Kofi>
 
         </div>
     </div>
@@ -176,18 +186,11 @@ const jsonLd = {
         height: 1.5rem;
         margin-right: 0.5rem;
         border-radius: 0.375rem;
-        background-color: color-mix(in oklab, var(--black) 5%, transparent);
-        color: color-mix(in oklab, var(--black) 50%, transparent);
+        background-color: var(--tint-bg);
+        color: var(--fg-50);
         transition: var(--transition);
-
-        :global(.dark) & {
-            background-color: color-mix(in oklab, var(--white) 10%, transparent);
-            color: color-mix(in oklab, var(--white) 50%, transparent);
-        }
     }
     .stat-text {
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
     }
     .title-wrapper {
         position: relative;
@@ -197,15 +200,10 @@ const jsonLd = {
         display: block;
         width: 100%;
         margin-bottom: 0.75rem;
-        font-size: var(--text-3xl);
-        line-height: var(--text-3xl-lh);
         font-weight: 700;
-        color: color-mix(in oklab, var(--black) 90%, transparent);
+        color: var(--text-90);
         transition: var(--transition);
 
-        :global(.dark) & {
-            color: color-mix(in oklab, var(--white) 90%, transparent);
-        }
         &::before {
             content: "";
             position: absolute;
@@ -242,8 +240,6 @@ const jsonLd = {
         padding: 0.75rem 1.25rem;
         border-radius: 0.75rem;
         background-color: var(--license-block-bg);
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
         color: var(--text-75);
         transition: var(--transition);
 

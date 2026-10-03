@@ -35,7 +35,7 @@ const modes = [
 ---
 <!-- z-index: 50 でほかのパネルより上に出す -->
 <div class="theme-switch" role="group" data-light-dark-switch>
-    <button aria-label="Light/Dark Mode" class="btn-plain scale-animation" id="scheme-switch">
+    <button aria-label={i18n(I18nKey.themeMode, lang)} class="btn-plain scale-animation" id="scheme-switch">
         {modes.map(({ mode, icon }) => (
             <div class:list={["mode-icon", { inactive: mode !== DEFAULT_THEME }]} data-mode-icon={mode}>
                 <Icon name={icon} class="icon" />

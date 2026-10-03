@@ -3,14 +3,11 @@ enum I18nKey {
 	about = "about",
 	archive = "archive",
 	search = "search",
+	searchUnavailable = "searchUnavailable",
 
 	tags = "tags",
 	categories = "categories",
-	recentPosts = "recentPosts",
 
-	comments = "comments",
-
-	untitled = "untitled",
 	uncategorized = "uncategorized",
 	noTags = "noTags",
 
@@ -52,6 +49,23 @@ enum I18nKey {
 	imageViewer = "imageViewer",
 	actualSize = "actualSize",
 	close = "close",
+
+	// 読み上げ用の名前(aria-label・alt)
+	viewCategory = "viewCategory",
+	viewTag = "viewTag",
+	displaySettings = "displaySettings",
+	menu = "menu",
+	openSearch = "openSearch",
+	themeMode = "themeMode",
+	resetToDefault = "resetToDefault",
+	goToAbout = "goToAbout",
+	authorImage = "authorImage",
+	coverImage = "coverImage",
+	previousPage = "previousPage",
+	nextPage = "nextPage",
+	pageNumber = "pageNumber",
+	backToTop = "backToTop",
+	copyCode = "copyCode",
 }
 
 export default I18nKey;

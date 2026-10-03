@@ -33,7 +33,7 @@ const isPunctuation = (c: string | undefined) =>
  * CJK の文字は 1 文字を 1 語、それ以外は空白で区切ったものを 1 語とする。
  * CJK の文字の直後の記号と空白は数えない
  */
-export function countWords(text: string): number {
+function countWords(text: string): number {
 	let words = 0;
 	let start = 0;
 	let end = text.length - 1;

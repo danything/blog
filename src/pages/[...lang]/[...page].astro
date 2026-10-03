@@ -1,20 +1,29 @@
 ---
-import type { Page } from "astro";
-import { profileConfig, siteConfig } from "../../config";
-import { type Lang, siteText } from "../../i18n/translation";
-import MainGridLayout from "../../layouts/MainGridLayout.astro";
-import type { PostEntry } from "../../utils/content-utils";
-import { localeUrl } from "../../utils/url-utils";
-import Pagination from "../control/Pagination.astro";
-import PostPage from "../PostPage.astro";
+import Pagination from "@components/control/Pagination.astro";
+import PostPage from "@components/PostPage.astro";
+import { PAGE_SIZE } from "@constants/constants";
+import { type Lang, langPaths, siteText } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { getSortedPosts, type PostEntry } from "@utils/content-utils";
+import { localeUrl } from "@utils/url-utils";
+import type { GetStaticPaths, Page } from "astro";
+import { profileConfig, siteConfig } from "@/config";
 
-// 記事一覧のページ(日本語版 pages/[...page].astro、英語版 pages/en/[...page].astro の中身)
-interface Props {
-	page: Page<PostEntry>;
-	lang: Lang;
-}
+// 記事一覧のページ(/、/2/ … と /en/、/en/2/ …)
+export const getStaticPaths = (async ({ paginate }) =>
+	(
+		await Promise.all(
+			langPaths().map(async ({ params, props }) =>
+				paginate(await getSortedPosts(props.lang), {
+					pageSize: PAGE_SIZE,
+					params,
+					props,
+				}),
+			),
+		)
+	).flat()) satisfies GetStaticPaths;
 
-const { page, lang } = Astro.props;
+const { page, lang } = Astro.props as { page: Page<PostEntry>; lang: Lang };
 const text = siteText(lang);
 
 const len = page.data.length;

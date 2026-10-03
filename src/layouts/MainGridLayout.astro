@@ -1,23 +1,16 @@
 ---
 import BackToTop from "@components/control/BackToTop.astro";
 import Footer from "@components/Footer.astro";
-import Icon from "@components/misc/Icon.astro";
 import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
-import ImageWrapper from "../components/misc/ImageWrapper.astro";
 import TOC from "../components/widget/TOC.astro";
 import { siteConfig } from "../config";
-import {
-	BANNER_HEIGHT,
-	BANNER_HEIGHT_EXTEND,
-	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT,
-} from "../constants/constants";
 import Layout from "./Layout.astro";
 
 interface Props {
 	title?: string;
-	banner?: string;
+	cover?: string;
 	description?: string;
 	lang?: string;
 	setOGTypeArticle?: boolean;
@@ -27,23 +20,16 @@ interface Props {
 
 const {
 	title,
-	banner,
+	cover,
 	description,
 	lang,
 	setOGTypeArticle,
 	ogImage,
 	headings = [],
 } = Astro.props;
-const hasBannerCredit =
-	siteConfig.banner.enable && siteConfig.banner.credit.enable;
-const hasBannerLink = !!siteConfig.banner.credit.url;
-
-const mainPanelTop = siteConfig.banner.enable
-	? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
-	: "5.5rem";
 ---
 
-<Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} ogImage={ogImage}>
+<Layout title={title} cover={cover} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} ogImage={ogImage}>
 
 <!-- Navbar -->
 <slot slot="head" name="head"></slot>
@@ -53,31 +39,12 @@ const mainPanelTop = siteConfig.banner.enable
     </div>
 </div>
 
-<!-- Banner -->
-{siteConfig.banner.enable && <div id="banner-wrapper" style={`top: -${BANNER_HEIGHT_EXTEND}vh`}>
-    <ImageWrapper id="banner" alt="Banner image of the blog" class="banner-hidden"
-                  src={siteConfig.banner.src} position={siteConfig.banner.position}
-    >
-    </ImageWrapper>
-</div>}
-
 <!-- Main content -->
-<div class="main-layer" style={`top: ${mainPanelTop}`}>
+<div class="main-layer">
     <!-- The pointer-events: none here prevent blocking the click event of the TOC -->
     <div class="main-column">
         <div id="main-grid">
-            <!-- Banner image credit -->
-            {hasBannerCredit && <a href={siteConfig.banner.credit.url} id="banner-credit" target="_blank" rel="noopener" aria-label="Visit image source"
-                                   class:list={["onload-animation", {"has-link": hasBannerLink}]}
-            >
-                <Icon class="credit-icon" name="lucide:copyright" ></Icon>
-                <div class="credit-text">{siteConfig.banner.credit.text}</div>
-                <Icon class="credit-link-icon" name="lucide:external-link">
-                </Icon>
-            </a>}
-
-
-            <SideBar class="sidebar onload-animation" headings={headings}></SideBar>
+            <SideBar class="sidebar onload-animation"></SideBar>
 
             <main id="main-content">
                 <div id="content-wrapper" class="onload-animation">
@@ -98,11 +65,11 @@ const mainPanelTop = siteConfig.banner.enable
     </div>
 </div>
 
-<!-- The things that should be under the banner, only the TOC for now -->
+<!-- 目次(カードより後ろの層) -->
 <div class="toc-layer">
     <div class="toc-column">
         <!-- TOC component -->
-        {siteConfig.toc.enable && <div id="toc-wrapper" class:list={{"toc-hide": siteConfig.banner.enable}}>
+        {siteConfig.toc.enable && <div id="toc-wrapper">
             <div id="toc-inner-wrapper">
                 <div id="toc">
                     <div class="toc-spacer"></div>
@@ -137,29 +104,9 @@ const mainPanelTop = siteConfig.banner.enable
         transition: all 0.15s var(--ease);
     }
 
-    #banner-wrapper {
-        position: absolute;
-        z-index: 10;
-        width: 100%;
-        overflow: hidden;
-        transition: var(--transition);
-        transition-duration: 0.7s;
-    }
-    #banner {
-        height: 100%;
-        object-fit: cover;
-        transition: var(--transition);
-        transition-duration: 0.7s;
-
-        /* 読み込みが終わるまで(Layout.astro のスクリプトが外す) */
-        &.banner-hidden {
-            opacity: 0;
-            scale: 1.05;
-        }
-    }
-
     .main-layer {
         position: absolute;
+        top: 5.5rem;
         z-index: 30;
         width: 100%;
         pointer-events: none;
@@ -229,53 +176,6 @@ const mainPanelTop = siteConfig.banner.enable
         }
     }
 
-    #banner-credit {
-        position: absolute;
-        top: -3.25rem;
-        right: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 2.25rem;
-        padding-inline: 0.75rem;
-        border-radius: calc(infinity * 1px);
-        background-color: color-mix(in oklab, var(--black) 60%, transparent);
-        transition: all 0.15s var(--ease);
-
-        @media (hover: hover) {
-            &:hover {
-                background-color: color-mix(in oklab, var(--black) 70%, transparent);
-            }
-            &.has-link:hover {
-                padding-right: 2.25rem;
-            }
-            &.has-link:hover .credit-link-icon {
-                opacity: 1;
-            }
-        }
-        &.has-link:active {
-            background-color: color-mix(in oklab, var(--black) 80%, transparent);
-        }
-    }
-    .credit-icon {
-        margin-right: 0.25rem;
-        font-size: 1.25rem;
-        color: color-mix(in oklab, var(--white) 75%, transparent);
-    }
-    .credit-text {
-        font-size: var(--text-xs);
-        line-height: var(--text-xs-lh);
-        color: color-mix(in oklab, var(--white) 75%, transparent);
-    }
-    .credit-link-icon {
-        position: absolute;
-        right: 1rem;
-        font-size: 0.75rem;
-        color: oklch(0.75 0.14 var(--hue));
-        opacity: 0;
-        transition: var(--transition);
-    }
-
     /* 目次はカードより後ろの層に、ページの右の余白に置く */
     .toc-layer {
         display: none;
@@ -303,11 +203,6 @@ const mainPanelTop = siteConfig.banner.enable
 
         @media (width >= 64rem) {
             display: block;
-        }
-        /* バナーがあるときは、スクロールするまで隠す(Layout.astro のスクリプト) */
-        &.toc-hide {
-            opacity: 0;
-            pointer-events: none;
         }
     }
     /* 目次が長いときはこの中でスクロールする(スクロールバーは出さず、上下の端をぼかす) */

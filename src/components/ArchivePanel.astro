@@ -1,18 +1,18 @@
 ---
 import I18nKey from "../i18n/i18nKey";
 import { i18n, langFromPath } from "../i18n/translation";
-import type { PostForList } from "../utils/content-utils";
+import type { PostEntry } from "../utils/content-utils";
 import { getPostUrlBySlug } from "../utils/url-utils";
 
 interface Props {
-	sortedPosts: PostForList[];
+	sortedPosts: PostEntry[];
 }
 
 // 一覧はビルド時に HTML で出す(検索エンジンや JavaScript の無い環境でも読める)。
 // ?tag= / ?category= / ?uncategorized=true での絞り込みだけ下のスクリプトで行う
 const { sortedPosts } = Astro.props;
 
-const groups = new Map<number, PostForList[]>();
+const groups = new Map<number, PostEntry[]>();
 for (const post of sortedPosts) {
 	const year = post.data.published.getFullYear();
 	groups.set(year, [...(groups.get(year) ?? []), post]);
@@ -30,7 +30,7 @@ const lang = langFromPath(Astro.url.pathname);
         return (
         <div data-archive-group>
             <div class="year-row">
-                <div class="col-date year">
+                <div class="col-date year text-2xl">
                     {year}
                 </div>
                 <div class="col-line">
@@ -43,7 +43,7 @@ const lang = langFromPath(Astro.url.pathname);
 
             {posts.map((post) => (
                 <a
-                        href={getPostUrlBySlug(post.slug, lang)}
+                        href={getPostUrlBySlug(post.id, lang)}
                         aria-label={post.data.title}
                         class="btn-plain post"
                         data-tags={JSON.stringify(post.data.tags)}
@@ -51,7 +51,7 @@ const lang = langFromPath(Astro.url.pathname);
                 >
                     <div class="post-row">
                         <!-- date -->
-                        <div class="col-date date">
+                        <div class="col-date date text-sm">
                             {formatDate(post.data.published)}
                         </div>
 
@@ -66,7 +66,7 @@ const lang = langFromPath(Astro.url.pathname);
                         </div>
 
                         <!-- tag list -->
-                        <div class="tags">
+                        <div class="tags text-sm">
                             {post.data.tags.map((t) => `#${t}`).join(" ")}
                         </div>
                     </div>
@@ -97,8 +97,6 @@ const lang = langFromPath(Astro.url.pathname);
         height: 3.75rem;
     }
     .year {
-        font-size: var(--text-2xl);
-        line-height: var(--text-2xl-lh);
         font-weight: 700;
         text-align: right;
         color: var(--text-75);
@@ -138,8 +136,6 @@ const lang = langFromPath(Astro.url.pathname);
         height: 100%;
     }
     .date {
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
         text-align: right;
         color: var(--text-50);
         transition: var(--transition);
@@ -196,8 +192,6 @@ const lang = langFromPath(Astro.url.pathname);
         text-align: left;
         text-overflow: ellipsis;
         white-space: nowrap;
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
         color: var(--text-30);
         transition: var(--transition);
 

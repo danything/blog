@@ -31,9 +31,6 @@
 .footer {
 	animation-delay: 250ms;
 }
-#banner-credit {
-	animation-delay: 400ms;
-}
 
 /* Post content */
 #post-container :nth-child(1) {
