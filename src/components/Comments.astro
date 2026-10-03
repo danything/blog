@@ -36,7 +36,7 @@ function mount() {
 		return;
 	}
 
-	// 2 回目以降 (swup 遷移) は既存インスタンスを捨てて作り直す。
+	// 2 回目以降 (ページ遷移) は既存インスタンスを捨てて作り直す。
 	// 同梱 CSS は init のたびに <head> に無ければ入れ直される
 	instance?.destroy();
 	instance = window.Yosegaki.init({
@@ -63,17 +63,8 @@ function load() {
 	document.head.appendChild(script);
 }
 
+// ページ遷移のたびにそのページのコメント欄を出す(初回の表示でも呼ばれる)
 if (commentConfig.enable) {
-	const setup = () => {
-		window.swup.hooks.on("page:view", load);
-	};
-
-	load();
-
-	if (window?.swup?.hooks) {
-		setup();
-	} else {
-		document.addEventListener("swup:enable", setup);
-	}
+	document.addEventListener("astro:page-load", load);
 }
 </script>

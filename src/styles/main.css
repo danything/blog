@@ -128,9 +128,6 @@
   @apply opacity-0 pointer-events-none;
 }
 
-@utility toc-not-ready {
-  @apply opacity-0 pointer-events-none;
-}
 
 @utility hide-scrollbar {
   scrollbar-width: none;
