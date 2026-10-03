@@ -22,6 +22,8 @@ exclude = [
   '^https?://[^/]+\.(example|invalid|test|localhost)(/|:|$)',
   # ボットには 403 を返すサイト (ブラウザでは開ける)
   '^https?://(www\.)?mhhauto\.com',
+  # 海外 (GitHub Actions のランナー) からは 403 を返すサイト (国内からは開ける)
+  '^https?://www\.jidoushatouroku-portal\.mlit\.go\.jp',
 ]
 
 # --- リクエスト ---
