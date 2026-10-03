@@ -13,7 +13,7 @@ const { badge, url, label } = Astro.props;
                 <slot></slot>
             </div>
             { badge !== undefined && badge !== null && badge !== '' &&
-                <div class="badge">
+                <div class="badge text-sm">
                     { badge }
                 </div>
             }
@@ -29,12 +29,8 @@ const { badge, url, label } = Astro.props;
         padding-left: 0.5rem;
         border-radius: 0.5rem;
         background-image: none;
-        color: var(--neutral-700);
+        color: var(--label-color);
         transition: all 0.15s var(--ease);
-
-        :global(.dark) & {
-            color: var(--neutral-300);
-        }
         @media (hover: hover) {
             &:hover {
                 padding-left: 0.75rem;
@@ -70,8 +66,6 @@ const { badge, url, label } = Astro.props;
         padding-inline: 0.5rem;
         border-radius: 0.5rem;
         background-color: var(--btn-regular-bg);
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
         font-weight: 700;
         color: var(--btn-content);
         transition: var(--transition);

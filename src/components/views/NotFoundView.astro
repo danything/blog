@@ -45,12 +45,9 @@ const { lang } = Astro.props;
         font-size: 8rem;
         line-height: 1;
         font-weight: 700;
-        color: color-mix(in oklab, var(--black) 10%, transparent);
+        color: var(--fg-10);
         transition: var(--transition);
 
-        :global(.dark) & {
-            color: color-mix(in oklab, var(--white) 10%, transparent);
-        }
         &::before {
             content: "404";
         }

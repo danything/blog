@@ -130,6 +130,27 @@
 	--text-75: color-mix(in oklab, var(--black) 75%, transparent);
 	--text-50: color-mix(in oklab, var(--black) 65%, transparent);
 	--text-30: color-mix(in oklab, var(--black) 60%, transparent);
+
+	/* 部品の見出し(サイドバー・テーマカラー)・一覧のボタンとページ番号・記事の日付やタグの文字 */
+	--heading-color: var(--neutral-900);
+	--label-color: var(--neutral-700);
+	--meta-color: var(--neutral-500);
+
+	/* 飾りの色(アイコン・透かし・線・下地)。ライトでは黒、ダークでは白を透かす。数は濃さ(%) */
+	--fg-5: color-mix(in oklab, var(--black) 5%, transparent);
+	--fg-10: color-mix(in oklab, var(--black) 10%, transparent);
+	--fg-20: color-mix(in oklab, var(--black) 20%, transparent);
+	--fg-25: color-mix(in oklab, var(--black) 25%, transparent);
+	--fg-30: color-mix(in oklab, var(--black) 30%, transparent);
+	--fg-35: color-mix(in oklab, var(--black) 35%, transparent);
+	--fg-50: color-mix(in oklab, var(--black) 50%, transparent);
+	/* 入力欄やアイコンの下地(ダークでは少し濃くする) */
+	--tint-bg: color-mix(in oklab, var(--black) 5%, transparent);
+	/* 点線の区切り(ダークでは少し濃くする) */
+	--dashed-line: color-mix(in oklab, var(--black) 10%, transparent);
+	/* ナビゲーションバーの検索欄の下地と、マウスを乗せた・入力中のとき */
+	--search-bg: color-mix(in oklab, var(--black) 4%, transparent);
+	--search-bg-hover: color-mix(in oklab, var(--black) 6%, transparent);
 }
 :root.dark {
 	--primary: oklch(0.75 0.14 var(--hue));
@@ -183,4 +204,20 @@
 	--text-75: color-mix(in oklab, var(--white) 75%, transparent);
 	--text-50: color-mix(in oklab, var(--white) 60%, transparent);
 	--text-30: color-mix(in oklab, var(--white) 50%, transparent);
+
+	--heading-color: var(--neutral-100);
+	--label-color: var(--neutral-300);
+	--meta-color: var(--neutral-400);
+
+	--fg-5: color-mix(in oklab, var(--white) 5%, transparent);
+	--fg-10: color-mix(in oklab, var(--white) 10%, transparent);
+	--fg-20: color-mix(in oklab, var(--white) 20%, transparent);
+	--fg-25: color-mix(in oklab, var(--white) 25%, transparent);
+	--fg-30: color-mix(in oklab, var(--white) 30%, transparent);
+	--fg-35: color-mix(in oklab, var(--white) 35%, transparent);
+	--fg-50: color-mix(in oklab, var(--white) 50%, transparent);
+	--tint-bg: color-mix(in oklab, var(--white) 10%, transparent);
+	--dashed-line: color-mix(in oklab, var(--white) 15%, transparent);
+	--search-bg: color-mix(in oklab, var(--white) 5%, transparent);
+	--search-bg-hover: color-mix(in oklab, var(--white) 10%, transparent);
 }

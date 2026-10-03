@@ -49,7 +49,7 @@ const links: NavBarLink[] = navBarConfig.links.map((link) =>
             <Search lang={lang} />
             <a href={switchUrl} hreflang={otherLang} lang={otherLang}
                aria-label={i18n(I18nKey.switchLanguage, lang)} title={i18n(I18nKey.switchLanguage, lang)}
-               class="btn-plain scale-animation lang-switch">
+               class="btn-plain scale-animation lang-switch text-sm">
                 <Icon name="lucide:languages" class="nav-icon"></Icon>
                 <span class="lang-label">{i18n(I18nKey.otherLanguage, lang)}</span>
             </a>
@@ -138,13 +138,9 @@ const links: NavBarLink[] = navBarConfig.links.map((link) =>
     .external-icon {
         margin-left: 0.25rem;
         font-size: 0.875rem;
-        color: color-mix(in oklab, var(--black) 20%, transparent);
+        color: var(--fg-20);
         translate: 0 -1px;
         transition: var(--transition);
-
-        :global(.dark) & {
-            color: color-mix(in oklab, var(--white) 20%, transparent);
-        }
     }
     .nav-buttons {
         display: flex;
@@ -166,8 +162,6 @@ const links: NavBarLink[] = navBarConfig.links.map((link) =>
         height: 2.75rem;
         gap: 0.25rem;
         padding-inline: 0.75rem;
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
         font-weight: 700;
         border-radius: 0.5rem;
 

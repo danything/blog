@@ -30,7 +30,7 @@ const stats = readingStats(remarkPluginFrontmatter, lang);
 ---
 <div class:list={["card-base post-card", className]} style={style}>
     <div class:list={["content", {"has-cover": hasCover}]}>
-        <a href={url} class="title">
+        <a href={url} class="title text-3xl">
             {title}
             <Icon class="title-arrow-mobile" name="lucide:chevron-right" ></Icon>
             <Icon class="title-arrow" name="lucide:chevron-right"></Icon>
@@ -45,7 +45,7 @@ const stats = readingStats(remarkPluginFrontmatter, lang);
         </div>
 
         <!-- word count and read time  -->
-        <div class="stats">
+        <div class="stats text-sm">
             <div>{stats.words}</div>
             <div>|</div>
             <div>{stats.minutes}</div>
@@ -106,8 +106,6 @@ const stats = readingStats(remarkPluginFrontmatter, lang);
         display: block;
         width: 100%;
         margin-bottom: 0.75rem;
-        font-size: var(--text-3xl);
-        line-height: var(--text-3xl-lh);
         font-weight: 700;
         color: var(--text-90);
         transition: var(--transition);
@@ -191,8 +189,6 @@ const stats = readingStats(remarkPluginFrontmatter, lang);
     .stats {
         display: flex;
         gap: 1rem;
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
         color: var(--text-30);
         transition: var(--transition);
     }
@@ -298,12 +294,9 @@ const stats = readingStats(remarkPluginFrontmatter, lang);
         margin-inline: 1.5rem;
         border-top-width: 1px;
         border-style: dashed;
-        border-color: color-mix(in oklab, var(--black) 10%, transparent);
+        border-color: var(--dashed-line);
         transition: var(--transition);
 
-        :global(.dark) & {
-            border-color: color-mix(in oklab, var(--white) 15%, transparent);
-        }
         &:last-child {
             border-top-width: 0;
         }

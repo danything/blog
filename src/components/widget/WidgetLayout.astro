@@ -16,7 +16,7 @@ const className = Astro.props.class;
 const lang = langFromPath(Astro.url.pathname);
 ---
 <widget-layout data-id={id} data-is-collapsed={String(isCollapsed)} class:list={["card-base widget", className]} style={style}>
-    <div class="widget-title">{name}</div>
+    <div class="widget-title text-lg">{name}</div>
     <div id={id} class:list={["collapse-wrapper", {"collapsed": isCollapsed}]}>
         <slot></slot>
     </div>
@@ -37,15 +37,9 @@ const lang = langFromPath(Astro.url.pathname);
     .widget-title {
         position: relative;
         margin: 1rem 0 0.5rem 2rem;
-        font-size: var(--text-lg);
-        line-height: var(--text-lg-lh);
         font-weight: 700;
-        color: var(--neutral-900);
+        color: var(--heading-color);
         transition: var(--transition);
-
-        :global(.dark) & {
-            color: var(--neutral-100);
-        }
         &::before {
             content: "";
             position: absolute;

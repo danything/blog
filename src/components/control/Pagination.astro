@@ -103,11 +103,7 @@ const getPageUrl = (p: number) => localeUrl(p === 1 ? "/" : `/${p}/`, lang);
         border-radius: 0.5rem;
         background-color: var(--card-bg);
         font-weight: 700;
-        color: var(--neutral-700);
-
-        :global(.dark) & {
-            color: var(--neutral-300);
-        }
+        color: var(--label-color);
     }
     .ellipsis {
         margin-inline: 0.25rem;

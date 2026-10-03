@@ -23,7 +23,7 @@ const unavailable = import.meta.env.DEV
 <!-- search bar for desktop view -->
 <div id="search-bar" class="search-bar">
     <Icon name="lucide:search" class="search-icon" />
-    <input placeholder={placeholder} data-search-input="desktop" class="search-input">
+    <input placeholder={placeholder} data-search-input="desktop" class="search-input text-sm">
 </div>
 
 <!-- toggle btn for phone/tablet view -->
@@ -37,20 +37,20 @@ const unavailable = import.meta.env.DEV
     <!-- search bar inside panel for phone/tablet -->
     <div id="search-bar-inside" class="search-bar">
         <Icon name="lucide:search" class="search-icon" />
-        <input placeholder={placeholder} data-search-input="mobile" class="search-input">
+        <input placeholder={placeholder} data-search-input="mobile" class="search-input text-sm">
     </div>
 
-    <div data-search-message class="message" hidden>{unavailable}</div>
+    <div data-search-message class="message text-sm" hidden>{unavailable}</div>
 
     <!-- search results(下のテンプレートを複製して、この後ろに並べる) -->
 </div>
 
 <template data-search-result>
-    <a class="result">
+    <a class="result text-lg">
         <div class="result-title">
             <span data-title></span><Icon name="lucide:chevron-right" class="result-chevron" />
         </div>
-        <div class="result-excerpt" data-excerpt></div>
+        <div class="result-excerpt text-sm" data-excerpt></div>
     </a>
 </template>
 </div>
@@ -64,28 +64,16 @@ const unavailable = import.meta.env.DEV
     display: flex;
     align-items: center;
     height: 2.75rem;
-    background-color: color-mix(in oklab, var(--black) 4%, transparent);
+    background-color: var(--search-bg);
     transition: all 0.15s var(--ease);
 
     @media (hover: hover) {
       &:hover {
-        background-color: color-mix(in oklab, var(--black) 6%, transparent);
+        background-color: var(--search-bg-hover);
       }
     }
     &:focus-within {
-      background-color: color-mix(in oklab, var(--black) 6%, transparent);
-    }
-    :global(.dark) & {
-      background-color: color-mix(in oklab, var(--white) 5%, transparent);
-
-      @media (hover: hover) {
-        &:hover {
-          background-color: color-mix(in oklab, var(--white) 10%, transparent);
-        }
-      }
-      &:focus-within {
-        background-color: color-mix(in oklab, var(--white) 10%, transparent);
-      }
+      background-color: var(--search-bg-hover);
     }
   }
   #search-bar {
@@ -110,18 +98,12 @@ const unavailable = import.meta.env.DEV
     margin-block: auto;
     margin-left: 0.75rem;
     font-size: 1.25rem;
-    color: color-mix(in oklab, var(--black) 30%, transparent);
+    color: var(--fg-30);
     pointer-events: none;
     transition: var(--transition);
-
-    :global(.dark) & {
-      color: color-mix(in oklab, var(--white) 30%, transparent);
-    }
   }
   .search-input {
     padding-left: 2.5rem;
-    font-size: var(--text-sm);
-    line-height: var(--text-sm-lh);
     color: var(--text-50);
     background-color: transparent;
     outline: 0 solid;
@@ -183,16 +165,12 @@ const unavailable = import.meta.env.DEV
 
   .message {
     padding: 0.5rem 0.75rem;
-    font-size: var(--text-sm);
-    line-height: var(--text-sm-lh);
     color: var(--text-50);
   }
   .result {
     display: block;
     padding: 0.5rem 0.75rem;
     border-radius: 0.75rem;
-    font-size: var(--text-lg);
-    line-height: var(--text-lg-lh);
     transition: var(--transition);
 
     &:first-of-type {
@@ -228,8 +206,6 @@ const unavailable = import.meta.env.DEV
     transition: var(--transition);
   }
   .result-excerpt {
-    font-size: var(--text-sm);
-    line-height: var(--text-sm-lh);
     color: var(--text-50);
     transition: var(--transition);
 

@@ -17,7 +17,7 @@ const text = siteText(lang);
         <ImageWrapper src={config.avatar || ""} alt="Profile Image of the Author" class="avatar"></ImageWrapper>
     </a>
     <div class="info">
-        <div class="name">{text.profileName}</div>
+        <div class="name text-xl">{text.profileName}</div>
         <div class="divider"></div>
         <div class="bio">{text.bio}</div>
         <div class="links">
@@ -104,8 +104,6 @@ const text = siteText(lang);
     }
     .name {
         margin-bottom: 0.25rem;
-        font-size: var(--text-xl);
-        line-height: var(--text-xl-lh);
         font-weight: 700;
         text-align: center;
         transition: var(--transition);

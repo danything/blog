@@ -10,7 +10,7 @@ const currentYear = new Date().getFullYear();
 
 <div class="separator"></div>
 <div class="footer-box">
-    <div class="footer-text">
+    <div class="footer-text text-sm">
         &copy; <span id="copyright-year">{currentYear}</span> {siteText(lang).profileName}. All Rights Reserved. /
         <a class="link" target="_blank" href={localeUrl('/rss.xml', lang)}>RSS</a> /
         <a class="link" target="_blank" href={url('sitemap-index.xml')}>Sitemap</a><br>
@@ -25,12 +25,8 @@ const currentYear = new Date().getFullYear();
         margin: 2.5rem 8rem;
         border-top-width: 1px;
         border-style: dashed;
-        border-color: color-mix(in oklab, var(--black) 10%, transparent);
+        border-color: var(--dashed-line);
         transition: var(--transition);
-
-        :global(.dark) & {
-            border-color: color-mix(in oklab, var(--white) 15%, transparent);
-        }
     }
     .footer-box {
         display: flex;
@@ -49,8 +45,6 @@ const currentYear = new Date().getFullYear();
         }
     }
     .footer-text {
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
         text-align: center;
         color: var(--text-50);
         transition: var(--transition);
