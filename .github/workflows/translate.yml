@@ -2,7 +2,8 @@ name: Translate
 
 # 記事の英訳(/en/)を Claude で作り、PR にする。決まりは .github/translate.md。
 # 原文と英訳の対応は scripts/translate-status.ts で調べる(英訳の sourceHash と原文のハッシュを比べる)。
-# 未訳・原文が変わった・原文が消えたものだけを直し、translate/auto ブランチの PR にまとめる(マージは手で)。
+# 未訳・原文が変わった・原文が消えたものだけを直し、translate/auto ブランチの PR にまとめる。
+# 検査がすべて通ったら自動でマージし、デプロイ(docker-publish.yml)を起こす(merge のジョブ)。
 #
 # GITHUB_TOKEN で作った PR や push では、ほかのワークフロー(Check・A11y Check など)が動かない。
 # 例外として workflow_dispatch は GITHUB_TOKEN でも起こせるので、PR を作った・更新したあとに
@@ -144,7 +145,8 @@ jobs:
             ${{ steps.status.outputs.todo }}
             ```
 
-            - 訳文は .github/translate.md の決まりで Claude が作っています。目を通してからマージしてください
+            - 訳文は .github/translate.md の決まりで Claude が作っています
+            - 下の検査がすべて通ると自動でマージされ、デプロイされます。落ちたときは開いたまま残るので、直してからマージしてください
             - この PR は GITHUB_TOKEN で作っているため、PR のイベントではほかのワークフローが動きません。
               代わりに translate.yml が Check・A11y Check・Visual Check・Docker Build Check を workflow_dispatch で実行し、
               終わると結果がこの PR のステータスとして出ます(Claude Code Review は動きません)
@@ -203,5 +205,27 @@ jobs:
             status success "workflow_dispatch で成功"
           else
             status failure "workflow_dispatch で失敗"
-            echo "::warning::$NAME が失敗しました: $url"
+            echo "::error::$NAME が失敗しました: $url"
+            exit 1 # merge のジョブを止める
           fi
+
+  # 検査がすべて通ったら PR をマージする。GITHUB_TOKEN でのマージ(main への push)ではデプロイの
+  # ワークフローが動かないので、docker-publish.yml を workflow_dispatch で起こす。
+  # 検査が 1 つでも落ちたら、PR は開いたまま残る(直してから手でマージする)
+  merge:
+    needs: [translate, checks]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      HEAD_SHA: ${{ needs.translate.outputs.head-sha }}
+    steps:
+      - name: Merge and deploy
+        run: |
+          # 検査のあいだに PR が更新されていたら、新しいほうの実行に任せる
+          gh pr merge translate/auto --squash --delete-branch --match-head-commit "$HEAD_SHA"
+          gh workflow run docker-publish.yml --ref main
