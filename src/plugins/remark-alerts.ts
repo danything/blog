@@ -1,5 +1,5 @@
 import type { RemarkPlugin } from "@astrojs/markdown-remark";
-import { visit } from "unist-util-visit";
+import { visit } from "./visit";
 
 const MARKER = /^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\][ \t]*(?:\r?\n|$)/;
 
