@@ -24,6 +24,8 @@ interface Props {
 	description?: string;
 	lang?: string;
 	setOGTypeArticle?: boolean;
+	/** OGP 画像(public 配下の絶対パス)。無ければサイト共通の画像 */
+	ogImage?: string;
 }
 
 let { title, banner, description, lang, setOGTypeArticle } = Astro.props;
@@ -34,9 +36,9 @@ const metaDescription = description || siteConfig.description;
 const canonicalUrl = Astro.url.pathname.startsWith(url("/404"))
 	? undefined
 	: new URL(Astro.url.pathname, Astro.site).href;
-// 記事のアイキャッチ(public 配下の絶対パス)があればそれを、無ければサイト共通の画像を使う
+// 記事のアイキャッチ(public 配下の絶対パス)があればそれ、次に記事ごとに作った画像、無ければサイト共通の画像
 const ogImage = new URL(
-	banner?.startsWith("/") ? banner : siteConfig.ogImage,
+	banner?.startsWith("/") ? banner : (Astro.props.ogImage ?? siteConfig.ogImage),
 	Astro.site,
 ).href;
 
