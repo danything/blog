@@ -1,17 +1,14 @@
 ---
-// src/icons.json(bun run icons で生成)のアイコンを SVG として埋め込む
+// src/icons.json(bun run icons で生成)のアイコンを描く。形はページに 1 回だけ置き(src/utils/icon-sprite.ts)、
+// ここでは <use> で参照する
 import type { HTMLAttributes } from "astro/types";
-import icons from "../../icons.json";
+import { getIcon, iconId } from "../../utils/icon-sprite";
 
 interface Props extends HTMLAttributes<"svg"> {
 	name: string;
 }
 
 const { name, class: className, ...attrs } = Astro.props;
-const icon = (icons as Record<string, { viewBox: string; body: string }>)[name];
-if (!icon)
-	throw new Error(
-		`アイコン ${name} が src/icons.json にありません(bun run icons を実行)`,
-	);
+const icon = getIcon(name);
 ---
-<svg width="1em" height="1em" viewBox={icon.viewBox} class={className} data-icon={name} {...attrs} set:html={icon.body} />
+<svg width="1em" height="1em" viewBox={icon.viewBox} class={className} data-icon={name} {...attrs}><use href={`#${iconId(name)}`}></use></svg>
