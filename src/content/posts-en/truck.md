@@ -7,7 +7,7 @@ image: "/static/images/blog/br90.webp"
 tags: ["Cars", "Cargo Registration", "Government Procedures"]
 category: "Cars"
 draft: false
-sourceHash: "9d26e342e8b1e166"
+sourceHash: "76d65f8edf2c750d"
 ---
 
 It's been a while since my last post. Lately, instead of web stuff, I've been completely absorbed in cars.  
@@ -20,20 +20,19 @@ On that note, I recently had my Subaru Legacy (a "3-number" passenger car) regis
 ## What is cargo registration?
 
 First, what is cargo registration? The vehicle inspection certificate (shakensho) has a field called "use". The idea is to change it from passenger to cargo, which changes the tax bracket that applies to the car.  
-I'll skip the details of the tax system here, but for the vehicle I registered as cargo this time, the taxes changed as follows. (For the old weight tax and compulsory liability insurance, I've divided the 24-month amounts by 2.)  
+I'll skip the details of the tax system here, but for the vehicle I registered as cargo this time, the taxes changed as follows. (As of October 3, 2026. For the old weight tax and compulsory liability insurance, I've divided the 24-month amounts by 2. The insurance figures are the base rates for policies starting on or after November 1, 2026.)  
 | |Before|After|
 |---|---|---|
 |Automobile tax|51,750|8,800|
 |Weight tax|22,800|8,200|
-|Compulsory liability insurance (jibaiseki)|8,825|16,900|
-|Total|83,375|33,900|
-|Difference|0|-49,475|
-
-> [!NOTE]
-> Update (October 2026): The automobile tax and weight tax amounts are still the same. For compulsory liability insurance, the base rates go up for policies starting on or after November 1, 2026: a private passenger car becomes 18,560 yen for 24 months (9,280 yen per year), and a private standard cargo vehicle (2 t or less) becomes 17,930 yen for 12 months. Recalculating with those figures, the total is 83,830 yen before and 34,930 yen after, a difference of -48,900 yen.
+|Compulsory liability insurance (jibaiseki)|9,280|17,930|
+|Total|83,830|34,930|
+|Difference|0|-48,900|
 
 As you can see, it gets quite a bit cheaper, but there are a few downsides.  
-The big one is that your ETC (electronic toll collection) toll class goes from standard to mid-size, so tolls go up. That said, it's not a problem unless you drive enough for the difference to exceed 50,000 yen a year. The other one is that the vehicle inspection (shaken) becomes yearly. That adds an inspection fee once a year, but it's only around 2,600 yen (the fee for bringing a standard-size car in for inspection yourself, after the April 2026 revision). Some of you probably leave your shaken to a dealer or a shop, but if it's a Japanese car, it'll pass the inspection with hardly any maintenance. If you're reading this article, you presumably want to save on running costs, so if you want to keep them down, buy your own tools and at least google the bare-minimum maintenance needed to keep a car going. If you can't do that, just do what the dealer says and pay up. That's what the service fee is for.
+The big one is that your ETC (electronic toll collection) toll class goes from standard to mid-size, so tolls go up. Let's work out how much driving it takes before the savings are wiped out, using the Shin-Tomei Expressway (standard section). NEXCO tolls are (terminal charge of 150 yen + 24.6 yen × distance) × vehicle class ratio × 1.1 (consumption tax), where mid-size is 1.2 times standard, and the portion beyond 100 km gets cheaper through the long-distance discount. A 100 km trip costs 2,871 yen for a standard car and 3,445 yen for a mid-size one, a difference of 574 yen, or about 5.7 yen per km. Dividing the 48,900 yen difference above by that gives about 8,500 km a year, and the longer each trip, the more the discount helps: at 300 km per trip it stretches to about 10,800 km. Unless you drive 8,000 km or more a year on expressways, it's not a problem.  
+That said, the holiday discount (30% off) applies only to standard cars and kei cars, not mid-size, so if you mostly drive on weekends and holidays, the gap widens to about 14.4 yen per km, and the savings are wiped out at about 3,400 km a year. (The late-night discount does apply to mid-size.)  
+The other one is that the vehicle inspection (shaken) becomes yearly. That adds an inspection fee once a year, but it's only around 2,600 yen (the fee for bringing a standard-size car in for inspection yourself, after the April 2026 revision). Some of you probably leave your shaken to a dealer or a shop, but if it's a Japanese car, it'll pass the inspection with hardly any maintenance. If you're reading this article, you presumably want to save on running costs, so if you want to keep them down, buy your own tools and at least google the bare-minimum maintenance needed to keep a car going. If you can't do that, just do what the dealer says and pay up. That's what the service fee is for.
 
 ## The cargo registration process
 
