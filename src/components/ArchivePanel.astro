@@ -24,22 +24,19 @@ const formatDate = (date: Date) =>
 const lang = langFromPath(Astro.url.pathname);
 ---
 
-<div class="card-base px-8 py-6" id="archive-panel">
+<div class="card-base" id="archive-panel">
     {years.map((year) => {
         const posts = groups.get(year) ?? [];
         return (
         <div data-archive-group>
-            <div class="flex flex-row w-full items-center h-[3.75rem]">
-                <div class="w-[15%] md:w-[10%] transition text-2xl font-bold text-right text-75">
+            <div class="year-row">
+                <div class="col-date year">
                     {year}
                 </div>
-                <div class="w-[15%] md:w-[10%]">
-                    <div
-                            class="h-3 w-3 bg-none rounded-full outline outline-[var(--primary)] mx-auto
-                  -outline-offset-[2px] z-50 outline-3"
-                    ></div>
+                <div class="col-line">
+                    <div class="year-circle"></div>
                 </div>
-                <div class="w-[70%] md:w-[80%] transition text-left text-50">
+                <div class="year-count">
                     <span data-archive-count>{posts.length}</span> {i18n(posts.length === 1 ? I18nKey.postCount : I18nKey.postsCount, lang)}
                 </div>
             </div>
@@ -48,42 +45,28 @@ const lang = langFromPath(Astro.url.pathname);
                 <a
                         href={getPostUrlBySlug(post.slug, lang)}
                         aria-label={post.data.title}
-                        class="group btn-plain !block h-10 w-full rounded-lg hover:text-[initial]"
+                        class="btn-plain post"
                         data-tags={JSON.stringify(post.data.tags)}
                         data-category={post.data.category ?? ""}
                 >
-                    <div class="flex flex-row justify-start items-center h-full">
+                    <div class="post-row">
                         <!-- date -->
-                        <div class="w-[15%] md:w-[10%] transition text-sm text-right text-50">
+                        <div class="col-date date">
                             {formatDate(post.data.published)}
                         </div>
 
                         <!-- dot and line -->
-                        <div class="w-[15%] md:w-[10%] relative dash-line h-full flex items-center">
-                            <div
-                                    class="transition-all mx-auto w-1 h-1 rounded-sm group-hover:h-5
-                       bg-[oklch(0.5_0.05_var(--hue))] group-hover:bg-[var(--primary)]
-                       outline outline-4 z-50
-                       outline-[var(--card-bg)]
-                       group-hover:outline-[var(--btn-plain-bg-hover)]
-                       group-active:outline-[var(--btn-plain-bg-active)]"
-                            ></div>
+                        <div class="col-line dash-line">
+                            <div class="dot"></div>
                         </div>
 
                         <!-- post title -->
-                        <div
-                                class="w-[70%] md:max-w-[65%] md:w-[65%] text-left font-bold
-                     group-hover:translate-x-1 transition-all group-hover:text-[var(--primary)]
-                     text-75 pr-8 whitespace-nowrap text-ellipsis overflow-hidden"
-                        >
+                        <div class="title">
                             {post.data.title}
                         </div>
 
                         <!-- tag list -->
-                        <div
-                                class="hidden md:block md:w-[15%] text-left text-sm transition
-                     whitespace-nowrap text-ellipsis overflow-hidden text-30"
-                        >
+                        <div class="tags">
                             {post.data.tags.map((t) => `#${t}`).join(" ")}
                         </div>
                     </div>
@@ -93,6 +76,159 @@ const lang = langFromPath(Astro.url.pathname);
         );
     })}
 </div>
+
+<style>
+    #archive-panel {
+        padding: 1.5rem 2rem;
+    }
+    /* 左から日付・線・タイトル・タグの列 */
+    .col-date,
+    .col-line {
+        width: 15%;
+
+        @media (width >= 48rem) {
+            width: 10%;
+        }
+    }
+    .year-row {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 3.75rem;
+    }
+    .year {
+        font-size: var(--text-2xl);
+        line-height: var(--text-2xl-lh);
+        font-weight: 700;
+        text-align: right;
+        color: var(--text-75);
+        transition: var(--transition);
+    }
+    .year-circle {
+        z-index: 50;
+        width: 0.75rem;
+        height: 0.75rem;
+        margin-inline: auto;
+        border-radius: calc(infinity * 1px);
+        background-image: none;
+        outline: 3px solid var(--primary);
+        outline-offset: -2px;
+    }
+    .year-count {
+        width: 70%;
+        text-align: left;
+        color: var(--text-50);
+        transition: var(--transition);
+
+        @media (width >= 48rem) {
+            width: 80%;
+        }
+    }
+
+    .post {
+        display: block;
+        width: 100%;
+        height: 2.5rem;
+        border-radius: 0.5rem;
+    }
+    /* マウスを乗せても .btn-plain の色にはしない(ダークモードでは .btn-plain のまま) */
+    @media (hover: hover) {
+        :global(:root:not(.dark)) .post:hover {
+            color: initial;
+        }
+    }
+    .post-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100%;
+    }
+    .date {
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+        text-align: right;
+        color: var(--text-50);
+        transition: var(--transition);
+    }
+    /* 記事をつなぐ縦の点線 */
+    .dash-line {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 100%;
+
+        &::before {
+            content: "";
+            position: absolute;
+            left: calc(50% - 1px);
+            width: 10%;
+            height: 100%;
+            border-left: 2px dashed var(--line-color);
+            pointer-events: none;
+            transform: translateY(-50%);
+            transition: all 0.3s;
+        }
+    }
+    /* 記事の点。マウスを乗せると縦に伸びる */
+    .dot {
+        z-index: 50;
+        width: 0.25rem;
+        height: 0.25rem;
+        margin-inline: auto;
+        border-radius: 0.25rem;
+        background-color: oklch(0.5 0.05 var(--hue));
+        outline: 4px solid var(--card-bg);
+        transition: all 0.15s var(--ease);
+    }
+    .title {
+        width: 70%;
+        padding-right: 2rem;
+        overflow: hidden;
+        text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 700;
+        color: var(--text-75);
+        transition: all 0.15s var(--ease);
+
+        @media (width >= 48rem) {
+            width: 65%;
+            max-width: 65%;
+        }
+    }
+    .tags {
+        display: none;
+        overflow: hidden;
+        text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+        color: var(--text-30);
+        transition: var(--transition);
+
+        @media (width >= 48rem) {
+            display: block;
+            width: 15%;
+        }
+    }
+    @media (hover: hover) {
+        .post:hover {
+            .dot {
+                height: 1.25rem;
+                background-color: var(--primary);
+                outline-color: var(--btn-plain-bg-hover);
+            }
+            .title {
+                translate: 0.25rem;
+                color: var(--primary);
+            }
+        }
+    }
+    .post:active .dot {
+        outline-color: var(--btn-plain-bg-active);
+    }
+</style>
 
 <script>
 // URL の条件に合わない記事を隠し、年ごとの件数を数え直す
@@ -113,11 +249,11 @@ function filterArchive() {
 				(tags.length === 0 || postTags.some((t) => tags.includes(t))) &&
 				(categories.length === 0 || categories.includes(category)) &&
 				(!uncategorized || category === "");
-			// リンクには !block が付いているので、hidden 属性ではなく同じく !important の hidden! で隠す
-			post.classList.toggle("hidden!", !show);
+			// hidden 属性は !important の display: none になる(styles/reset.css)ので、リンクの display: block に勝つ
+			post.hidden = !show;
 			if (show) visible++;
 		}
-		group.classList.toggle("hidden!", visible === 0);
+		group.hidden = visible === 0;
 		const count = group.querySelector("[data-archive-count]");
 		if (count) count.textContent = String(visible);
 	}

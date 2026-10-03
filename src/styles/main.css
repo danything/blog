@@ -25,43 +25,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@utility text-90 {
-  @apply text-black/90 dark:text-white/90;
-}
-
-@utility text-75 {
-  @apply text-black/75 dark:text-white/75;
-}
-
-@utility text-50 {
-  @apply text-black/65 dark:text-white/60;
-}
-
-@utility text-30 {
-  @apply text-black/60 dark:text-white/50;
-}
-
-@utility meta-icon {
-  @apply w-8 h-8 transition rounded-md flex items-center justify-center bg-(--btn-regular-bg)
-        text-(--btn-content) mr-2;
-}
-
 .custom-md img, #post-cover img {
     @apply cursor-zoom-in
-}
-
-.dash-line {
-    position: relative;
-}
-
-.dash-line::before {
-    content: "";
-    position: absolute;
-    width: 10%;
-    height: 100%;
-    left: calc(50% - 1px);
-    border-left: 2px dashed var(--line-color);
-    pointer-events: none;
-    transition: all 0.3s;
-    transform: translateY(-50%);
 }

@@ -44,30 +44,24 @@ const coverWidth = "28%";
 const { remarkPluginFrontmatter } = await render(entry);
 const lang = langFromPath(Astro.url.pathname);
 ---
-<div class:list={["card-base flex flex-col-reverse md:flex-col w-full rounded-[var(--radius-large)] overflow-hidden relative", className]} style={style}>
-    <div class:list={["pl-6 md:pl-9 pr-6 md:pr-2 pt-6 md:pt-7 pb-6 relative", {"w-full md:w-[calc(100%_-_52px_-_12px)]": !hasCover, "w-full md:w-[calc(100%_-_var(--coverWidth)_-_12px)]": hasCover}]}>
-        <a href={url}
-           class="transition group w-full block font-bold mb-3 text-3xl text-90
-        hover:text-[var(--primary)] dark:hover:text-[var(--primary)]
-        active:text-[var(--title-active)] dark:active:text-[var(--title-active)]
-        before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
-        before:absolute before:top-[35px] before:left-[18px] before:hidden md:before:block
-        ">
+<div class:list={["card-base post-card", className]} style={style}>
+    <div class:list={["content", {"has-cover": hasCover}]}>
+        <a href={url} class="title">
             {title}
-            <Icon class="inline text-[2rem] text-[var(--primary)] md:hidden translate-y-0.5 absolute" name="lucide:chevron-right" ></Icon>
-            <Icon class="text-[var(--primary)] text-[2rem] transition hidden md:inline absolute translate-y-0.5 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0" name="lucide:chevron-right"></Icon>
+            <Icon class="title-arrow-mobile" name="lucide:chevron-right" ></Icon>
+            <Icon class="title-arrow" name="lucide:chevron-right"></Icon>
         </a>
 
         <!-- metadata -->
-        <PostMetadata published={published} updated={updated} tags={tags} category={category} hideTagsForMobile={true} hideUpdateDate={true} class="mb-4"></PostMetadata>
+        <PostMetadata published={published} updated={updated} tags={tags} category={category} hideTagsForMobile={true} hideUpdateDate={true} class="meta"></PostMetadata>
 
         <!-- description -->
-        <div class:list={["transition text-75 mb-3.5 pr-4", {"line-clamp-2 md:line-clamp-1": !description}]}>
+        <div class:list={["description", {"excerpt": !description}]}>
             { description || remarkPluginFrontmatter.excerpt }
         </div>
 
         <!-- word count and read time  -->
-        <div class="text-sm text-30 flex gap-4 transition">
+        <div class="stats">
             <div>
                 {remarkPluginFrontmatter.words} {" " + i18n(remarkPluginFrontmatter.words === 1 ? I18nKey.wordCount : I18nKey.wordsCount, lang)}
             </div>
@@ -79,34 +73,262 @@ const lang = langFromPath(Astro.url.pathname);
 
     </div>
 
-    {hasCover && <a href={url} aria-label={title}
-                    class:list={["group",
-                        "max-h-[20vh] md:max-h-none mx-4 mt-4 -mb-2 md:mb-0 md:mx-0 md:mt-0",
-                        "md:w-[var(--coverWidth)] relative md:absolute md:top-3 md:bottom-3 md:right-3 rounded-xl overflow-hidden active:scale-95"
-                    ]} >
-        <div class="absolute pointer-events-none z-10 w-full h-full group-hover:bg-black/30 group-active:bg-black/50 transition"></div>
-        <div class="absolute pointer-events-none z-20 w-full h-full flex items-center justify-center ">
-            <Icon name="lucide:chevron-right"
-                  class="transition opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 text-white text-5xl">
+    {hasCover && <a href={url} aria-label={title} class="cover">
+        <div class="cover-overlay"></div>
+        <div class="cover-icon-wrapper">
+            <Icon name="lucide:chevron-right" class="cover-icon">
             </Icon>
         </div>
         <ImageWrapper src={image} basePath={path.join(entry.collection === "postsEn" ? "content/posts-en/" : "content/posts/", getDir(entry.id))} alt="Cover Image of the Post"
-                  class="w-full h-full">
+                  class="cover-image">
         </ImageWrapper>
     </a>}
 
     {!hasCover &&
-        <a href={url} aria-label={title} class="!hidden md:!flex btn-regular w-[3.25rem]
-         absolute right-3 top-3 bottom-3 rounded-xl bg-[var(--enter-btn-bg)]
-         hover:bg-[var(--enter-btn-bg-hover)] active:bg-[var(--enter-btn-bg-active)] active:scale-95
-        ">
-            <Icon name="lucide:chevron-right"
-                  class="transition text-[var(--primary)] text-4xl mx-auto">
+        <a href={url} aria-label={title} class="btn-regular enter">
+            <Icon name="lucide:chevron-right" class="enter-icon">
             </Icon>
         </a>
     }
 </div>
-<div class="transition border-t-[1px] border-dashed mx-6 border-black/10 dark:border-white/[0.15] last:border-t-0 md:hidden"></div>
+<div class="divider"></div>
 
 <style define:vars={{coverWidth}}>
+    /* 狭い画面ではカバー画像を上に、広い画面では右に置く */
+    .post-card {
+        position: relative;
+        display: flex;
+        flex-direction: column-reverse;
+        width: 100%;
+        overflow: hidden;
+        border-radius: var(--radius-large);
+
+        @media (width >= 48rem) {
+            flex-direction: column;
+        }
+    }
+    .content {
+        position: relative;
+        width: 100%;
+        padding: 1.5rem;
+
+        @media (width >= 48rem) {
+            width: calc(100% - 52px - 12px);
+            padding: 1.75rem 0.5rem 1.5rem 2.25rem;
+
+            &.has-cover {
+                width: calc(100% - var(--coverWidth) - 12px);
+            }
+        }
+    }
+    /* タイトルの左の縦線は ::before で描く(広い画面だけ) */
+    .title {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.75rem;
+        font-size: var(--text-3xl);
+        line-height: var(--text-3xl-lh);
+        font-weight: 700;
+        color: var(--text-90);
+        transition: var(--transition);
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 35px;
+            left: 18px;
+            display: none;
+            width: 0.25rem;
+            height: 1.25rem;
+            border-radius: 0.375rem;
+            background-color: var(--primary);
+
+            @media (width >= 48rem) {
+                display: block;
+            }
+        }
+        @media (hover: hover) {
+            &:hover {
+                color: var(--primary);
+            }
+        }
+        &:active {
+            color: var(--title-active);
+        }
+    }
+    .title-arrow-mobile,
+    .title-arrow {
+        position: absolute;
+        font-size: 2rem;
+        color: var(--primary);
+    }
+    .title-arrow-mobile {
+        display: inline;
+        translate: 0 0.125rem;
+
+        @media (width >= 48rem) {
+            display: none;
+        }
+    }
+    /* 広い画面では、マウスを乗せたときだけ出る */
+    .title-arrow {
+        display: none;
+        opacity: 0;
+        translate: -0.25rem 0.125rem;
+        transition: var(--transition);
+
+        @media (width >= 48rem) {
+            display: inline;
+        }
+        @media (hover: hover) {
+            .title:hover & {
+                opacity: 1;
+                translate: 0 0.125rem;
+            }
+        }
+    }
+    .meta {
+        margin-bottom: 1rem;
+    }
+    .description {
+        margin-bottom: 0.875rem;
+        padding-right: 1rem;
+        color: var(--text-75);
+        transition: var(--transition);
+
+        /* 説明が無く本文の抜き出しを出すときは、行数を絞る */
+        &.excerpt {
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+
+            @media (width >= 48rem) {
+                -webkit-line-clamp: 1;
+            }
+        }
+    }
+    .stats {
+        display: flex;
+        gap: 1rem;
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+        color: var(--text-30);
+        transition: var(--transition);
+    }
+
+    .cover {
+        position: relative;
+        max-height: 20vh;
+        margin: 1rem 1rem -0.5rem;
+        overflow: hidden;
+        border-radius: 0.75rem;
+
+        &:active {
+            scale: 0.95;
+        }
+        @media (width >= 48rem) {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            bottom: 0.75rem;
+            width: var(--coverWidth);
+            max-height: none;
+            margin: 0;
+        }
+    }
+    .cover-overlay,
+    .cover-icon-wrapper {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+    .cover-overlay {
+        z-index: 10;
+        transition: var(--transition);
+    }
+    .cover-icon-wrapper {
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .cover-icon {
+        font-size: 3rem;
+        line-height: 1;
+        color: white;
+        opacity: 0;
+        scale: 0.5;
+        transition: var(--transition);
+    }
+    @media (hover: hover) {
+        .cover:hover {
+            .cover-overlay {
+                background-color: color-mix(in oklab, var(--black) 30%, transparent);
+            }
+            .cover-icon {
+                opacity: 1;
+                scale: 1;
+            }
+        }
+    }
+    .cover:active .cover-overlay {
+        background-color: color-mix(in oklab, var(--black) 50%, transparent);
+    }
+    .cover-image {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* カバー画像の無い記事は、右に入るためのボタンを置く(広い画面だけ) */
+    .enter {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        bottom: 0.75rem;
+        display: none;
+        width: 3.25rem;
+        border-radius: 0.75rem;
+        background-color: var(--enter-btn-bg);
+
+        @media (hover: hover) {
+            &:hover {
+                background-color: var(--enter-btn-bg-hover);
+            }
+        }
+        &:active {
+            scale: 0.95;
+            background-color: var(--enter-btn-bg-active);
+        }
+        @media (width >= 48rem) {
+            display: flex;
+        }
+    }
+    .enter-icon {
+        margin-inline: auto;
+        font-size: 2.25rem;
+        line-height: calc(2.5 / 2.25);
+        color: var(--primary);
+        transition: var(--transition);
+    }
+
+    /* 狭い画面では記事の間に点線を引く */
+    .divider {
+        margin-inline: 1.5rem;
+        border-top-width: 1px;
+        border-style: dashed;
+        border-color: color-mix(in oklab, var(--black) 10%, transparent);
+        transition: var(--transition);
+
+        :global(.dark) & {
+            border-color: color-mix(in oklab, var(--white) 15%, transparent);
+        }
+        &:last-child {
+            border-top-width: 0;
+        }
+        @media (width >= 48rem) {
+            display: none;
+        }
+    }
 </style>

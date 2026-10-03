@@ -10,7 +10,7 @@ const lang = langFromPath(Astro.url.pathname);
 let delay = 0;
 const interval = 50;
 ---
-<div class="transition flex flex-col rounded-[var(--radius-large)] bg-[var(--card-bg)] py-1 md:py-0 md:bg-transparent md:gap-4 mb-4">
+<div class="post-list">
     {page.data.map((entry: PostEntry) => (
         <PostCard
                 entry={entry}
@@ -28,3 +28,22 @@ const interval = 50;
         ></PostCard>
     ))}
 </div>
+
+<style>
+    /* 狭い画面では 1 枚のカードに記事を並べ、広い画面では記事ごとのカードにする */
+    .post-list {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+        padding-block: 0.25rem;
+        border-radius: var(--radius-large);
+        background-color: var(--card-bg);
+        transition: var(--transition);
+
+        @media (width >= 48rem) {
+            gap: 1rem;
+            padding-block: 0;
+            background-color: transparent;
+        }
+    }
+</style>

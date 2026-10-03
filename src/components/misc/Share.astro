@@ -10,9 +10,9 @@ interface Props {
 	class?: string;
 }
 
-const { title } = Astro.props;
+// 呼び出し元の <style> が効くよう、残りの属性(data-astro-cid-*)も外側の要素に付ける
+const { title, class: className, ...rest } = Astro.props;
 const lang = langFromPath(Astro.url.pathname);
-const className = Astro.props.class ?? "";
 const postUrl = Astro.url.toString();
 const text = encodeURIComponent(title);
 const url = encodeURIComponent(postUrl);
@@ -37,25 +37,70 @@ const links = [
 // はてなブックマークは URL をそのまま後ろに付ける形式 (https:// は https:/ に縮める慣習だが素のままでも通る)
 const hatena = `https://b.hatena.ne.jp/entry/${postUrl.replace(/^https?:\/\//, "s/")}`;
 ---
-<div class={`flex flex-wrap items-center gap-2 ${className}`}>
-    <div class="transition text-30 text-sm mr-2">{i18n(I18nKey.share, lang)}</div>
+<div class:list={["share", className]} {...rest}>
+    <div class="label">{i18n(I18nKey.share, lang)}</div>
     {links.map(l => (
         <a href={l.href} target="_blank" rel="noopener noreferrer" aria-label={i18n(I18nKey.shareOn, lang).replace("{name}", l.name)} title={l.name}
-           class="btn-regular rounded-lg h-10 w-10 active:scale-90">
-            <Icon name={l.icon} class="text-[1.25rem]"></Icon>
+           class="btn-regular square">
+            <Icon name={l.icon} class="icon"></Icon>
         </a>
     ))}
     <a href={hatena} target="_blank" rel="noopener noreferrer" aria-label={i18n(I18nKey.addToHatena, lang)} title="はてなブックマーク"
-       class="btn-regular rounded-lg h-10 w-10 active:scale-90 font-bold text-[0.95rem] tracking-tight">
+       class="btn-regular square hatena">
         B!
     </a>
-    <button type="button" class="share-copy btn-regular rounded-lg h-10 px-3 active:scale-90 flex items-center gap-2 text-sm"
+    <button type="button" class="share-copy btn-regular"
             data-url={postUrl} data-copied={i18n(I18nKey.copied, lang)} data-failed={i18n(I18nKey.copyFailed, lang)}
             aria-label={i18n(I18nKey.copyUrl, lang)}>
-        <Icon name="lucide:link" class="text-[1rem]"></Icon>
+        <Icon name="lucide:link" class="copy-icon"></Icon>
         <span class="share-copy-label">{i18n(I18nKey.copyUrl, lang)}</span>
     </button>
 </div>
+
+<style>
+    .share {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .label {
+        margin-right: 0.5rem;
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+        color: var(--text-30);
+        transition: var(--transition);
+    }
+    .square,
+    .share-copy {
+        height: 2.5rem;
+        border-radius: 0.5rem;
+
+        &:active {
+            scale: 0.9;
+        }
+    }
+    .square {
+        width: 2.5rem;
+    }
+    .icon {
+        font-size: 1.25rem;
+    }
+    .hatena {
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+    }
+    .share-copy {
+        gap: 0.5rem;
+        padding-inline: 0.75rem;
+        font-size: var(--text-sm);
+        line-height: var(--text-sm-lh);
+    }
+    .copy-icon {
+        font-size: 1rem;
+    }
+</style>
 
 <script>
 for (const btn of document.querySelectorAll<HTMLButtonElement>(".share-copy")) {
