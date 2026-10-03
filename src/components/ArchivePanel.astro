@@ -131,12 +131,6 @@ const lang = langFromPath(Astro.url.pathname);
         height: 2.5rem;
         border-radius: 0.5rem;
     }
-    /* マウスを乗せても .btn-plain の色にはしない(ダークモードでは .btn-plain のまま) */
-    @media (hover: hover) {
-        :global(:root:not(.dark)) .post:hover {
-            color: initial;
-        }
-    }
     .post-row {
         display: flex;
         align-items: center;
@@ -212,6 +206,8 @@ const lang = langFromPath(Astro.url.pathname);
             width: 15%;
         }
     }
+    /* マウスを乗せると、背景が付き(.btn-plain)、点が伸びて、タイトルがテーマの色になる(ライト・ダークとも)。
+     * 日付とタグの色は変えない */
     @media (hover: hover) {
         .post:hover {
             .dot {
