@@ -1,3 +1,4 @@
+import I18nKey from "./i18n/i18nKey";
 import type {
 	CommentConfig,
 	ExpressiveCodeConfig,
@@ -8,7 +9,6 @@ import type {
 	ProfileConfig,
 	SiteConfig,
 } from "./types/config";
-import { LinkPreset } from "./types/config";
 
 export const siteConfig: SiteConfig = {
 	title: "Doa",
@@ -61,13 +61,13 @@ export const siteTextEn = {
 
 export const navBarConfig: NavBarConfig = {
 	links: [
-		LinkPreset.Home,
-		LinkPreset.Archive,
-		LinkPreset.About,
+		{ i18nKey: I18nKey.home, url: "/" },
+		{ i18nKey: I18nKey.archive, url: "/archive/" },
+		{ i18nKey: I18nKey.about, url: "/about/" },
 		{
 			name: "GitHub",
-			url: "https://github.com/DAnything/blog", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
+			url: "https://github.com/DAnything/blog",
+			external: true, // 外部リンクの印を付け、新しいタブで開く
 		},
 	],
 };

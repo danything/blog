@@ -1,10 +1,9 @@
 ---
 import Icon from "@components/misc/Icon.astro";
 import { navBarConfig, siteConfig } from "../config";
-import { getLinkPresets } from "../constants/link-presets";
 import I18nKey from "../i18n/i18nKey";
 import { i18n, langFromPath } from "../i18n/translation";
-import { LinkPreset, type NavBarLink } from "../types/config";
+import type { NavBarLink } from "../types/config";
 import { getAlternates } from "../utils/content-utils";
 import { localeUrl } from "../utils/url-utils";
 import LightDarkSwitch from "./LightDarkSwitch.astro";
@@ -14,7 +13,6 @@ import NavMenuPanel from "./widget/NavMenuPanel.astro";
 
 const className = Astro.props.class;
 const lang = langFromPath(Astro.url.pathname);
-const LinkPresets = getLinkPresets(lang);
 
 // 言語の切り替え先。同じページのもう一方の言語版、無ければもう一方のトップ
 const otherLang = lang === "ja" ? "en" : "ja";
@@ -22,13 +20,8 @@ const switchUrl =
 	(await getAlternates(Astro.url.pathname))?.[otherLang] ??
 	localeUrl("/", otherLang);
 
-let links: NavBarLink[] = navBarConfig.links.map(
-	(item: NavBarLink | LinkPreset): NavBarLink => {
-		if (typeof item === "number") {
-			return LinkPresets[item];
-		}
-		return item;
-	},
+const links: NavBarLink[] = navBarConfig.links.map((link) =>
+	"i18nKey" in link ? { ...link, name: i18n(link.i18nKey, lang) } : link,
 );
 ---
 <div id="navbar" class="onload-animation">

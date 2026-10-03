@@ -1,4 +1,5 @@
 import type { AUTO_MODE, DARK_MODE, LIGHT_MODE } from "@constants/constants";
+import type I18nKey from "@i18n/i18nKey";
 import type { BundledShikiTheme } from "astro-expressive-code";
 
 export type SiteConfig = {
@@ -29,20 +30,16 @@ export type Favicon = {
 	sizes?: string;
 };
 
-export enum LinkPreset {
-	Home = 0,
-	Archive = 1,
-	About = 2,
-}
-
 export type NavBarLink = {
 	name: string;
+	/** サイト内のリンクは言語を除いたパス(表示する側で localeUrl を通す) */
 	url: string;
 	external?: boolean;
 };
 
 export type NavBarConfig = {
-	links: (NavBarLink | LinkPreset)[];
+	/** name の代わりに i18nKey を書くと、ページの言語の文言を出す */
+	links: (NavBarLink | (Omit<NavBarLink, "name"> & { i18nKey: I18nKey }))[];
 };
 
 export type ProfileConfig = {
