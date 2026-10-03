@@ -1,4 +1,5 @@
 import { type CollectionEntry, getCollection } from "astro:content";
+import { PAGE_SIZE } from "@constants/constants";
 import I18nKey from "@i18n/i18nKey";
 import { i18n, LANGS, type Lang } from "@i18n/translation";
 import { getCategoryUrl, localeUrl, stripLang } from "@utils/url-utils.ts";
@@ -133,11 +134,20 @@ export async function getAlternates(
 ): Promise<Record<Lang, string> | undefined> {
 	const path = stripLang(pathname);
 	const slug = path.match(/^\/posts\/([^/]+)\/$/)?.[1];
+	// トップの 2 ページ目以降(/2/ など)。記事の数によっては一方の言語にしか無い
+	const pageNum = path.match(/^\/(\d+)\/$/)?.[1];
 	if (slug) {
 		const id = decodeURIComponent(slug);
 		for (const lang of LANGS) {
 			const posts = await getPublishedPosts(lang);
 			if (!posts.some((p) => p.id === id)) return undefined;
+		}
+	} else if (pageNum) {
+		for (const lang of LANGS) {
+			const posts = await getPublishedPosts(lang);
+			if (Math.ceil(posts.length / PAGE_SIZE) < Number(pageNum)) {
+				return undefined;
+			}
 		}
 	} else if (!PAIRED_PAGES.includes(path)) {
 		return undefined;
