@@ -3,7 +3,7 @@ name: Translate
 # 記事の英訳(/en/)を Claude で作り、PR にする。決まりは .github/translate.md。
 # 原文と英訳の対応は scripts/translate-status.ts で調べる(英訳の sourceHash と原文のハッシュを比べる)。
 # 未訳・原文が変わった・原文が消えたものだけを直し、translate/auto ブランチの PR にまとめる。
-# 検査がすべて通ったら自動でマージし、デプロイ(docker-publish.yml)を起こす(merge のジョブ)。
+# 検査がすべて通ったら自動でマージし、デプロイ(docker.yml)を起こす(merge のジョブ)。
 #
 # GITHUB_TOKEN で作った PR や push では、ほかのワークフロー(Check・A11y Check など)が動かない。
 # 例外として workflow_dispatch は GITHUB_TOKEN でも起こせるので、PR を作った・更新したあとに
@@ -95,7 +95,7 @@ jobs:
               .github/translate.md(カテゴリ・タグの対応表に足すときだけ)。原文やほかのファイルは変えない
             - 上に挙がっていないファイルは触らない
             - git の commit・push はしない(このあとのステップで PR にする)
-            - 最後に `bun scripts/translate-status.ts` を実行し、「英訳はすべて最新です」と出ることを確かめる
+            - 最後に `bun scripts/translate-status.ts --check` を実行し、「英訳はすべて最新です」と出ることを確かめる
           EOF
           )
           prompt=${prompt//__TODO__/$TODO}
@@ -106,11 +106,8 @@ jobs:
       - name: Verify
         if: steps.status.outputs.count != '0'
         run: |
-          bun scripts/translate-status.ts
-          json=$(bun scripts/translate-status.ts --json)
-          count=$(echo "$json" | jq '[.missing, .outdated, .orphaned] | map(length) | add')
-          if [ "$count" != "0" ]; then
-            echo "::error::英訳が終わっていないものがあります: $json"
+          if ! bun scripts/translate-status.ts --check; then
+            echo "::error::英訳が終わっていないものがあります"
             exit 1
           fi
           # 英訳とその決まり以外のファイルを変えていないか
@@ -169,7 +166,7 @@ jobs:
           - { workflow: check.yml, name: Check }
           - { workflow: a11y.yml, name: A11y Check }
           - { workflow: visual.yml, name: Visual Check }
-          - { workflow: docker-build-check.yml, name: Docker Build Check }
+          - { workflow: docker.yml, name: Docker Build Check }
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GH_REPO: ${{ github.repository }}
@@ -210,7 +207,7 @@ jobs:
           fi
 
   # 検査がすべて通ったら PR をマージする。GITHUB_TOKEN でのマージ(main への push)ではデプロイの
-  # ワークフローが動かないので、docker-publish.yml を workflow_dispatch で起こす。
+  # ワークフローが動かないので、docker.yml を main で workflow_dispatch で起こす。
   # 検査が 1 つでも落ちたら、PR は開いたまま残る(直してから手でマージする)
   merge:
     needs: [translate, checks]
@@ -228,4 +225,4 @@ jobs:
         run: |
           # 検査のあいだに PR が更新されていたら、新しいほうの実行に任せる
           gh pr merge translate/auto --squash --delete-branch --match-head-commit "$HEAD_SHA"
-          gh workflow run docker-publish.yml --ref main
+          gh workflow run docker.yml --ref main

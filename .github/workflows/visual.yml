@@ -51,18 +51,6 @@ jobs:
           ref: ${{ steps.base.outputs.sha }}
           path: .base
 
-      # 固定の記事を入れる前の main には tests/fixtures/ が無い。そのときは PR の固定の記事と、それを
-      # 読むための仕組みを main に重ねてビルドし、記事以外(デザイン・コード)が main のままの基準を作る
-      - name: main に固定の記事が無ければ PR から持ってくる
-        run: |
-          if [ ! -d .base/tests/fixtures ]; then
-            echo "::notice::main に tests/fixtures/ が無いので、PR の固定の記事と読み込みの仕組みを重ねて基準を作ります"
-            for f in tests/fixtures src/constants/content-dir.ts src/content.config.ts src/plugins/remark-github-card.ts src/styles/main.css; do
-              mkdir -p ".base/$(dirname "$f")"
-              rm -rf ".base/$f"
-              cp -r "$f" ".base/$f"
-            done
-          fi
       - run: bun install --frozen-lockfile && bun run build
         working-directory: .base
         env:
@@ -72,14 +60,12 @@ jobs:
 
       - name: main のスクリーンショットを基準にする
         run: |
-          (cd .base/dist && python3 -m http.server 4321 --bind 127.0.0.1 &)
-          until curl -s -o /dev/null http://127.0.0.1:4321/; do sleep 1; done
+          scripts/serve.sh .base/dist 4321
           BASE_URL=http://127.0.0.1:4321 bunx playwright test tests/visual.spec.ts --update-snapshots --reporter=dot
 
       - name: PR と比べる
         run: |
-          (cd dist && python3 -m http.server 4322 --bind 127.0.0.1 &)
-          until curl -s -o /dev/null http://127.0.0.1:4322/; do sleep 1; done
+          scripts/serve.sh dist 4322
           BASE_URL=http://127.0.0.1:4322 bunx playwright test tests/visual.spec.ts
 
       - uses: actions/upload-artifact@v7

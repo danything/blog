@@ -1,7 +1,16 @@
-name: Build and Push Docker Image
+name: Docker
 
+# Dockerfile でサイトをビルドする。
+# - PR では、ビルドが通るかだけを確かめる(壊れた変更が main に入ってデプロイで落ちないように。
+#   Renovate の自動マージもこのチェックを待つ)
+# - main への push(と main での workflow_dispatch)では、イメージを ghcr.io に公開し、
+#   deploy/deployment.yaml のイメージのタグを書き換えて push する(Argo CD がデプロイする)
+# translate.yml は英訳の PR のブランチで(ビルドの確認)、マージした後は main で(公開)、
+# このワークフローを workflow_dispatch で呼ぶ
 on:
   push:
+    branches: [main]
+  pull_request:
     branches: [main]
   workflow_dispatch:
 
@@ -9,7 +18,26 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  build-and-push:
+  # PR(と main 以外のブランチでの workflow_dispatch)では、ビルドが通るかだけを確かめる
+  build:
+    if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: false
+          secrets: github_token=${{ secrets.GITHUB_TOKEN }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # main では、ビルドしたイメージを公開してデプロイのタグを書き換える
+  publish:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
