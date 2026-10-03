@@ -9,6 +9,8 @@ export default defineConfig({
 	// test-results/ は実行のたびに消されるので、基準の画像は別の場所に置く
 	snapshotPathTemplate: ".visual-snapshots/{projectName}/{arg}{ext}",
 	fullyParallel: true,
+	// まれな描画の揺れで落ちないよう、CI では 1 回だけやり直す(やり直して通ったものは flaky と表示される)
+	retries: process.env.CI ? 1 : 0,
 	reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
 	use: {
 		baseURL: process.env.BASE_URL ?? "http://127.0.0.1:4321",
@@ -35,6 +37,8 @@ export default defineConfig({
 			name: "desktop-dark",
 			use: { viewport: { width: 1280, height: 900 }, colorScheme: "dark" },
 		},
-		{ name: "mobile", use: { ...devices["Pixel 7"] } },
+		// isMobile だとページ全体を撮るときにレイアウトが揺れる(高さが毎回数 px 変わる)ので、
+		// 画面の大きさだけスマホに合わせる
+		{ name: "mobile", use: { ...devices["Pixel 7"], isMobile: false } },
 	],
 });

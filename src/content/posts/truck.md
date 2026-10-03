@@ -3,7 +3,7 @@ title: "ステーションワゴンを貨物登録して税金を安くしてみ
 zennEmoji: "🚚"
 published: 2025-08-06
 description: "自動車検査証(車検証)に用途という項目があります。ここの項目を乗用から貨物に変更して適用される税区分を変更し税金を安くできます。その方法、条件等を説明します。"
-image: "/static/images/blog/br90.png"
+image: "/static/images/blog/br90.webp"
 tags: ["車", "貨物登録", "行政"]
 category: "車"
 draft: false
