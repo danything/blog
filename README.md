@@ -156,6 +156,8 @@ BASE_URL=http://127.0.0.1:4321 bunx playwright test tests/visual.spec.ts --updat
 BASE_URL=http://127.0.0.1:4321 bunx playwright test tests/visual.spec.ts                      # 基準と比べる
 ```
 
+通常のビルドと `VISUAL_FIXTURES=1` のビルドを同じ場所で切り替えるときは、Astro のコンテンツのキャッシュが使い回されて実際の記事が混ざることがあるので、先に `rm -rf .astro node_modules/.astro` で消す。
+
 ## デプロイ
 
 `main` への push で GitHub Actions がイメージをビルドし `ghcr.io` へ push、
