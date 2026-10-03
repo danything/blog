@@ -4,6 +4,7 @@ name: Check
 on:
   pull_request:
     branches: [main]
+  workflow_dispatch: # translate.yml が英訳の PR に対して呼ぶ
 
 permissions:
   contents: read

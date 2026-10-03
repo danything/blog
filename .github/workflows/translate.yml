@@ -5,7 +5,12 @@ name: Translate
 # 未訳・原文が変わった・原文が消えたものだけを直し、translate/auto ブランチの PR にまとめる(マージは手で)。
 #
 # GITHUB_TOKEN で作った PR や push では、ほかのワークフロー(Check・A11y Check など)が動かない。
-# PR の検査を走らせるときは、PR を一度閉じて開き直すか、空のコミットを push する。
+# 例外として workflow_dispatch は GITHUB_TOKEN でも起こせるので、PR を作った・更新したあとに
+# 検査のワークフローを translate/auto ブランチで実行する(checks のジョブ)。
+# ただし workflow_dispatch の実行は PR の head のコミットに付いても PR の Checks には出ないので、
+# 終わるのを待ってその結果をコミットのステータスとして PR の head に付ける。
+# 検査を手で再実行したときは、ステータスは更新されない(translate.yml を実行し直す)。
+# Claude Code Review は呼ばない(PR のイベントでしか動かず、bot の PR は対象外にしている)。
 on:
   push:
     branches: [main]
@@ -27,6 +32,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BRANCH: translate/auto
+    outputs:
+      operation: ${{ steps.pr.outputs.pull-request-operation }}
+      head-sha: ${{ steps.pr.outputs.pull-request-head-sha }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -116,6 +124,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub カードの情報を取るため
 
       - name: Open a pull request
+        id: pr
         if: steps.status.outputs.count != '0'
         uses: peter-evans/create-pull-request@v8
         with:
@@ -136,6 +145,63 @@ jobs:
             ```
 
             - 訳文は .github/translate.md の決まりで Claude が作っています。目を通してからマージしてください
-            - この PR は GITHUB_TOKEN で作っているため、Check や A11y Check などのワークフローが自動では動きません。
-              検査を走らせるときは、PR を一度閉じて開き直すか、空のコミットを push してください
+            - この PR は GITHUB_TOKEN で作っているため、PR のイベントではほかのワークフローが動きません。
+              代わりに translate.yml が Check・A11y Check・Visual Check・Docker Build Check を workflow_dispatch で実行し、
+              終わると結果がこの PR のステータスとして出ます(Claude Code Review は動きません)
           delete-branch: true
+
+  # PR のイベントでは検査が動かないので、workflow_dispatch で PR のブランチに対して実行し、
+  # 結果を PR の head のコミットのステータスにする
+  checks:
+    needs: translate
+    if: needs.translate.outputs.operation == 'created' || needs.translate.outputs.operation == 'updated'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write # gh workflow run で起こすため
+      checks: read # gh run watch で結果を見るため
+      statuses: write # 結果をコミットのステータスにするため
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { workflow: check.yml, name: Check }
+          - { workflow: a11y.yml, name: A11y Check }
+          - { workflow: visual.yml, name: Visual Check }
+          - { workflow: docker-build-check.yml, name: Docker Build Check }
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      BRANCH: translate/auto
+      HEAD_SHA: ${{ needs.translate.outputs.head-sha }}
+      WORKFLOW: ${{ matrix.workflow }}
+      NAME: ${{ matrix.name }}
+    steps:
+      - name: Run ${{ matrix.name }}
+        run: |
+          status() {
+            gh api "repos/$GH_REPO/statuses/$HEAD_SHA" -f state="$1" -f context="$NAME" \
+              -f description="$2" ${url:+-f target_url="$url"} > /dev/null
+          }
+          since=$(date -u -d '-1 minute' +%Y-%m-%dT%H:%M:%SZ)
+          gh workflow run "$WORKFLOW" --ref "$BRANCH"
+          # 起こした実行を探す(すぐには一覧に出ない)
+          for _ in $(seq 30); do
+            run=$(gh run list --workflow "$WORKFLOW" --branch "$BRANCH" --event workflow_dispatch \
+              --commit "$HEAD_SHA" --created ">=$since" --limit 1 --json databaseId,url --jq '.[0] // empty')
+            [ -n "$run" ] && break
+            sleep 5
+          done
+          if [ -z "$run" ]; then
+            status error "workflow_dispatch の実行が見つかりません"
+            echo "::error::$WORKFLOW の実行が見つかりません"
+            exit 1
+          fi
+          id=$(echo "$run" | jq -r .databaseId)
+          url=$(echo "$run" | jq -r .url)
+          status pending "workflow_dispatch で実行中"
+          if gh run watch "$id" --exit-status --interval 30 > /dev/null; then
+            status success "workflow_dispatch で成功"
+          else
+            status failure "workflow_dispatch で失敗"
+            echo "::warning::$NAME が失敗しました: $url"
+          fi
