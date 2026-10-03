@@ -90,7 +90,7 @@ hostname:port:database:username:password
 bitbucket-pipelines.yml は bitbucket のパイプラインの定義を記述するファイルです下記の通り記述してください。  
 execution-role-arn のところに先ほどメモした`ロール ARN`を記入してください。
 
-```yml
+```yml collapse={26-34, 38-44}
 # enable Docker for your repository
 options:
   docker: true
