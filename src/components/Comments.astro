@@ -32,6 +32,7 @@ import { commentConfig } from "@/config";
 
 <script>
 import { commentConfig } from "@/config";
+import { whenActivated } from "@/utils/prerender";
 
 const { yosegaki: conf } = commentConfig;
 
@@ -61,12 +62,17 @@ function mount(target: HTMLElement) {
 
 // コメント欄のあるページでだけ埋め込みスクリプトを読む。data-auto="false" で自動描画は止め、
 // こちらから init する
-const target = document.getElementById("yosegaki");
-if (target) {
+// 裏で描画している(Speculation Rules の prerender)間は読まず、実際に開かれてから読む
+function load(target: HTMLElement) {
 	const script = document.createElement("script");
 	script.src = `${conf.server}/embed.js`;
 	script.dataset.auto = "false";
 	script.onload = () => mount(target);
 	document.head.appendChild(script);
+}
+
+const target = document.getElementById("yosegaki");
+if (target) {
+	whenActivated(() => load(target));
 }
 </script>

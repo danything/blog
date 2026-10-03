@@ -44,8 +44,8 @@ export default defineConfig({
 	// Astro 7 の既定("jsx")は要素の前後の改行を空白ごと消し、「Powered by Astro」が
 	// 「Powered byAstro」になる。Astro 5 までと同じ、表示を変えない圧縮にする
 	compressHTML: true,
-	// ページ遷移はブラウザの View Transitions(styles/transition.css)。リンクにマウスを乗せた時点で先読みする
-	prefetch: { prefetchAll: true },
+	// ページ遷移はブラウザの View Transitions(styles/transition.css)。先読みはブラウザの
+	// Speculation Rules(layouts/Layout.astro の <script type="speculationrules">)に任せる
 	integrations: [
 		expressiveCode({
 			themes: [expressiveCodeConfig.theme, expressiveCodeConfig.theme],
@@ -141,6 +141,12 @@ export default defineConfig({
 	vite: {
 		plugins: [cssIcons()],
 		build: {
+			// .astro の <script> は、小さい(4KB 未満の)ものだと Astro がページの HTML に直に埋め込む。
+			// それだとページごとに同じ JavaScript を毎回送ることになるので、JavaScript は常に別のファイル
+			// (_astro/ の名前にハッシュが付いたもの。ページをまたいでキャッシュされる)にする。
+			// 画像や CSS は既定のまま(undefined を返すと既定の 4KB で決まる)
+			assetsInlineLimit: (filePath) =>
+				filePath.endsWith(".js") ? false : undefined,
 			// CSS の入れ子(nesting)などを、対応していないブラウザ向けに平らに直す(Tailwind 4 と同じ対応範囲)
 			cssTarget: ["chrome111", "safari16.4", "firefox128"],
 			rollupOptions: {

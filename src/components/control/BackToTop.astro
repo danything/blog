@@ -4,7 +4,7 @@ import Icon from "@components/misc/Icon.astro";
 
 <!-- There can't be a filter on parent element, or it will break `fixed` -->
 <div class="back-to-top-wrapper">
-    <div id="back-to-top-btn" class="back-to-top-btn hide" onclick="backToTop()">
+    <div id="back-to-top-btn" class="back-to-top-btn hide">
         <button aria-label="Back to Top" class="btn-card">
             <Icon name="lucide:chevron-up" class="icon"></Icon>
         </button>
@@ -59,8 +59,8 @@ import Icon from "@components/misc/Icon.astro";
 	}
 </style>
 
-<script is:raw is:inline>
-function backToTop() {
-    window.scroll({ top: 0, behavior: 'smooth' });
-}
+<script>
+document.getElementById("back-to-top-btn")?.addEventListener("click", () => {
+    window.scroll({ top: 0, behavior: "smooth" });
+});
 </script>
