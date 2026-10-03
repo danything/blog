@@ -31,15 +31,17 @@ jobs:
         env:
           VISUAL_FIXTURES: 1 # GitHub カードも api.github.com に取りに行かず固定の値を使う
 
-      # workflow_dispatch では github.event.pull_request が無い。また PR のように main と
-      # マージしたものではなくブランチそのものをビルドしているので、main の先頭ではなく分岐点と比べる
+      # PR ではビルドしたのは main とのマージコミットなので、その 1 つ目の親(マージに使った main)と比べる。
+      # pull_request.base.sha は PR を作ったときの古い main のことがあり、あとで main に入った変更まで差に出てしまう。
+      # workflow_dispatch ではマージしたものではなくブランチそのものをビルドしているので、main との分岐点と比べる
       - name: 基準のコミットを決める
         id: base
         env:
           GH_TOKEN: ${{ github.token }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
-          if [ -z "$BASE_SHA" ]; then
+          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+            BASE_SHA=$(git cat-file -p HEAD | awk '/^parent /{print $2; exit}')
+          else
             BASE_SHA=$(gh api "repos/$GITHUB_REPOSITORY/compare/main...$GITHUB_SHA" --jq .merge_base_commit.sha)
           fi
           echo "sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
