@@ -23,7 +23,7 @@ const links = [
 const hatena = `https://b.hatena.ne.jp/entry/${postUrl.replace(/^https?:\/\//, "s/")}`;
 ---
 <div class={`flex flex-wrap items-center gap-2 ${className}`}>
-    <div class="transition text-black/30 dark:text-white/30 text-sm mr-2">シェア</div>
+    <div class="transition text-30 text-sm mr-2">シェア</div>
     {links.map(l => (
         <a href={l.href} target="_blank" rel="noopener noreferrer" aria-label={`${l.name} でシェア`} title={l.name}
            class="btn-regular rounded-lg h-10 w-10 active:scale-90">

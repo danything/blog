@@ -145,11 +145,11 @@
 }
 
 @utility text-50 {
-  @apply text-black/50 dark:text-white/50;
+  @apply text-black/65 dark:text-white/60;
 }
 
 @utility text-30 {
-  @apply text-black/30 dark:text-white/30;
+  @apply text-black/60 dark:text-white/50;
 }
 
 @utility text-25 {
