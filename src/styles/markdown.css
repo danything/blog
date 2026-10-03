@@ -52,25 +52,9 @@
         &:after {
             content:none;
         }
-
-        counter-reset: line;
-        span.line {
-            &:before {
-                @apply text-white/25 mr-4 w-4 inline-block;
-                content: counter(line);
-                counter-increment: line;
-                direction: rtl;
-            }
-            &:last-child:empty, &:last-child:has(> span:empty:only-child) {
-                display: none;
-            }
-        }
     }
 
-    /* main.css の .btn-regular-dark を @apply で参照すると、このファイルが
-       別の PostCSS パスで処理された場合に解決できずビルドが落ちる
-       (上の a:not(.no-styling) と同じ理由)。中身を展開してある。
-       main.css 側を変更したときはここも合わせること。 */
+    /* コードブロックのコピーボタン(src/plugins/expressive-code/custom-copy-button.ts) */
     .copy-btn {
         all: initial;
         @apply flex items-center justify-center

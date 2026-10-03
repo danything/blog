@@ -1,9 +1,11 @@
 /* サイト全体のスタイルの入口(Layout.astro で読み込む)。
  * 独自のスタイルはレイヤーに入れない。Tailwind 3 のときと同じく prose や
  * ユーティリティより後ろ(=優先)に来るようにするため */
-@import "tailwindcss";
-/* 見た目の比較用の固定の記事(tests/fixtures/)の文字をクラス名として拾わない。拾うと本番の CSS が変わる */
-@source not "../../tests";
+/* クラス名を探すのは src/ だけにする。記事(src/content/)の本文やコードに書かれた
+ * class="…" の文字を拾うと、使っていないユーティリティまで CSS に入る。見た目の比較用の
+ * 固定の記事(tests/fixtures/)も src/ の外なので、本番と同じ CSS になる */
+@import "tailwindcss" source("../");
+@source not "../content";
 @import "./variables.css";
 @import "./icons.css";
 @import "./markdown.css";
@@ -56,10 +58,6 @@
 
 @utility card-base {
   @apply rounded-(--radius-large) overflow-hidden bg-(--card-bg) transition;
-}
-
-@utility card-shadow {
-  @apply drop-shadow-[0_2px_4px_rgba(0,0,0,0.005)];
 }
 
 @utility expand-animation {
@@ -126,11 +124,6 @@
         text-(--btn-content) dark:text-white/75;
 }
 
-@utility link-underline {
-  @apply transition underline decoration-2 decoration-dashed decoration-(--link-underline)
-        hover:decoration-(--link-hover) active:decoration-(--link-active) underline-offset-[0.25rem];
-}
-
 @utility toc-hide {
   @apply opacity-0 pointer-events-none;
 }
@@ -159,33 +152,9 @@
   @apply text-black/60 dark:text-white/50;
 }
 
-@utility text-25 {
-  @apply text-black/25 dark:text-white/25;
-}
-
 @utility meta-icon {
   @apply w-8 h-8 transition rounded-md flex items-center justify-center bg-(--btn-regular-bg)
         text-(--btn-content) mr-2;
-}
-
-@utility with-divider {
-  @apply before:content-['/'] before:ml-1.5 before:mr-1.5 before:text-(--meta-divider) before:text-sm
-        before:font-medium first-of-type:before:hidden before:transition;
-}
-
-@utility btn-regular-dark {
-  @apply flex items-center justify-center
-        bg-[oklch(0.45_0.01_var(--hue))] hover:bg-[oklch(0.50_0.01_var(--hue))] active:bg-[oklch(0.55_0.01_var(--hue))]
-        dark:bg-[oklch(0.30_0.02_var(--hue))] dark:hover:bg-[oklch(0.35_0.03_var(--hue))] dark:active:bg-[oklch(0.40_0.03_var(--hue))];
-  &.success {
-    @apply bg-[oklch(0.75_0.14_var(--hue))] dark:bg-[oklch(0.75_0.14_var(--hue))];
-  }
-}
-
-@utility success {
-  &.btn-regular-dark {
-    @apply bg-[oklch(0.75_0.14_var(--hue))] dark:bg-[oklch(0.75_0.14_var(--hue))];
-  }
 }
 
 @layer components {
@@ -220,19 +189,4 @@
     pointer-events: none;
     transition: all 0.3s;
     transform: translateY(-50%);
-}
-
-.collapsed {
-    height: var(--collapsedHeight);
-}
-
-.custom-md spoiler {
-  @apply bg-(--codeblock-bg) hover:bg-transparent px-1 py-0.5 overflow-hidden rounded-md transition-all duration-150;
-
-  &:not(:hover) {
-    color: var(--codeblock-bg);
-    * {
-        color: var(--codeblock-bg);
-    }
-  }
 }
