@@ -66,28 +66,41 @@
 		handle /en/* {
 			rewrite * /en/404/index.html
 			file_server {
+				precompressed zstd br gzip
 				status 410
 			}
 		}
 		handle {
 			rewrite * /404.html
 			file_server {
+				precompressed zstd br gzip
 				status 410
 			}
 		}
 	}
 
-	file_server
+	# ビルドで dist/ に書き出した .zst・.br・.gz (scripts/precompress.ts) をそのまま返す。
+	# 無いもの (画像や Pagefind の索引など) は元のファイルを返し、上の encode が必要なら圧縮する
+	file_server {
+		precompressed zstd br gzip
+	}
+	# 圧縮したファイルそのもの (/index.html.br など) は URL としては見せない
+	@precompressedFile path *.zst *.br *.gz
+	error @precompressedFile 404
 
 	# 英語版 (/en/ 以下) は英語の 404 ページを返す
 	handle_errors {
 		handle /en/* {
 			rewrite * /en/404/index.html
-			file_server
+			file_server {
+				precompressed zstd br gzip
+			}
 		}
 		handle {
 			rewrite * /404.html
-			file_server
+			file_server {
+				precompressed zstd br gzip
+			}
 		}
 	}
 }
