@@ -111,6 +111,8 @@ Actions の画面から手動でも実行できる。この PR は GITHUB_TOKEN 
 代わりに translate.yml が PR を作った・更新したあとに Check・A11y Check・Visual Check・Docker Build Check を
 `workflow_dispatch` で `translate/auto` ブランチに対して実行する。workflow_dispatch の実行は PR の Checks に出ないので、
 終わるのを待って結果をコミットのステータスとして PR の head に付ける(Claude Code Review は動かない)。
+検査がすべて通ると translate.yml が PR を自動でマージし、デプロイ(`docker-publish.yml`)を起こす。
+1 つでも落ちたら PR は開いたまま残るので、直してから手でマージする。
 
 英訳のフロントマターの `sourceHash` は訳した時点の原文のハッシュで、原文と食い違っているものは次で分かる。
 
