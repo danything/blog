@@ -1,0 +1,30 @@
+---
+import Icon from "@components/misc/Icon.astro";
+import { kofiConfig } from "@/config";
+import { langFromPath, siteText } from "../../i18n/translation";
+
+// 記事を読み終えたところに出す応援の欄。サイドバーの応援は一番下にあって
+// スクロールしないと見えないので、記事の末尾にも置く(中身はサイドバーと同じ)
+interface Props {
+	class?: string;
+}
+const className = Astro.props.class ?? "";
+const url = `https://ko-fi.com/${kofiConfig.username}`;
+const text = siteText(langFromPath(Astro.url.pathname)).kofi;
+---
+{kofiConfig.enable && kofiConfig.username && (
+<div class={`flex flex-col sm:flex-row sm:items-center gap-3 rounded-xl bg-[var(--license-block-bg)] py-4 px-6 transition ${className}`}>
+    <div class="text-sm text-black/75 dark:text-white/75 transition flex-1">
+        {text.description}
+    </div>
+    <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-regular rounded-lg h-9 px-4 text-sm font-bold flex items-center justify-center gap-2 shrink-0"
+    >
+        <Icon name="simple-icons:kofi" class="text-[1.1rem]" aria-hidden="true"></Icon>
+        {text.buttonLabel}
+    </a>
+</div>
+)}
