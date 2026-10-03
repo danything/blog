@@ -17,7 +17,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  id-token: write
 
 concurrency:
   group: translate
@@ -59,17 +58,21 @@ jobs:
           echo "$json" | jq -r '.orphaned[]' | xargs -r rm -v --
           echo "todo=$(echo "$json" | jq -c '{missing, outdated}')" >> "$GITHUB_OUTPUT"
 
+      # claude-code-action は push のイベントで動かない(Unsupported event type: push)ので、
+      # Claude Code の CLI をそのまま非対話で呼ぶ
       - name: Translate
         if: steps.status.outputs.todo != '{"missing":[],"outdated":[]}'
-        uses: anthropics/claude-code-action@v1
-        with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          prompt: |
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          TODO: ${{ steps.status.outputs.todo }}
+        run: |
+          # 'EOF' で囲んで中のバッククォートを展開させず、対象だけをあとから差し込む
+          prompt=$(cat <<'EOF'
             このブログ(Astro 製、日本語)の記事の英訳を更新してください。
             まず .github/translate.md を読み、その決まりに従ってください。
 
             対象(scripts/translate-status.ts の出力。source が日本語の原文、target が英訳):
-            ${{ steps.status.outputs.todo }}
+            __TODO__
 
             - missing: 英訳がまだ無い。原文を読んで target に英訳を新しく作る
             - outdated: 原文が変わった。`git diff` などで原文の変更点を確かめ、既存の英訳を、
@@ -84,7 +87,10 @@ jobs:
             - 上に挙がっていないファイルは触らない
             - git の commit・push はしない(このあとのステップで PR にする)
             - 最後に `bun scripts/translate-status.ts` を実行し、「英訳はすべて最新です」と出ることを確かめる
-          claude_args: |
+          EOF
+          )
+          prompt=${prompt//__TODO__/$TODO}
+          bunx @anthropic-ai/claude-code -p "$prompt" \
             --allowedTools "Read,Write,Edit,Glob,Grep,Bash(bun scripts/translate-status.ts:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*)"
 
       # 訳が残っていないか、フロントマターや Markdown が壊れていないかを確かめる
