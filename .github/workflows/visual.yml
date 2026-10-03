@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
 
-      # PR を先にビルドする(main を取り出す .base/ を Tailwind が走査しないように)
+      # PR を先にビルドする
       - run: bun install --frozen-lockfile
       - run: bun run build
         env:

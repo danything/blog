@@ -1,85 +1,96 @@
 /* Fade-in animations for components */
 @keyframes fade-in-up {
-    0% {
-        transform: translateY(2rem);
-        opacity: 0;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
+	0% {
+		transform: translateY(2rem);
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
 }
 
 /* Main components */
 .onload-animation {
-    opacity: 0;
-    animation: 300ms fade-in-up;
-    animation-fill-mode: forwards;
+	opacity: 0;
+	animation: 300ms fade-in-up;
+	animation-fill-mode: forwards;
 }
 #navbar {
-    animation-delay: 0ms
+	animation-delay: 0ms;
 }
 #sidebar {
-    animation-delay: 100ms
+	animation-delay: 100ms;
 }
 #main-content {
-    outline: none;
+	outline: none;
 }
 #content-wrapper {
-    animation-delay: var(--content-delay);
+	animation-delay: var(--content-delay);
 }
 .footer {
-    animation-delay: 250ms;
+	animation-delay: 250ms;
 }
 #banner-credit {
-    animation-delay: 400ms;
+	animation-delay: 400ms;
 }
 
 /* Post content */
-#post-container :nth-child(1) { animation-delay: calc(var(--content-delay) + 0ms) }
-#post-container :nth-child(2) { animation-delay: calc(var(--content-delay) + 50ms) }
-#post-container :nth-child(3) { animation-delay: calc(var(--content-delay) + 100ms) }
-#post-container :nth-child(4) { animation-delay: calc(var(--content-delay) + 175ms) }
-#post-container :nth-child(5) { animation-delay: calc(var(--content-delay) + 250ms) }
-#post-container :nth-child(6) { animation-delay: calc(var(--content-delay) + 325ms) }
-
+#post-container :nth-child(1) {
+	animation-delay: calc(var(--content-delay) + 0ms);
+}
+#post-container :nth-child(2) {
+	animation-delay: calc(var(--content-delay) + 50ms);
+}
+#post-container :nth-child(3) {
+	animation-delay: calc(var(--content-delay) + 100ms);
+}
+#post-container :nth-child(4) {
+	animation-delay: calc(var(--content-delay) + 175ms);
+}
+#post-container :nth-child(5) {
+	animation-delay: calc(var(--content-delay) + 250ms);
+}
+#post-container :nth-child(6) {
+	animation-delay: calc(var(--content-delay) + 325ms);
+}
 
 /* ページ遷移(ブラウザの View Transitions。対応していないブラウザでは普通に移る)。
    本文と目次だけを 0.2 秒でふわっと入れ替え、ほかはそのまま切り替える。動きを減らす設定なら使わない */
 @media (prefers-reduced-motion: no-preference) {
-    @view-transition {
-        navigation: auto;
-    }
+	@view-transition {
+		navigation: auto;
+	}
 }
 #main-content {
-    view-transition-name: main-content;
+	view-transition-name: main-content;
 }
 #toc {
-    view-transition-name: toc;
+	view-transition-name: toc;
 }
 ::view-transition-old(root) {
-    animation: none;
-    opacity: 0;
+	animation: none;
+	opacity: 0;
 }
 ::view-transition-new(root),
 ::view-transition-group(root) {
-    animation: none;
+	animation: none;
 }
 ::view-transition-old(main-content),
 ::view-transition-old(toc) {
-    animation: 0.2s cubic-bezier(0.76, 0, 0.24, 1) both page-fade-out;
+	animation: 0.2s cubic-bezier(0.76, 0, 0.24, 1) both page-fade-out;
 }
 ::view-transition-new(main-content),
 ::view-transition-new(toc) {
-    animation: 0.2s cubic-bezier(0.76, 0, 0.24, 1) both page-fade-in;
+	animation: 0.2s cubic-bezier(0.76, 0, 0.24, 1) both page-fade-in;
 }
 @keyframes page-fade-in {
-    from {
-        opacity: 0;
-    }
+	from {
+		opacity: 0;
+	}
 }
 @keyframes page-fade-out {
-    to {
-        opacity: 0;
-    }
+	to {
+		opacity: 0;
+	}
 }

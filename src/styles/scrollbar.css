@@ -1,6 +1,6 @@
 /* ページのスクロールバーを細くし、色をテーマに合わせる(Web 標準の指定だけで、ライブラリは使わない)。
  * スクロールバーが重なって表示される端末(Mac・スマホなど)では見た目は変わらない */
 html {
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-bg) transparent;
+	scrollbar-width: thin;
+	scrollbar-color: var(--scrollbar-bg) transparent;
 }
