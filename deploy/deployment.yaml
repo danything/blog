@@ -45,6 +45,13 @@ spec:
             httpGet:
               path: /
               port: http
+          # 止める前に少し待つ。Pod の終了と Service の宛先から外れるのが同時に進むので、待たないと
+          # 外れる前の数秒に来たリクエストが落ちる(デプロイのたびに 0〜1 件の 503 が出ていた)。
+          # sleep はイメージ (alpine) の busybox のもの。猶予 (terminationGracePeriodSeconds 既定 30 秒) より短くする
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "5"]
           # ルートは読み取り専用。Caddy が書く XDG_DATA_HOME (instance.uuid やロック) だけ書けるようにする
           volumeMounts:
             - name: caddy-data
