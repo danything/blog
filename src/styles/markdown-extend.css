@@ -212,36 +212,6 @@ a.card-github .github-logo:before {
   margin-right: 0;
   mask-image: var(--icon-simple-icons-github);
 }
-a.card-github.fetch-waiting {
-  pointer-events: none;
-  opacity: 0.7;
-  transition: opacity 0.15s ease-in-out;
-}
-a.card-github.fetch-waiting .gc-description,
-a.card-github.fetch-waiting .gc-infobar,
-a.card-github.fetch-waiting .gc-avatar {
-  background-color: var(--tw-prose-body);
-  color: transparent;
-  opacity: 0.5;
-  animation: pulsate 2s infinite linear;
-  user-select: none;
-}
-a.card-github.fetch-waiting .gc-description:before,
-a.card-github.fetch-waiting .gc-infobar:before,
-a.card-github.fetch-waiting .gc-avatar:before {
-  background-color: transparent;
-}
-a.card-github.fetch-waiting .gc-repo {
-  margin-left: -0.1rem;
-}
-a.card-github.fetch-waiting .gc-description,
-a.card-github.fetch-waiting .gc-infobar {
-  border-radius: 0.5rem;
-}
-a.card-github.fetch-error {
-  pointer-events: all;
-  opacity: 1;
-}
 .card-github,
 .gc-description,
 .gc-titlebar,
@@ -253,48 +223,4 @@ a.card-github.fetch-error {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 0.15s;
-}
-@-moz-keyframes pulsate {
-  0% {
-    opacity: 0.15;
-  }
-  50% {
-    opacity: 0.25;
-  }
-  100% {
-    opacity: 0.15;
-  }
-}
-@-webkit-keyframes pulsate {
-  0% {
-    opacity: 0.15;
-  }
-  50% {
-    opacity: 0.25;
-  }
-  100% {
-    opacity: 0.15;
-  }
-}
-@-o-keyframes pulsate {
-  0% {
-    opacity: 0.15;
-  }
-  50% {
-    opacity: 0.25;
-  }
-  100% {
-    opacity: 0.15;
-  }
-}
-@keyframes pulsate {
-  0% {
-    opacity: 0.15;
-  }
-  50% {
-    opacity: 0.25;
-  }
-  100% {
-    opacity: 0.15;
-  }
 }
