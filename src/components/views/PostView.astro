@@ -3,7 +3,6 @@ import { render } from "astro:content";
 import path from "node:path";
 import Comments from "@components/Comments.astro";
 import Icon from "@components/misc/Icon.astro";
-import KofiPostEnd from "@components/misc/KofiPostEnd.astro";
 import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import Share from "@components/misc/Share.astro";
@@ -16,6 +15,7 @@ import { licenseConfig } from "@/config";
 import { formatDateToYYYYMMDD } from "../../utils/date-utils";
 import ImageWrapper from "../misc/ImageWrapper.astro";
 import PostMetadata from "../PostMeta.astro";
+import Kofi from "../widget/Kofi.astro";
 
 // 記事のページ(日本語版 pages/posts/、英語版 pages/en/posts/ の中身)
 interface Props {
@@ -106,7 +106,7 @@ const jsonLd = {
 
             <Share title={entry.data.title} class="section onload-animation"></Share>
 
-            <KofiPostEnd class="section onload-animation"></KofiPostEnd>
+            <Kofi variant="post-end" class="section onload-animation"></Kofi>
 
         </div>
     </div>

@@ -23,7 +23,7 @@ const lang = langFromPath(Astro.url.pathname);
         <Tag class="onload-animation" style="animation-delay: 200ms"></Tag>
         <!-- ニュースレターは日本語の記事だけを送るので、英語版には出さない -->
         {lang === "ja" && <Newsletter class="onload-animation" style="animation-delay: 250ms"></Newsletter>}
-        <Kofi class="onload-animation" style="animation-delay: 300ms"></Kofi>
+        <Kofi variant="widget" class="onload-animation" style="animation-delay: 300ms"></Kofi>
     </div>
 </div>
 

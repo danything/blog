@@ -161,6 +161,15 @@
 	transition-property: all !important;
 }
 
+/* サイドバーの部品(ニュースレター・応援)の説明の文 */
+.widget-description {
+	margin-bottom: 0.75rem;
+	font-size: var(--text-sm);
+	line-height: var(--text-sm-lh);
+	color: var(--text-75);
+	transition: var(--transition);
+}
+
 /* 読み上げ用で、画面には出さない(記事の脚注の見出しにも付く) */
 .sr-only {
 	position: absolute;

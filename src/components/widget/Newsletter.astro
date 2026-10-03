@@ -15,7 +15,7 @@ const profileUrl = `https://buttondown.com/${newsletterConfig.username}`;
 ---
 {newsletterConfig.enable && newsletterConfig.username && (
 <WidgetLayout name={newsletterConfig.title} id="newsletter" class={className} style={style}>
-    <div class="description">
+    <div class="widget-description">
         {newsletterConfig.description}
     </div>
     <form
@@ -40,13 +40,6 @@ const profileUrl = `https://buttondown.com/${newsletterConfig.username}`;
 )}
 
 <style>
-    .description {
-        margin-bottom: 0.75rem;
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
-        color: var(--text-75);
-        transition: var(--transition);
-    }
     form {
         display: flex;
         flex-direction: column;

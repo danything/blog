@@ -4,52 +4,76 @@ import { kofiConfig } from "@/config";
 import { langFromPath, siteText } from "../../i18n/translation";
 import WidgetLayout from "./WidgetLayout.astro";
 
+// 応援(Ko-fi)の欄。外部のスクリプトは読み込まず、Ko-fi のページへリンクするだけにして、
+// 表示の速さとテーマへの追従を優先する。
+// variant="widget" はサイドバーの部品。"post-end" は記事を読み終えたところに置く横長の欄
+// (サイドバーの応援は一番下にあってスクロールしないと見えないので、記事の末尾にも置く)
 interface Props {
+	variant: "widget" | "post-end";
 	class?: string;
 	style?: string;
 }
-const className = Astro.props.class;
-const style = Astro.props.style;
-
-// 外部スクリプトを読み込まず、Ko-fi のページへリンクするだけの実装。
-// 表示速度とテーマ追従を優先している。
+// 呼び出し元の <style> が効くよう、残りの属性(data-astro-cid-*)も外側の要素に付ける
+const { variant, class: className, ...rest } = Astro.props;
 const url = `https://ko-fi.com/${kofiConfig.username}`;
 const text = siteText(langFromPath(Astro.url.pathname)).kofi;
+
+const enabled = kofiConfig.enable && kofiConfig.username;
 ---
-{kofiConfig.enable && kofiConfig.username && (
-<WidgetLayout name={text.title} id="kofi" class={className} style={style}>
-    <div class="description">
-        {text.description}
-    </div>
-    <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={text.buttonLabel}
-        class="btn-regular kofi-button"
-    >
-        <Icon name="simple-icons:kofi" class="kofi-icon"></Icon>
+{enabled && variant === "widget" && (
+<WidgetLayout name={text.title} id="kofi" class={className} {...rest}>
+    <div class="widget-description">{text.description}</div>
+    <a href={url} target="_blank" rel="noopener noreferrer" class="btn-regular kofi-button widget">
+        <Icon name="simple-icons:kofi" class="kofi-icon" aria-hidden="true" />
         {text.buttonLabel}
     </a>
 </WidgetLayout>
 )}
+{enabled && variant === "post-end" && (
+<div class:list={["post-end", className]} {...rest}>
+    <div class="widget-description">{text.description}</div>
+    <a href={url} target="_blank" rel="noopener noreferrer" class="btn-regular kofi-button post-end-button">
+        <Icon name="simple-icons:kofi" class="kofi-icon" aria-hidden="true" />
+        {text.buttonLabel}
+    </a>
+</div>
+)}
+
 
 <style>
-    .description {
-        margin-bottom: 0.75rem;
-        font-size: var(--text-sm);
-        line-height: var(--text-sm-lh);
-        color: var(--text-75);
+    .post-end {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        border-radius: 0.75rem;
+        background-color: var(--license-block-bg);
         transition: var(--transition);
+
+        @media (width >= 40rem) {
+            flex-direction: row;
+            align-items: center;
+        }
+        .widget-description {
+            flex: 1;
+            margin-bottom: 0;
+        }
     }
     .kofi-button {
         gap: 0.5rem;
-        width: 100%;
         height: 2.25rem;
         border-radius: 0.5rem;
         font-size: var(--text-sm);
         line-height: var(--text-sm-lh);
         font-weight: 700;
+
+        &.widget {
+            width: 100%;
+        }
+        &.post-end-button {
+            flex-shrink: 0;
+            padding-inline: 1rem;
+        }
     }
     .kofi-icon {
         font-size: 1.1rem;
