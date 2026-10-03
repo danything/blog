@@ -141,6 +141,12 @@ export default defineConfig({
 	vite: {
 		plugins: [cssIcons()],
 		build: {
+			// .astro の <script> は、小さい(4KB 未満の)ものだと Astro がページの HTML に直に埋め込む。
+			// それだとページごとに同じ JavaScript を毎回送ることになるので、JavaScript は常に別のファイル
+			// (_astro/ の名前にハッシュが付いたもの。ページをまたいでキャッシュされる)にする。
+			// 画像や CSS は既定のまま(undefined を返すと既定の 4KB で決まる)
+			assetsInlineLimit: (filePath) =>
+				filePath.endsWith(".js") ? false : undefined,
 			// CSS の入れ子(nesting)などを、対応していないブラウザ向けに平らに直す(Tailwind 4 と同じ対応範囲)
 			cssTarget: ["chrome111", "safari16.4", "firefox128"],
 			rollupOptions: {
