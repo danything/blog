@@ -29,6 +29,10 @@ k3s + Traefik（Let's Encrypt / DNS-01）→ Cloudflare → 読者
 
 サーバーサイドのアプリケーションは一切動いておらず、配信されているのは完全に静的なファイルだけです。
 
+:::message
+2026年10月追記 その後パッケージマネージャをpnpmからBunに替えたので、ビルドは`bun run build`、ビルド用のイメージは`node:24-slim`ではなく`oven/bun`になっています。ページ遷移もSwupからAstro標準のClientRouterに置き換えました。それ以外の流れは変わっていません。最新の構成は[リポジトリ](https://github.com/DAnything/blog)を見てください。
+:::
+
 ## ビルド
 
 Astroなので出力は静的HTMLです。ページ遷移はSwupが担当していてフルリロードなしで切り替わります。

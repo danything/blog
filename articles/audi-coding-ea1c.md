@@ -2,7 +2,7 @@
 title: "アウディコーディングメモ"
 emoji: "🚗"
 type: tech
-topics: ["車"]
+topics: ["車","Audi","VCDS"]
 published: true
 published_at: 2020-07-08
 ---

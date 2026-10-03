@@ -2,7 +2,7 @@
 title: "Mercedes NTG ATAロック解除メモ"
 emoji: "🔓"
 type: tech
-topics: ["車"]
+topics: ["車","Mercedes","NTG"]
 published: true
 published_at: 2024-05-25
 ---

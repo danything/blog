@@ -2,7 +2,7 @@
 title: "hls.jsのレベル変更で躓いた件"
 emoji: "🎬"
 type: tech
-topics: ["tech"]
+topics: ["HLS","JavaScript","jQuery"]
 published: true
 published_at: 2018-12-18
 ---
