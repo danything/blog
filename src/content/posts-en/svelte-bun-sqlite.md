@@ -21,7 +21,7 @@ Here's what I currently have running.
 | --- | --- | --- |
 | [worklog](https://w.doany.io/) | Builds timesheets from Slack and GitHub logs | Service only |
 | [𝕏ool](https://x.doany.io/) | Automatically posts a "report card" of your day on 𝕏 | [Source](https://github.com/DAnything/xool) |
-| Smart QR Payment | QR-based pre-ordering and self-checkout | [Source](https://github.com/5ym/smart-qr-payment) |
+| mogiri | QR-based admission, pre-ordering and self-checkout | [Source](https://github.com/5ym/mogiri) |
 | denpa | TV program guide, scheduling, recording, and streaming | [Source](https://github.com/DAnything/denpa) |
 | [tamasagashi](https://ts.doany.io/) | Browser for a vehicle master database (model code → common name and specs) built from public data | Service only |
 
@@ -30,7 +30,7 @@ I didn't set out to standardize them. Honestly, I rewrote one, it was pleasant, 
 
 ## How the rewrite came about
 
-Smart QR Payment was originally built around 2024 as two separate pieces: a Django REST Framework backend and a Nuxt (Vuetify) frontend.  
+mogiri (formerly Smart QR Payment) was originally built around 2024 as two separate pieces: a Django REST Framework backend and a Nuxt (Vuetify) frontend.  
 I didn't touch it for a while after that, but Renovate PRs keep coming whether you touch a project or not. Looking at the history for July 2026, it went something like this, with commits in between that did nothing but bump dependencies and then carry them through to a working state.
 
 ```text
@@ -112,7 +112,7 @@ There's no point in only writing about the good parts, so here are the places I 
 
 ## On Biome and CSS
 
-I chose Biome largely because I'm a neat freak and dislike having libraries scattered around. The fewer libraries the better. Right after the Smart QR Payment rewrite I was using ESLint + Prettier, but I didn't like keeping separate libraries and config files for linting and formatting, and on top of that having to check how well they play together, so I consolidated on a single `biome.json` and a single command, `biome check --write`. It's written in Rust and fast, so putting it alongside type checking in the `check` script doesn't bother me.  
+I chose Biome largely because I'm a neat freak and dislike having libraries scattered around. The fewer libraries the better. Right after the mogiri rewrite I was using ESLint + Prettier, but I didn't like keeping separate libraries and config files for linting and formatting, and on top of that having to check how well they play together, so I consolidated on a single `biome.json` and a single command, `biome check --write`. It's written in Rust and fast, so putting it alongside type checking in the `check` script doesn't bother me.  
 The downside, as I mentioned earlier, is that it only looks at the `<script>` in `.svelte` files and flags variables used in the template as unused, so I use it with just that rule turned off.
 
 For a long time my CSS was Tailwind + daisyUI. At the start of a project it's easy to build a UI with fixed choices, and when you want to customize something, Tailwind makes it easy to tweak directly. I'd start with `class="btn btn-primary"` and only add utilities where I didn't like something, as in `class="btn btn-primary rounded-full px-8"`.
@@ -145,7 +145,7 @@ UI and API in SvelteKit; things close to the hardware, things that need to be re
 
 ## On AI
 
-To be honest, Claude wrote most of the Smart QR Payment rewrite. The task was to read the Django + Nuxt code and rebuild the same screen flows in SvelteKit. What the human did was make the decisions described above, and poke at and fix what came out.
+To be honest, Claude wrote most of the mogiri rewrite. The task was to read the Django + Nuxt code and rebuild the same screen flows in SvelteKit. What the human did was make the decisions described above, and poke at and fix what came out.
 
 The choice of one language, one process, and readable generated code pays off precisely because of that premise. Having tons of code I can't read generated for me wouldn't help, so choosing Svelte, with less code to write and a straightforward structure, was also a decision to widen the range of what I can hand off to AI.  
 I wrote about how this feels in practice in the second half of [my Slack post](/en/posts/slack-search-read/).
