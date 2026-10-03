@@ -33,15 +33,17 @@
 	redir @tag /archive/?tag={re.tag.1} permanent
 
 	# --- キャッシュ ---
-	# ハッシュ付きのビルド成果物と検索インデックスは長期キャッシュ
-	@immutable path /_astro/* /pagefind/*
+	# ファイル名にハッシュが付くものだけ長期キャッシュ。Pagefind は索引の断片だけがハッシュ付きで、
+	# pagefind.js や wasm.*.pagefind・pagefind-entry.json は名前が変わらないまま中身が変わる
+	# (ここを長期キャッシュにしていたため、Cloudflare に古い pagefind.js が残り検索が壊れた)
+	@immutable path /_astro/* /pagefind/fragment/* /pagefind/index/* /pagefind/filter/* /pagefind/*.pf_meta
 	header @immutable Cache-Control "public, max-age=31536000, immutable"
 
 	@static path /static/*
 	header @static Cache-Control "public, max-age=604800"
 
-	# HTML は都度検証させる
-	@html not path /_astro/* /pagefind/* /static/*
+	# HTML と、名前の変わらない Pagefind のファイルは都度検証させる
+	@html not path /_astro/* /pagefind/fragment/* /pagefind/index/* /pagefind/filter/* /pagefind/*.pf_meta /static/*
 	header @html Cache-Control "public, max-age=0, must-revalidate"
 
 	# --- 削除した記事 ---
