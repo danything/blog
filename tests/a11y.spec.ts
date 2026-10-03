@@ -6,33 +6,23 @@ import { pages, setupContext } from "./setup";
 // 影響が serious・critical の違反があると失敗する。ライト・ダーク・スマホの各プロジェクトで走る:
 //   BASE_URL=<ビルドを配信している URL> bunx playwright test tests/a11y.spec.ts
 
-// 失敗にはしない規則。見つかった数は注記としてレポートに残す
-const reportOnly = new Set([
-	// 文字のコントラスト。テーマ色(リンクや見出しの --primary)、日付などの薄い文字(text-50・text-30)、
-	// インラインコードの色がどれも 4.5:1 に届かない。直すとサイト全体の配色が変わるので、
-	// デザインを見直すまでは失敗にしない
-	"color-contrast",
-]);
-
 test.beforeEach(({ context }, info) => setupContext(context, info));
 
 for (const path of pages) {
-	test(path, async ({ page }, info) => {
+	test(path, async ({ page }) => {
+		// 読み込み時のフェードの途中だと文字が薄く測られるので、動きを止めて終わるのを待つ
+		await page.emulateMedia({ reducedMotion: "reduce" });
 		await page.goto(path);
 		await page.waitForLoadState("networkidle");
+		await page.evaluate(() =>
+			Promise.all(document.getAnimations().map((a) => a.finished)),
+		);
 		const { violations } = await new AxeBuilder({ page })
 			.withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
 			.analyze();
-		const serious = violations.filter(
+		const failures = violations.filter(
 			(v) => v.impact === "serious" || v.impact === "critical",
 		);
-		for (const v of serious.filter((v) => reportOnly.has(v.id))) {
-			info.annotations.push({
-				type: "a11y",
-				description: `${v.id}: ${v.nodes.length} 件`,
-			});
-		}
-		const failures = serious.filter((v) => !reportOnly.has(v.id));
 		// 失敗したときに、どの規則がどの要素で引っかかったかを読める形で出す
 		const summary = failures
 			.map((v) => {
