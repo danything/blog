@@ -148,6 +148,7 @@ function setup(root: HTMLElement) {
 	};
 
 	const search = async (keyword: string, isDesktop: boolean) => {
+		const id = ++latest;
 		if (!keyword) {
 			setPanelVisibility(false, isDesktop);
 			render([]);
@@ -155,7 +156,6 @@ function setup(root: HTMLElement) {
 		}
 		if (!initialized) return;
 
-		const id = ++latest;
 		let result: SearchResult[] = [];
 		try {
 			if (import.meta.env.PROD && window.pagefind) {
