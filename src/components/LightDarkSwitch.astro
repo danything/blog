@@ -134,14 +134,9 @@ function setup(group: HTMLElement) {
 	render();
 }
 
-// ナビゲーションバーはページ遷移の間も残る(transition:persist)ので、まだ準備していないものだけ準備する
-document.addEventListener("astro:page-load", () => {
-	for (const group of document.querySelectorAll<HTMLElement>(
-		"[data-light-dark-switch]",
-	)) {
-		if (group.dataset.ready) continue;
-		group.dataset.ready = "true";
-		setup(group);
-	}
-});
+for (const group of document.querySelectorAll<HTMLElement>(
+	"[data-light-dark-switch]",
+)) {
+	setup(group);
+}
 </script>

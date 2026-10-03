@@ -200,12 +200,7 @@ function setup(root: HTMLElement) {
 	else pagefindWaiters.push(init);
 }
 
-// ナビゲーションバーはページ遷移の間も残る(transition:persist)ので、まだ準備していないものだけ準備する
-document.addEventListener("astro:page-load", () => {
-	for (const root of document.querySelectorAll<HTMLElement>("[data-search]")) {
-		if (root.dataset.ready) continue;
-		root.dataset.ready = "true";
-		setup(root);
-	}
-});
+for (const root of document.querySelectorAll<HTMLElement>("[data-search]")) {
+	setup(root);
+}
 </script>
