@@ -1,5 +1,6 @@
 import type { RemarkPlugin } from "@astrojs/markdown-remark";
 import { visit } from "unist-util-visit";
+import { VISUAL_FIXTURES } from "../constants/content-dir";
 import { h } from "./hast";
 
 // 1 行まるごとがこの形のときだけカードにする。以前の remark-directive のように
@@ -33,7 +34,7 @@ const FIXTURE_REPO: Repo = {
 };
 
 function fetchRepo(repo: string): Promise<Repo | null> {
-	if (process.env.VISUAL_FIXTURES)
+	if (VISUAL_FIXTURES)
 		return Promise.resolve(repo.endsWith("/missing") ? null : FIXTURE_REPO);
 	let p = cache.get(repo);
 	if (!p) {
