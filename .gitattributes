@@ -46,7 +46,6 @@
 *.scss            text diff=css
 *.sh              text eol=lf
 *.sql             text
-*.styl            text
 *.tag             text
 *.ts              text
 *.tsx             text

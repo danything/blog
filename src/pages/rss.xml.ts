@@ -2,11 +2,16 @@ import rss from "@astrojs/rss";
 import { getSortedPosts } from "@utils/content-utils";
 import { url } from "@utils/url-utils";
 import type { APIContext } from "astro";
-import MarkdownIt from "markdown-it";
-import sanitizeHtml from "sanitize-html";
 import { siteConfig } from "@/config";
 
-const parser = new MarkdownIt();
+// 記事ページと同じ描画結果を使う。コードブロックや GitHub カードの script / style は
+// フィードには不要なので外す(自前のビルドが出した HTML なので正規表現で十分)
+function toFeedHtml(html: string): string {
+	return html
+		.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
+		.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "")
+		.replace(/<link\b[^>]*>/gi, "");
+}
 
 function stripInvalidXmlChars(str: string): string {
 	return str.replace(
@@ -24,17 +29,15 @@ export async function GET(context: APIContext) {
 		description: siteConfig.subtitle || "No description",
 		site: context.site ?? "https://fuwari.vercel.app",
 		items: blog.map((post) => {
-			const content =
-				typeof post.body === "string" ? post.body : String(post.body || "");
-			const cleanedContent = stripInvalidXmlChars(content);
+			const content = stripInvalidXmlChars(
+				toFeedHtml(post.rendered?.html ?? ""),
+			);
 			return {
 				title: post.data.title,
 				pubDate: post.data.published,
 				description: post.data.description || "",
 				link: url(`/posts/${post.id}/`),
-				content: sanitizeHtml(parser.render(cleanedContent), {
-					allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-				}),
+				content,
 			};
 		}),
 		customData: `<language>${siteConfig.lang}</language>`,
