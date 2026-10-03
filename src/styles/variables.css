@@ -25,14 +25,15 @@
 	--white: #fff;
 	--black: #000;
 
-	/* 灰色(Tailwind の neutral と同じ値)。ライト・ダークで変わらないので、使う側で切り替える */
-	--neutral-50: oklch(98.5% 0 none);
-	--neutral-100: oklch(97% 0 none);
-	--neutral-300: oklch(87% 0 none);
-	--neutral-400: oklch(70.8% 0 none);
-	--neutral-500: oklch(55.6% 0 none);
-	--neutral-700: oklch(37.1% 0 none);
-	--neutral-900: oklch(20.5% 0 none);
+	/* 灰色(Tailwind の neutral と同じ値)。ライト・ダークで変わらないので、使う側で切り替える。
+	 * oklch(70.8% 0 none) のように書くと axe がコントラストを測れない(色として読めずに飛ばす)ので、数で書く */
+	--neutral-50: oklch(0.985 0 0);
+	--neutral-100: oklch(0.97 0 0);
+	--neutral-300: oklch(0.87 0 0);
+	--neutral-400: oklch(0.708 0 0);
+	--neutral-500: oklch(0.556 0 0);
+	--neutral-700: oklch(0.371 0 0);
+	--neutral-900: oklch(0.205 0 0);
 
 	/* 文字の大きさと、それに合う行の高さ(文字の大きさに対する比) */
 	--text-xs: 0.75rem;
