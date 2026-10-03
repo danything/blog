@@ -127,6 +127,7 @@ import {
 	setTheme,
 } from "@utils/setting-utils.ts";
 import type { LIGHT_DARK_MODE } from "@/types/config.ts";
+import { onActivatedFromPrerender } from "@/utils/prerender";
 
 const seq: LIGHT_DARK_MODE[] = [LIGHT_MODE, DARK_MODE, AUTO_MODE];
 
@@ -191,6 +192,10 @@ function setup(group: HTMLElement) {
 	});
 
 	render();
+	onActivatedFromPrerender(() => {
+		mode = getStoredTheme();
+		render();
+	});
 }
 
 for (const group of document.querySelectorAll<HTMLElement>(

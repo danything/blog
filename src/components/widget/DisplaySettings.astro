@@ -166,6 +166,7 @@ const hue = siteConfig.themeColor.hue;
 </style>
 
 <script>
+import { onActivatedFromPrerender } from "@utils/prerender";
 import { getDefaultHue, getHue, setHue } from "@utils/setting-utils";
 
 function setup(panel: HTMLElement) {
@@ -199,6 +200,7 @@ function setup(panel: HTMLElement) {
 	});
 
 	update(getHue());
+	onActivatedFromPrerender(() => update(getHue()));
 }
 
 const panel = document.getElementById("display-setting");

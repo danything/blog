@@ -44,8 +44,8 @@ export default defineConfig({
 	// Astro 7 の既定("jsx")は要素の前後の改行を空白ごと消し、「Powered by Astro」が
 	// 「Powered byAstro」になる。Astro 5 までと同じ、表示を変えない圧縮にする
 	compressHTML: true,
-	// ページ遷移はブラウザの View Transitions(styles/transition.css)。リンクにマウスを乗せた時点で先読みする
-	prefetch: { prefetchAll: true },
+	// ページ遷移はブラウザの View Transitions(styles/transition.css)。先読みはブラウザの
+	// Speculation Rules(layouts/Layout.astro の <script type="speculationrules">)に任せる
 	integrations: [
 		expressiveCode({
 			themes: [expressiveCodeConfig.theme, expressiveCodeConfig.theme],

@@ -95,6 +95,49 @@ const bannerOffsetByPosition = {
 };
 const bannerOffset =
 	bannerOffsetByPosition[siteConfig.banner.position || "center"];
+
+// サイト内のページへのリンクに 200ms ほどマウスを乗せた(スマホでは押し始めた)時点で、
+// ブラウザの Speculation Rules で裏に描画しておき、押したら待たずに切り替える。
+// 先に描画したページでは、閲覧の数え上げのような副作用は開かれるまで遅らせる(document.prerendering)。
+// 対応していないブラウザ(Firefox・Safari)では普通に移る
+// https://developer.chrome.com/docs/web-platform/prerender-pages
+const speculationRules = {
+	prerender: [
+		{
+			source: "document",
+			where: {
+				and: [
+					{ href_matches: "/*" },
+					// ページではないもの(RSS・サイトマップ・画像・検索の索引など)
+					{
+						not: {
+							href_matches: [
+								"/*.xml",
+								"/*.txt",
+								"/og/*",
+								"/static/*",
+								"/pagefind/*",
+								"/_astro/*",
+							],
+						},
+					},
+					// 同じページの中への移動(見出しのリンクや目次)と、新しいタブで開くもの・ダウンロード・nofollow
+					{
+						not: {
+							selector_matches: [
+								'[href^="#"]',
+								"[target]",
+								"[download]",
+								'[rel~="nofollow"]',
+							],
+						},
+					},
+				],
+			},
+			eagerness: "moderate",
+		},
+	],
+};
 ---
 
 <!DOCTYPE html>
@@ -174,9 +217,10 @@ const bannerOffset =
 			offset = offset - offset % 4;
 			document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
 
-			// 本文の出現を遅らせるのは最初の表示だけ。サイトの中でページを移ってきたとき(再読み込みは除く)は遅らせない
+			// 本文の出現を遅らせるのは最初の表示だけ。サイトの中でページを移ってきたとき(再読み込みは除く)は遅らせない。
+			// 裏で描画している(Speculation Rules の prerender)ページは、サイトの中のリンクから開かれる
 			const activation = window.navigation?.activation;
-			if (activation?.from && activation.navigationType !== 'reload') {
+			if (document.prerendering || (activation?.from && activation.navigationType !== 'reload')) {
 				document.documentElement.style.setProperty('--content-delay', '0ms');
 			}
 		</script>
@@ -185,6 +229,8 @@ const bannerOffset =
 			'page-width': `${PAGE_WIDTH}rem`,
 		}}></style>  <!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why -->
 
+
+		<script is:inline type="speculationrules" set:html={JSON.stringify(speculationRules)}></script>
 
 		<slot name="head"></slot>
 
@@ -247,6 +293,7 @@ const bannerOffset =
 
 <script>
 import {getHue, getStoredTheme, setHue, setTheme} from "../utils/setting-utils";
+import { onActivatedFromPrerender } from "../utils/prerender";
 import {
 	BANNER_HEIGHT,
 	BANNER_HEIGHT_HOME,
@@ -283,6 +330,11 @@ function setBannerHeightExtend() {
 // テーマ・色相は <head> のスクリプトで描画の前に付けている。ここでは Expressive Code のテーマなども合わせる
 setTheme(getStoredTheme());
 setHue(getHue());
+// 裏で描画してから開かれるまでの間に、テーマや色相が変えられていたら合わせ直す
+onActivatedFromPrerender(() => {
+	setTheme(getStoredTheme());
+	setHue(getHue());
+});
 
 function showBanner() {
 	if (!siteConfig.banner.enable) return;
