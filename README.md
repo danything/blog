@@ -119,6 +119,7 @@ bun scripts/translate-status.ts --hash <原文>   # sourceHash に書く値
 
 手で訳を直したときも `sourceHash` を合わせておく(合っていないと CI が訳し直す)。
 記事を削除したときは英訳も CI が消す。`Caddyfile` の `@gone` は `/en/posts/...` にも効く。
+見た目の比較用の固定の英訳は `tests/fixtures/posts-en/` と `tests/fixtures/spec/about-en.md`(一部の記事だけ訳してある)。
 
 ## アイコン
 

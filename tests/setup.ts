@@ -15,6 +15,12 @@ export const visualPages: string[] = [
 	"/posts/github-card/",
 	"/posts/cover/",
 	"/posts/long/",
+	// 英語版(tests/fixtures/posts-en/。英訳の無い記事もある)
+	"/en/",
+	"/en/archive/",
+	"/en/about/",
+	"/en/404/",
+	"/en/posts/markdown/",
 ];
 
 // アクセシビリティの検査(a11y.spec.ts)で見るページ。実際の記事でビルドしたサイトを調べる
