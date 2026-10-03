@@ -46,7 +46,6 @@ const profileUrl = `https://buttondown.com/${newsletterConfig.username}`;
 
 <script>
 // 送信時に buttondown の確認ページをポップアップで開く (公式の埋め込みフォームと同じ挙動)。
-// swup で再描画されるためページ表示ごとに張り直す。
 function bindNewsletterForm() {
 	const form = document.querySelector<HTMLFormElement>("form[data-buttondown-url]");
 	if (!form || form.dataset.bound === "true") return;
@@ -56,15 +55,6 @@ function bindNewsletterForm() {
 	});
 }
 
-bindNewsletterForm();
-
-const setup = () => {
-	window.swup.hooks.on("page:view", bindNewsletterForm);
-};
-
-if (window?.swup?.hooks) {
-	setup();
-} else {
-	document.addEventListener("swup:enable", setup);
-}
+// サイドバーはページ遷移の間も残るが、初回の表示を含めページごとに確かめる(二重には張らない)
+document.addEventListener("astro:page-load", bindNewsletterForm);
 </script>

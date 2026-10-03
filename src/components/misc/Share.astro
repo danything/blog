@@ -42,7 +42,7 @@ const hatena = `https://b.hatena.ne.jp/entry/${postUrl.replace(/^https?:\/\//, "
 </div>
 
 <script>
-// swup で本文が差し替わっても効くよう、document に 1 回だけ委譲で付ける
+// ページ遷移で本文が入れ替わっても効くよう、document に 1 回だけ委譲で付ける
 if (!(window as Window & { __shareCopyBound?: boolean }).__shareCopyBound) {
 	(window as Window & { __shareCopyBound?: boolean }).__shareCopyBound = true;
 	document.addEventListener("click", async (e) => {
