@@ -12,6 +12,9 @@ name: Visual Check
 on:
   pull_request:
     branches: [main]
+  # translate.yml が英訳の PR に対して呼ぶ。このときは main を基準にする
+  # (英訳の PR のブランチは毎回 main から作り直される)
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -31,7 +34,8 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.base.sha }}
+          # workflow_dispatch では pull_request が無く、空だと実行したブランチ自身を取り出してしまう
+          ref: ${{ github.event.pull_request.base.sha || 'main' }}
           path: .base
 
       # 固定の記事を入れる前の main には tests/fixtures/ が無い。そのときは PR の固定の記事と、それを
