@@ -75,9 +75,8 @@ export const profileConfig: ProfileConfig = {
 	links: [
 		{
 			name: "GitHub",
-			icon: "fa6-brands:github", // Visit https://icones.js.org/ for icon codes
-			// You will need to install the corresponding icon set if it's not already included
-			// `bun add @iconify-json/<icon-set-name>`
+			icon: "fa6-brands:github", // アイコン名は https://icon-sets.iconify.design/ で探す
+			// 新しいアイコンを使うときは `bun run icons` で src/icons.json に取り込む
 			url: "https://github.com/5ym/",
 		},
 		{

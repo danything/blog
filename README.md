@@ -68,6 +68,17 @@ GitHub と同じ書き方。種類は `NOTE` / `TIP` / `IMPORTANT` / `WARNING` /
 
 どちらも Zenn へ同期するとき(`bun run zenn-sync`)に Zenn の記法(`:::message` / `@[card](...)`)へ変換される。
 
+## アイコン
+
+使っているアイコンだけを `src/icons.json` に持ち、`src/components/misc/Icon.astro`(Svelte からは `Icon.svelte`)で埋め込む。
+新しいアイコンは名前(`material-symbols:search` など。https://icon-sets.iconify.design/ で探す)をコードや設定に書いてから、
+
+```shell
+bun run icons
+```
+
+を実行すると、src 内で使われている名前を集めて Iconify から取り込み直す。
+
 ## デプロイ
 
 `main` への push で GitHub Actions がイメージをビルドし `ghcr.io` へ push、

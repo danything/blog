@@ -13,7 +13,8 @@
     "new-post": "bun scripts/new-post.js",
     "zenn-sync": "bun scripts/zenn-sync.mjs",
     "format": "biome format --write ./src",
-    "lint": "biome check --write ./src"
+    "lint": "biome check --write ./src",
+    "icons": "bun scripts/icons.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
@@ -24,17 +25,11 @@
     "@expressive-code/core": "^0.44.2",
     "@expressive-code/plugin-collapsible-sections": "^0.44.2",
     "@expressive-code/plugin-line-numbers": "^0.44.2",
-    "@iconify-json/fa6-brands": "^1.2.6",
-    "@iconify-json/fa6-regular": "^1.2.4",
-    "@iconify-json/fa6-solid": "^1.2.4",
-    "@iconify-json/material-symbols": "^1.2.93",
-    "@iconify/svelte": "^5.2.2",
     "@swup/astro": "^1.8.0",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.5",
     "astro-expressive-code": "^0.44.2",
-    "astro-icon": "^1.2.0",
     "mdast-util-to-string": "^4.0.0",
     "overlayscrollbars": "^2.16.0",
     "pagefind": "^1.5.2",
