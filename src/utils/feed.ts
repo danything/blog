@@ -12,7 +12,9 @@ import { siteConfig, siteText } from "@/config";
 function toFeedHtml(html: string, site: URL): string {
 	return html
 		.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
-		.replace(/\s(?:srcset|sizes)="[^"]*"/gi, "")
+		.replace(/<img\b[^>]*>/gi, (img) =>
+			img.replace(/\s(?:srcset|sizes)="[^"]*"/gi, ""),
+		)
 		.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "")
 		.replace(/<link\b[^>]*>/gi, "")
 		.replace(

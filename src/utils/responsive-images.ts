@@ -2,7 +2,7 @@
 //
 // 元の画像(カバーは 1200px 幅など)はそのまま置き、ビルドのときに幅を縮めた WebP
 // (br90.webp → br90-400w.webp・br90-800w.webp)を dist に書き出す(plugins/responsive-images.ts)。
-// 縮めても元よりファイルが小さくならないもの(元が小さく単純な画像)は使わない。
+// 縮めても元よりファイルが小さくならないもの(元が小さく単純な画像)や、動く画像は縮めない。
 // <img> には srcset・sizes を付け、ブラウザが画面の幅と画素密度に合うものを選ぶ。
 // 一番大きい候補は元の画像そのもので、拡大表示(Layout.astro)・RSS・Zenn は元の URL を使い続ける。
 // width・height も付けて、読み込む前から場所を取り、表示時のずれを防ぐ
@@ -64,16 +64,24 @@ interface Info {
 }
 
 // 縮めた版の変換は 1 枚 1 秒ほどかかる。記事の描画(ImageWrapper・rehype-responsive-images)と
-// dist への書き出し(plugins/responsive-images.ts)は別々に読み込まれるので、変換した結果はファイルに取っておく
+// dist への書き出し(plugins/responsive-images.ts)は別々に読み込まれるので、変換した結果はファイルに取っておく。
+// キーは元の画像・幅・変換の処理(toWebp の中身)で、品質などを変えたら作り直す
 const CACHE_DIR = "node_modules/.cache/responsive-images";
 
 async function encode(input: Buffer, width: number): Promise<Buffer> {
-	const hash = createHash("sha256").update(input).digest("hex").slice(0, 16);
+	const hash = createHash("sha256")
+		.update(input)
+		.update(toWebp.toString())
+		.digest("hex")
+		.slice(0, 16);
 	const file = path.join(CACHE_DIR, `${hash}-${width}w.webp`);
 	if (fs.existsSync(file)) return fs.readFileSync(file);
 	const { data } = await toWebp(sharp(input).resize({ width }));
+	// ビルドと開発サーバーが同時に読み書きしても、書きかけのファイルを読まないよう、別名で書いてから置き換える
 	fs.mkdirSync(CACHE_DIR, { recursive: true });
-	fs.writeFileSync(file, data);
+	const tmp = `${file}.${process.pid}.tmp`;
+	fs.writeFileSync(tmp, data);
+	fs.renameSync(tmp, file);
 	return data;
 }
 
@@ -88,8 +96,10 @@ export function imageInfo(src: string): Promise<Info | undefined> {
 			const file = path.join("public", src);
 			if (!fs.existsSync(file)) return undefined;
 			const input = fs.readFileSync(file);
-			const { width, height } = await sharp(input).metadata();
+			const { width, height, pages = 1 } = await sharp(input).metadata();
 			if (!width || !height) return undefined;
+			// 動く画像(アニメーション WebP・GIF)は縮めると止まるので、縦横だけ使う
+			if (pages > 1) return { width, height, variants: [] };
 			const variants = await Promise.all(
 				WIDTHS.filter((w) => w < width).map(async (w) => ({
 					url: variantUrl(src, w),
