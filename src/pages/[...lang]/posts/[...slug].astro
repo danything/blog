@@ -51,11 +51,11 @@ const jsonLd = {
 		url: Astro.site,
 	},
 	datePublished: formatDateToYYYYMMDD(entry.data.published),
-	inLanguage: entry.data.lang ? entry.data.lang.replace("_", "-") : lang,
+	inLanguage: lang,
 	// TODO include cover image here
 };
 ---
-<MainGridLayout cover={entry.data.image} title={entry.data.title} description={entry.data.description} lang={entry.data.lang} setOGTypeArticle={true} ogImage={isTranslation ? `/og/en/${entry.id}.png` : `/og/${entry.id}.png`} headings={headings}>
+<MainGridLayout cover={entry.data.image} title={entry.data.title} description={entry.data.description} setOGTypeArticle={true} ogImage={isTranslation ? `/og/en/${entry.id}.png` : `/og/${entry.id}.png`} headings={headings}>
     <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
     <div class="post-card">
         <div id="post-container" class="card-base">

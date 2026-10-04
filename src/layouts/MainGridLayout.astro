@@ -11,7 +11,6 @@ interface Props {
 	title?: string;
 	cover?: string;
 	description?: string;
-	lang?: string;
 	setOGTypeArticle?: boolean;
 	ogImage?: string;
 	headings?: MarkdownHeading[];
@@ -21,14 +20,13 @@ const {
 	title,
 	cover,
 	description,
-	lang,
 	setOGTypeArticle,
 	ogImage,
 	headings = [],
 } = Astro.props;
 ---
 
-<Layout title={title} cover={cover} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} ogImage={ogImage}>
+<Layout title={title} cover={cover} description={description} setOGTypeArticle={setOGTypeArticle} ogImage={ogImage}>
 
 {/* Navbar */}
 <slot slot="head" name="head"></slot>
