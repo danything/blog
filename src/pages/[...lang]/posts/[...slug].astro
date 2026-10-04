@@ -18,6 +18,7 @@ import {
 	readingStats,
 } from "@utils/content-utils";
 import { formatDateToYYYYMMDD } from "@utils/date-utils";
+import { SIZES } from "@utils/responsive-images";
 import { getPostUrlBySlug } from "@utils/url-utils";
 import { siteText } from "@/config";
 
@@ -97,7 +98,7 @@ const jsonLd = {
             {/* always show cover as long as it has one */}
 
             {entry.data.image &&
-                <ImageWrapper id="post-cover" src={entry.data.image} basePath={postImageBase(entry)} class="cover onload-animation"/>
+                <ImageWrapper id="post-cover" src={entry.data.image} basePath={postImageBase(entry)} sizes={SIZES.content} class="cover onload-animation"/>
             }
 
 

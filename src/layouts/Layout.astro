@@ -289,7 +289,8 @@ function open(source: HTMLImageElement) {
 	const { dialog, image } = parts
 	setZoom(false)
 	image.alt = source.alt
-	image.src = source.currentSrc || source.src
+	// 縮めた版(srcset。utils/responsive-images.ts)を表示しているときも、拡大表示では元の大きさの画像(src)を出す
+	image.src = source.src
 	dialog.showModal()
 	if (image.complete) updateZoomable()
 	else image.addEventListener("load", updateZoomable, { once: true })

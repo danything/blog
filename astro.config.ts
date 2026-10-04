@@ -11,12 +11,14 @@ import { CONTENT_DIR } from "./src/constants/content-dir";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button";
 import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge";
 import { rehypeHeadingAnchors } from "./src/plugins/rehype-heading-anchors";
+import { rehypeResponsiveImages } from "./src/plugins/rehype-responsive-images";
 import { rehypeTableRowHeaders } from "./src/plugins/rehype-table-row-headers";
 import { remarkAlerts } from "./src/plugins/remark-alerts";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt";
 import { remarkGithubCard } from "./src/plugins/remark-github-card";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time";
 import { remarkSectionize } from "./src/plugins/remark-sectionize";
+import { responsiveImages } from "./src/plugins/responsive-images";
 import { cssIcons } from "./src/styles/icons-plugin";
 
 // サイトマップの lastmod 用に、記事ごとの最終更新日(updated があればそれ、無ければ published)を集める。
@@ -121,6 +123,8 @@ export default defineConfig({
 				return item;
 			},
 		}),
+		// 記事の画像の縮めた版を作る(utils/responsive-images.ts)
+		responsiveImages(),
 	],
 	markdown: {
 		// Astro 7 の既定は Sätteri。remark / rehype のプラグインを使うので unified を指定する
@@ -138,6 +142,7 @@ export default defineConfig({
 				rehypeHeadingIds,
 				rehypeHeadingAnchors,
 				rehypeTableRowHeaders,
+				rehypeResponsiveImages,
 			],
 		}),
 	},

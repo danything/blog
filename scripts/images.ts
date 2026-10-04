@@ -4,11 +4,12 @@
 //   bun run images <ファイル…>   指定したファイルだけ変換(public/ 以下のパス)
 //
 // 画像ごとにロスレスと非可逆(品質 82)の両方を試し、ロスレスが非可逆の 1.3 倍以内なら
-// ロスレスにする(スクリーンショットは劣化なし、写真は軽く)。変換後は元のファイルを消し、
+// ロスレスにする(スクリーンショットは劣化なし、写真は軽く。scripts/webp.ts)。変換後は元のファイルを消し、
 // 記事中の参照(本文の画像とフロントマターの image)を .webp に書き換える。
 import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
+import { toWebp } from "./webp";
 
 const POSTS_DIR = "src/content/posts";
 const IMAGE = /\/static\/images\/[^\s)"'<>]+?\.(?:png|jpe?g)/gi;
@@ -41,12 +42,7 @@ for (const url of [...targets].sort()) {
 		continue;
 	}
 	const input = fs.readFileSync(file);
-	const [lossless, lossy] = await Promise.all([
-		sharp(input).webp({ lossless: true, effort: 6 }).toBuffer(),
-		sharp(input).webp({ quality: 82, effort: 6 }).toBuffer(),
-	]);
-	const useLossless = lossless.length <= lossy.length * 1.3;
-	const output = useLossless ? lossless : lossy;
+	const { data: output, lossless: useLossless } = await toWebp(sharp(input));
 	const outUrl = url.replace(/\.(png|jpe?g)$/i, ".webp");
 
 	fs.writeFileSync(path.join("public", outUrl), output);

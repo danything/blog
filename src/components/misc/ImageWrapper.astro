@@ -10,9 +10,15 @@ interface Props {
 	/** public の画像の縦横 (px)。読み込む前から場所を取って、表示時のずれを防ぐ */
 	width?: number;
 	height?: number;
+	/**
+	 * 表示される幅(img の sizes)。記事の画像(/static/images/blog/)は縮めた版の srcset と
+	 * 縦横を付ける(utils/responsive-images.ts)
+	 */
+	sizes?: string;
 }
 
 import { Image } from "astro:assets";
+import { responsiveImage } from "../../utils/responsive-images";
 import { url } from "../../utils/url-utils";
 
 // 呼び出し元の <style> が効くよう、残りの属性(data-astro-cid-*)も外側の要素に付ける
@@ -23,6 +29,7 @@ const {
 	basePath = "/",
 	width,
 	height,
+	sizes,
 	class: className,
 	...rest
 } = Astro.props;
@@ -34,6 +41,7 @@ const isLocal = !(
 	src.startsWith("data:")
 );
 const isPublic = src.startsWith("/");
+const responsive = isPublic ? await responsiveImage(src, url) : undefined;
 
 // TODO temporary workaround for images dynamic import
 // https://github.com/withastro/astro/issues/3373
@@ -61,7 +69,8 @@ if (isLocal) {
 <div id={id} class:list={[className, "image-wrapper"]} {...rest}>
     <div class="dim"></div>
     {isLocal && img && <Image src={img} alt={alt || ""} class="image"/>}
-    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} width={width} height={height} class="image"/>}
+    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} width={width ?? responsive?.width} height={height ?? responsive?.height}
+        srcset={responsive?.srcset} sizes={responsive?.srcset && sizes} class="image"/>}
 </div>
 
 <style>
