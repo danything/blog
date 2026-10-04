@@ -7,13 +7,25 @@ interface Props {
 	class?: string;
 	alt?: string;
 	basePath?: string;
+	/** public の画像の縦横 (px)。読み込む前から場所を取って、表示時のずれを防ぐ */
+	width?: number;
+	height?: number;
 }
 
 import { Image } from "astro:assets";
 import { url } from "../../utils/url-utils";
 
 // 呼び出し元の <style> が効くよう、残りの属性(data-astro-cid-*)も外側の要素に付ける
-const { id, src, alt, basePath = "/", class: className, ...rest } = Astro.props;
+const {
+	id,
+	src,
+	alt,
+	basePath = "/",
+	width,
+	height,
+	class: className,
+	...rest
+} = Astro.props;
 
 const isLocal = !(
 	src.startsWith("/") ||
@@ -49,7 +61,7 @@ if (isLocal) {
 <div id={id} class:list={[className, "image-wrapper"]} {...rest}>
     <div class="dim"></div>
     {isLocal && img && <Image src={img} alt={alt || ""} class="image"/>}
-    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} class="image"/>}
+    {!isLocal && <img src={isPublic ? url(src) : src} alt={alt || ""} width={width} height={height} class="image"/>}
 </div>
 
 <style>
