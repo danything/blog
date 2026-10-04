@@ -37,15 +37,15 @@ const stats = readingStats(remarkPluginFrontmatter, lang);
             <Icon class="title-arrow" name="lucide:chevron-right"></Icon>
         </a>
 
-        <!-- metadata -->
+        {/* metadata */}
         <PostMetadata published={published} updated={updated} tags={tags} category={category} hideTagsForMobile={true} hideUpdateDate={true} class="meta"></PostMetadata>
 
-        <!-- description -->
+        {/* description */}
         <div class:list={["description", {"excerpt": !description}]}>
             { description || remarkPluginFrontmatter.excerpt }
         </div>
 
-        <!-- word count and read time  -->
+        {/* word count and read time  */}
         <div class="stats text-sm">
             <div>{stats.words}</div>
             <div>|</div>

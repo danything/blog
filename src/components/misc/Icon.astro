@@ -10,4 +10,4 @@ interface Props extends HTMLAttributes<"svg"> {
 const { name, class: className, ...attrs } = Astro.props;
 const icon = getIcon(name);
 ---
-<svg width="1em" height="1em" viewBox={icon.viewBox} class={className} data-icon={name} {...attrs} set:html={icon.body} />
+<svg width="1em" height="1em" viewBox={icon.viewBox} class={className} {...attrs} set:html={icon.body} />

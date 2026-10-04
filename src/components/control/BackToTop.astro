@@ -6,7 +6,7 @@ import { i18n, langFromPath } from "@i18n/translation";
 const lang = langFromPath(Astro.url.pathname);
 ---
 
-<!-- There can't be a filter on parent element, or it will break `fixed` -->
+{/* There can't be a filter on parent element, or it will break `fixed` */}
 <div class="back-to-top-wrapper">
     <div id="back-to-top-btn" class="back-to-top-btn hide">
         <button aria-label={i18n(I18nKey.backToTop, lang)} class="btn-card">

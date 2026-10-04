@@ -20,21 +20,21 @@ const unavailable = import.meta.env.DEV
 	: i18n(I18nKey.searchUnavailable, Astro.props.lang);
 ---
 <div data-search data-pagefind={pagefind} class="search">
-<!-- search bar for desktop view -->
+{/* search bar for desktop view */}
 <div id="search-bar" class="search-bar">
     <Icon name="lucide:search" class="search-icon" />
     <input placeholder={placeholder} data-search-input="desktop" class="search-input text-sm">
 </div>
 
-<!-- toggle btn for phone/tablet view -->
+{/* toggle btn for phone/tablet view */}
 <button aria-label={i18n(I18nKey.openSearch, Astro.props.lang)} id="search-switch" class="btn-plain scale-animation">
     <Icon name="lucide:search" class="switch-icon" />
 </button>
 
-<!-- search panel -->
+{/* search panel */}
 <div id="search-panel" class="float-panel float-panel-closed">
 
-    <!-- search bar inside panel for phone/tablet -->
+    {/* search bar inside panel for phone/tablet */}
     <div id="search-bar-inside" class="search-bar">
         <Icon name="lucide:search" class="search-icon" />
         <input placeholder={placeholder} data-search-input="mobile" class="search-input text-sm">
@@ -42,7 +42,7 @@ const unavailable = import.meta.env.DEV
 
     <div data-search-message class="message text-sm" hidden>{unavailable}</div>
 
-    <!-- search results(下のテンプレートを複製して、この後ろに並べる) -->
+    {/* search results(下のテンプレートを複製して、この後ろに並べる) */}
 </div>
 
 <template data-search-result>

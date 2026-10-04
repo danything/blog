@@ -50,22 +50,22 @@ const lang = langFromPath(Astro.url.pathname);
                         data-category={post.data.category ?? ""}
                 >
                     <div class="post-row">
-                        <!-- date -->
+                        {/* date */}
                         <div class="col-date date text-sm">
                             {formatDate(post.data.published)}
                         </div>
 
-                        <!-- dot and line -->
+                        {/* dot and line */}
                         <div class="col-line dash-line">
                             <div class="dot"></div>
                         </div>
 
-                        <!-- post title -->
+                        {/* post title */}
                         <div class="title">
                             {post.data.title}
                         </div>
 
-                        <!-- tag list -->
+                        {/* tag list */}
                         <div class="tags text-sm">
                             {post.data.tags.map((t) => `#${t}`).join(" ")}
                         </div>

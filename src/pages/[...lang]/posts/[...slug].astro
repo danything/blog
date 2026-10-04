@@ -59,7 +59,7 @@ const jsonLd = {
     <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
     <div class="post-card">
         <div id="post-container" class="card-base">
-            <!-- word count and reading time -->
+            {/* word count and reading time */}
             <div class="stats onload-animation">
                 <div class="stat">
                     <div class="stat-icon">
@@ -75,14 +75,14 @@ const jsonLd = {
                 </div>
             </div>
 
-            <!-- title -->
+            {/* title */}
             <div class="title-wrapper onload-animation">
                 <div data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title" class="title text-3xl">
                     {entry.data.title}
                 </div>
             </div>
 
-            <!-- metadata -->
+            {/* metadata */}
             <div class="onload-animation">
                 <PostMetadata
                         class="meta"
@@ -94,7 +94,7 @@ const jsonLd = {
                 {!entry.data.image && <div class="meta-divider"></div>}
             </div>
 
-            <!-- always show cover as long as it has one -->
+            {/* always show cover as long as it has one */}
 
             {entry.data.image &&
                 <ImageWrapper id="post-cover" src={entry.data.image} basePath={postImageBase(entry)} class="cover onload-animation"/>
@@ -121,7 +121,7 @@ const jsonLd = {
         </div>
     </div>
 
-    <!-- 前後の記事 -->
+    {/* 前後の記事 */}
     <div class="neighbors">
         <a href={entry.data.nextSlug ? getPostUrlBySlug(entry.data.nextSlug, lang) : undefined}
            class:list={["neighbor", {"empty": !entry.data.nextSlug}]}>

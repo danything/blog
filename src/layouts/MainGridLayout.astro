@@ -31,7 +31,7 @@ const {
 
 <Layout title={title} cover={cover} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} ogImage={ogImage}>
 
-<!-- Navbar -->
+{/* Navbar */}
 <slot slot="head" name="head"></slot>
 <div id="top-row">
     <div id="navbar-wrapper">
@@ -39,16 +39,16 @@ const {
     </div>
 </div>
 
-<!-- Main content -->
+{/* Main content */}
 <div class="main-layer">
-    <!-- The pointer-events: none here prevent blocking the click event of the TOC -->
+    {/* The pointer-events: none here prevent blocking the click event of the TOC */}
     <div class="main-column">
         <div id="main-grid">
             <SideBar class="sidebar onload-animation"></SideBar>
 
             <main id="main-content">
                 <div id="content-wrapper" class="onload-animation">
-                    <!-- the overflow: hidden here prevent long text break the layout-->
+                    {/* the overflow: hidden here prevent long text break the layout*/}
                     <slot></slot>
                     <div class="footer footer-wide onload-animation">
                         <Footer></Footer>
@@ -65,10 +65,10 @@ const {
     </div>
 </div>
 
-<!-- 目次(カードより後ろの層) -->
+{/* 目次(カードより後ろの層) */}
 <div class="toc-layer">
     <div class="toc-column">
-        <!-- TOC component -->
+        {/* TOC component */}
         {siteConfig.toc.enable && <div id="toc-wrapper">
             <div id="toc-inner-wrapper">
                 <div id="toc">

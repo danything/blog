@@ -33,7 +33,7 @@ const modes = [
 ];
 // 保存されたテーマはスクリプトで反映する。ここでは既定のテーマで描いておく
 ---
-<!-- z-index: 50 でほかのパネルより上に出す -->
+{/* z-index: 50 でほかのパネルより上に出す */}
 <div class="theme-switch" role="group" data-light-dark-switch>
     <button aria-label={i18n(I18nKey.themeMode, lang)} class="btn-plain scale-animation" id="scheme-switch">
         {modes.map(({ mode, icon }) => (

@@ -144,9 +144,9 @@ const speculationRules = {
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 
-		<!-- Threads との双方向認証 (プロフィールのリンク横にダブルアローが付く)。
+		{/* Threads との双方向認証 (プロフィールのリンク横にダブルアローが付く)。
 		     サイドバーの SNS アイコンにも rel="me" は付いているが、サイドバーの
-		     無いページでも検証が通るよう head に置く -->
+		     無いページでも検証が通るよう head に置く */}
 		<link rel="me" href="https://www.threads.com/@5yuim" />
 		{siteConfig.favicon.map(favicon => (
 			<link rel="icon"
@@ -155,7 +155,7 @@ const speculationRules = {
 			/>
 		))}
 
-		<!-- Set the theme before the page is rendered to avoid a flash -->
+		{/* Set the theme before the page is rendered to avoid a flash */}
 		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, configHue}}>
 			// Load the theme from local storage
 			const theme = localStorage.getItem('theme') || DEFAULT_THEME;
@@ -195,7 +195,7 @@ const speculationRules = {
 	</head>
 	<body>
 		<slot />
-		<!-- 記事の画像の拡大表示(下のスクリプトと styles/lightbox.css) -->
+		{/* 記事の画像の拡大表示(下のスクリプトと styles/lightbox.css) */}
 		<dialog id="lightbox" class="lightbox" aria-label={i18n(I18nKey.imageViewer, pageLang)} data-enlarge={i18n(I18nKey.enlargeImage, pageLang)}>
 			<div class="lightbox-scroller">
 				<img class="lightbox-image" alt="">
