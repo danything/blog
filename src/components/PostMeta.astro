@@ -29,7 +29,7 @@ const lang = langFromPath(Astro.url.pathname);
 ---
 
 <div class:list={["post-meta", className]} {...rest}>
-    <!-- publish date -->
+    {/* publish date */}
     <div class="item">
         <div class="meta-icon">
             <Icon name="lucide:calendar" class="icon text-xl"></Icon>
@@ -37,7 +37,7 @@ const lang = langFromPath(Astro.url.pathname);
         <span class="text text-sm">{formatDateToYYYYMMDD(published)}</span>
     </div>
 
-    <!-- update date -->
+    {/* update date */}
     {!hideUpdateDate && updated && updated.getTime() !== published.getTime() && (
         <div class="item">
             <div class="meta-icon">
@@ -47,7 +47,7 @@ const lang = langFromPath(Astro.url.pathname);
         </div>
     )}
 
-    <!-- categories -->
+    {/* categories */}
     <div class="item">
         <div class="meta-icon">
             <Icon name="lucide:book" class="icon text-xl"></Icon>
@@ -60,7 +60,7 @@ const lang = langFromPath(Astro.url.pathname);
         </div>
     </div>
 
-    <!-- tags -->
+    {/* tags */}
     <div class:list={["item", {"hide-on-mobile": hideTagsForMobile}]}>
         <div class="meta-icon">
             <Icon name="lucide:hash" class="icon text-xl"></Icon>

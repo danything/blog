@@ -5,10 +5,8 @@
   "packageManager": "bun@1.4.2",
   "scripts": {
     "dev": "astro dev",
-    "check": "astro check",
     "build": "astro build && pagefind --site dist && bun scripts/precompress.ts",
     "preview": "astro preview",
-    "astro": "astro",
     "new-post": "bun scripts/new-post.ts",
     "zenn-sync": "bun scripts/zenn-sync.ts",
     "lint": "biome check . && astro check",

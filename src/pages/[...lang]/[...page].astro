@@ -2,12 +2,12 @@
 import Pagination from "@components/control/Pagination.astro";
 import PostPage from "@components/PostPage.astro";
 import { PAGE_SIZE } from "@constants/constants";
-import { type Lang, langPaths, siteText } from "@i18n/translation";
+import { type Lang, langPaths } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { getSortedPosts, type PostEntry } from "@utils/content-utils";
 import { localeUrl } from "@utils/url-utils";
 import type { GetStaticPaths, Page } from "astro";
-import { profileConfig, siteConfig } from "@/config";
+import { profileConfig, siteConfig, siteText } from "@/config";
 
 // 記事一覧のページ(/、/2/ … と /en/、/en/2/ …)
 export const getStaticPaths = (async ({ paginate }) =>
@@ -24,7 +24,7 @@ export const getStaticPaths = (async ({ paginate }) =>
 	).flat()) satisfies GetStaticPaths;
 
 const { page, lang } = Astro.props as { page: Page<PostEntry>; lang: Lang };
-const text = siteText(lang);
+const text = siteText[lang];
 
 const len = page.data.length;
 
@@ -33,7 +33,7 @@ const person = {
 	"@type": "Person",
 	name: text.profileName,
 	url: Astro.site,
-	image: new URL(profileConfig.avatar ?? "", Astro.site).href,
+	image: new URL(profileConfig.avatar, Astro.site).href,
 	sameAs: profileConfig.links.map((link) => link.url),
 };
 const jsonLd =

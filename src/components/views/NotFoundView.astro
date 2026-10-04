@@ -12,7 +12,7 @@ const { lang } = Astro.props;
 <MainGridLayout title="404" description="404 Not Found">
     <div class="page">
         <div class="card-base page-card">
-            <!-- 透かしの飾りなので文字にはせず ::before で出す(読み上げとコントラストの検査から外す) -->
+            {/* 透かしの飾りなので文字にはせず ::before で出す(読み上げとコントラストの検査から外す) */}
             <div aria-hidden="true" class="watermark"></div>
             <div class="message">{i18n(I18nKey.notFound, lang)}</div>
             <a href={localeUrl("/", lang)} class="btn-regular home-link">{i18n(I18nKey.backToHome, lang)}</a>

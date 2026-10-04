@@ -1,6 +1,7 @@
 ---
 
-import { langFromPath, siteText } from "../i18n/translation";
+import { siteText } from "../config";
+import { langFromPath } from "../i18n/translation";
 import { localeUrl, url } from "../utils/url-utils";
 
 const lang = langFromPath(Astro.url.pathname);
@@ -11,7 +12,7 @@ const currentYear = new Date().getFullYear();
 <div class="separator"></div>
 <div class="footer-box">
     <div class="footer-text text-sm">
-        &copy; <span id="copyright-year">{currentYear}</span> {siteText(lang).profileName}. All Rights Reserved. /
+        &copy; <span id="copyright-year">{currentYear}</span> {siteText[lang].profileName}. All Rights Reserved. /
         <a class="link" target="_blank" href={localeUrl('/rss.xml', lang)}>RSS</a> /
         <a class="link" target="_blank" href={url('sitemap-index.xml')}>Sitemap</a><br>
         Powered by

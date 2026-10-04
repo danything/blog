@@ -13,7 +13,9 @@
 # 特権ポートを避けて 8080 で待つ (Service が 80 → 8080 に転送する)
 :8080 {
 	root * /srv
-	encode zstd gzip
+	# 前段の Cloudflare はオリジンに Accept-Encoding: br, gzip しか送らない。br はビルドで書き出したものを
+	# 返すので (下の file_server)、ここで圧縮するのは事前に圧縮していないものと gzip だけを受け付けるとき
+	encode gzip
 
 	# --- 旧 Next.js 版 URL からの 301 ---
 	redir /feed.xml /rss.xml permanent
@@ -65,46 +67,34 @@
 
 	# --- 削除した記事 ---
 	# 意図的に消したので 404 ではなく 410 Gone を返し、検索エンジンにも
-	# 恒久的な削除として伝える。本文には 404 ページを流用する。英語版 (/en/posts/...) も同じ扱いで、本文は英語の 404
+	# 恒久的な削除として伝える。本文は下の handle_errors が返す 404 ページ (英語版 /en/posts/... は英語の 404)
 	@gone path_regexp gone ^/(?:en/)?posts/(wpdevenv|hhvmlaravel|wpgit|ec-ajax|paypalmeetup|doodcron|zabbixifttt|mstdn|bbdhdeploy|dockerzabbix|kadouhyou|worklog-from-logs|ubuntulxdnet|op25b)/?$
-	handle @gone {
-		handle /en/* {
-			rewrite * /en/404/index.html
-			file_server {
-				precompressed br gzip
-				status 410
-			}
-		}
-		handle {
-			rewrite * /404.html
-			file_server {
-				precompressed br gzip
-				status 410
-			}
-		}
-	}
+	error @gone 410
 
-	# ビルドで dist/ に書き出した .br・.gz (scripts/precompress.ts) をそのまま返す。
-	# 無いもの (画像や Pagefind の索引など) は元のファイルを返し、上の encode が必要なら圧縮する
+	# ビルドで dist/ に書き出した .br (scripts/precompress.ts) をそのまま返す。
+	# 無いもの (画像や Pagefind の索引など) や br を受け付けないときは元のファイルを返し、上の encode が必要なら gzip で圧縮する
 	file_server {
-		precompressed br gzip
+		precompressed br
 	}
 	# 圧縮したファイルそのもの (/index.html.br など) は URL としては見せない
-	@precompressedFile path *.br *.gz
+	@precompressedFile path *.br
 	error @precompressedFile 404
 
-	# 英語版 (/en/ 以下) は英語の 404 ページを返す
+	# 404 と、削除した記事の 410。英語版 (/en/ 以下) は英語の 404 ページを返す。
+	# 状態コードはエラーのもの (404・410) がそのまま使われる
 	handle_errors {
+		# エラーのページはサイトの route を通らないので、ここでも gzip だけを受け付けるときに圧縮する
+		encode gzip
 		handle /en/* {
 			rewrite * /en/404/index.html
 			file_server {
-				precompressed br gzip
+				precompressed br
 			}
 		}
 		handle {
 			rewrite * /404.html
 			file_server {
-				precompressed br gzip
+				precompressed br
 			}
 		}
 	}

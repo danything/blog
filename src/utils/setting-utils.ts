@@ -1,14 +1,13 @@
+// ブラウザで動くスクリプトから読む。設定(config.ts)や文言(i18n/)を読み込むと
+// それもクライアントの JS に入るので、使うのは constants だけにする
 import {
 	AUTO_MODE,
 	DARK_MODE,
+	DEFAULT_HUE,
 	DEFAULT_THEME,
 	LIGHT_MODE,
 } from "@constants/constants.ts";
-import { siteConfig } from "@/config";
 import type { LIGHT_DARK_MODE } from "@/types/config";
-
-/** 設定の色相(テーマカラーの既定) */
-export const DEFAULT_HUE = siteConfig.themeColor.hue;
 
 export function getHue(): number {
 	const stored = localStorage.getItem("hue");

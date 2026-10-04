@@ -1,61 +1,50 @@
 import I18nKey from "./i18n/i18nKey";
 import type {
 	CommentConfig,
-	ExpressiveCodeConfig,
 	KofiConfig,
 	LicenseConfig,
 	NavBarConfig,
 	NewsletterConfig,
 	ProfileConfig,
 	SiteConfig,
+	SiteText,
 } from "./types/config";
 
 export const siteConfig: SiteConfig = {
 	title: "Doa",
-	subtitle: "気ままな備忘録",
-	description:
-		"Linux やネットワーク、Web アプリ開発から、車のコーディングや登録手続きまで、実際に試して分かったことを書き留めている備忘録です。",
 	ogImage: "/static/images/x-card.png",
 	lang: "ja",
-	themeColor: {
-		// テーマ色の色相 (0-360)。Fuwari の既定は 250 だが、この配色は
-		// oklch(0.70 0.14 H) を使うため、170-230 と 250-290 は sRGB の色域から
-		// はみ出してクリップされる (既定の 250 もその一つ)。
-		// 色域に収まり、かつボタン文字のコントラストが最大に近い暖色域から選んだ。
-		hue: 40,
-		fixed: false, // Hide the theme color picker for visitors
-	},
 	toc: {
-		enable: true, // Display the table of contents on the right side of the post
-		depth: 2, // Maximum heading depth to show in the table, from 1 to 3
+		depth: 2, // 記事の右の目次に出す見出しの深さ (1-3)
 	},
-	favicon: [
-		{
-			src: "/static/favicons/favicon-32x32.png",
-			sizes: "32x32",
-		},
-		{
-			src: "/static/favicons/favicon-16x16.png",
-			sizes: "16x16",
-		},
-		{
-			src: "/static/favicons/apple-touch-icon.png",
-			sizes: "180x180",
-		},
-	],
 };
 
-// 英語版 (/en/) で差し替える文言。ほかの設定は日本語版と同じものを使う
-export const siteTextEn = {
-	subtitle: "A casual notebook",
-	description:
-		"Notes on things I've actually tried and figured out — from Linux, networking, and web app development to car coding and vehicle registration paperwork in Japan.",
-	profileName: "Ryuki Maruyama",
-	bio: "A casual notebook",
-	kofi: {
-		title: "Support",
-		description: "If a post helped you out, your support keeps me going.",
-		buttonLabel: "Support me on Ko-fi",
+// 言語ごとに変わる、サイトと作者についての文言。英語版は /en/ 以下。
+// 画面の部品の文言(ボタンや読み上げ用の名前など)は src/i18n/languages/ に書く
+export const siteText: Record<"ja" | "en", SiteText> = {
+	ja: {
+		subtitle: "気ままな備忘録",
+		description:
+			"Linux やネットワーク、Web アプリ開発から、車のコーディングや登録手続きまで、実際に試して分かったことを書き留めている備忘録です。",
+		profileName: "丸山 竜輝",
+		bio: "気ままな備忘録",
+		kofi: {
+			title: "応援",
+			description: "記事が役に立ったら応援していただけると励みになります。",
+			buttonLabel: "Ko-fi で支援する",
+		},
+	},
+	en: {
+		subtitle: "A casual notebook",
+		description:
+			"Notes on things I've actually tried and figured out — from Linux, networking, and web app development to car coding and vehicle registration paperwork in Japan.",
+		profileName: "Ryuki Maruyama",
+		bio: "A casual notebook",
+		kofi: {
+			title: "Support",
+			description: "If a post helped you out, your support keeps me going.",
+			buttonLabel: "Support me on Ko-fi",
+		},
 	},
 };
 
@@ -73,9 +62,7 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "/static/images/avatar.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-	name: "丸山 竜輝",
-	bio: "気ままな備忘録",
+	avatar: "/static/images/avatar.png", // public 配下の絶対パス
 	links: [
 		{
 			name: "GitHub",
@@ -116,20 +103,16 @@ export const profileConfig: ProfileConfig = {
 };
 
 export const licenseConfig: LicenseConfig = {
-	enable: true,
 	name: "CC BY-NC-SA 4.0",
 	url: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
 };
 
 export const commentConfig: CommentConfig = {
-	enable: true,
-	yosegaki: {
-		server: "https://yk.doany.io",
-	},
+	server: "https://yk.doany.io",
 };
 
+// ニュースレターは日本語の記事だけを送るので、日本語版にだけ出す(文言も日本語だけ)
 export const newsletterConfig: NewsletterConfig = {
-	enable: true,
 	// https://buttondown.com/<username> の <username> 部分
 	username: "doa",
 	title: "更新のお知らせ",
@@ -138,17 +121,8 @@ export const newsletterConfig: NewsletterConfig = {
 	buttonLabel: "登録",
 };
 
+// 文言は siteText の kofi
 export const kofiConfig: KofiConfig = {
-	enable: true,
 	// https://ko-fi.com/<username> の <username> 部分
 	username: "yui5m",
-	title: "応援",
-	description: "記事が役に立ったら応援していただけると励みになります。",
-	buttonLabel: "Ko-fi で支援する",
-};
-
-export const expressiveCodeConfig: ExpressiveCodeConfig = {
-	// Note: Some styles (such as background color) are being overridden, see the astro.config.mjs file.
-	// Please select a dark theme, as this blog theme currently only supports dark background color
-	theme: "github-dark",
 };

@@ -1,9 +1,9 @@
 import rss from "@astrojs/rss";
-import { type Lang, siteText } from "@i18n/translation";
+import type { Lang } from "@i18n/translation";
 import { getSortedPosts } from "@utils/content-utils";
 import { getPostUrlBySlug } from "@utils/url-utils";
 import type { APIContext } from "astro";
-import { siteConfig } from "@/config";
+import { siteConfig, siteText } from "@/config";
 
 // 記事ページと同じ描画結果を使う。コードブロックや GitHub カードの script / style は
 // フィードには不要なので外す(自前のビルドが出した HTML なので正規表現で十分)。
@@ -34,7 +34,7 @@ export async function feed(context: APIContext, lang: Lang) {
 
 	return rss({
 		title: siteConfig.title,
-		description: siteText(lang).subtitle || "No description",
+		description: siteText[lang].subtitle || "No description",
 		site,
 		items: blog.map((post) => {
 			const content = stripInvalidXmlChars(

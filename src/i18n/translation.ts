@@ -1,4 +1,4 @@
-import { kofiConfig, profileConfig, siteConfig, siteTextEn } from "../config";
+import { siteConfig } from "../config";
 import type I18nKey from "./i18nKey";
 import { en } from "./languages/en";
 import { ja } from "./languages/ja";
@@ -35,20 +35,4 @@ export function langFromPath(pathname: string): Lang {
 
 export function i18n(key: I18nKey, lang: Lang): string {
 	return map[lang][key];
-}
-
-/** 設定ファイルにある、言語ごとに変わる文言 */
-export function siteText(lang: Lang) {
-	if (lang === "en") return siteTextEn;
-	return {
-		subtitle: siteConfig.subtitle,
-		description: siteConfig.description,
-		profileName: profileConfig.name,
-		bio: profileConfig.bio,
-		kofi: {
-			title: kofiConfig.title,
-			description: kofiConfig.description,
-			buttonLabel: kofiConfig.buttonLabel,
-		},
-	};
 }

@@ -9,7 +9,7 @@ import Share from "@components/misc/Share.astro";
 import PostMetadata from "@components/PostMeta.astro";
 import Kofi from "@components/widget/Kofi.astro";
 import I18nKey from "@i18n/i18nKey";
-import { i18n, type Lang, langPaths, siteText } from "@i18n/translation";
+import { i18n, type Lang, langPaths } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import {
 	getSortedPosts,
@@ -19,7 +19,7 @@ import {
 } from "@utils/content-utils";
 import { formatDateToYYYYMMDD } from "@utils/date-utils";
 import { getPostUrlBySlug } from "@utils/url-utils";
-import { licenseConfig } from "@/config";
+import { siteText } from "@/config";
 
 // 記事のページ(/posts/<記事>/ と、英訳の /en/posts/<記事>/)
 export async function getStaticPaths() {
@@ -47,19 +47,19 @@ const jsonLd = {
 	keywords: entry.data.tags,
 	author: {
 		"@type": "Person",
-		name: siteText(lang).profileName,
+		name: siteText[lang].profileName,
 		url: Astro.site,
 	},
 	datePublished: formatDateToYYYYMMDD(entry.data.published),
-	inLanguage: entry.data.lang ? entry.data.lang.replace("_", "-") : lang,
+	inLanguage: lang,
 	// TODO include cover image here
 };
 ---
-<MainGridLayout cover={entry.data.image} title={entry.data.title} description={entry.data.description} lang={entry.data.lang} setOGTypeArticle={true} ogImage={isTranslation ? `/og/en/${entry.id}.png` : `/og/${entry.id}.png`} headings={headings}>
+<MainGridLayout cover={entry.data.image} title={entry.data.title} description={entry.data.description} setOGTypeArticle={true} ogImage={isTranslation ? `/og/en/${entry.id}.png` : `/og/${entry.id}.png`} headings={headings}>
     <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
     <div class="post-card">
         <div id="post-container" class="card-base">
-            <!-- word count and reading time -->
+            {/* word count and reading time */}
             <div class="stats onload-animation">
                 <div class="stat">
                     <div class="stat-icon">
@@ -75,14 +75,14 @@ const jsonLd = {
                 </div>
             </div>
 
-            <!-- title -->
+            {/* title */}
             <div class="title-wrapper onload-animation">
                 <div data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title" class="title text-3xl">
                     {entry.data.title}
                 </div>
             </div>
 
-            <!-- metadata -->
+            {/* metadata */}
             <div class="onload-animation">
                 <PostMetadata
                         class="meta"
@@ -94,7 +94,7 @@ const jsonLd = {
                 {!entry.data.image && <div class="meta-divider"></div>}
             </div>
 
-            <!-- always show cover as long as it has one -->
+            {/* always show cover as long as it has one */}
 
             {entry.data.image &&
                 <ImageWrapper id="post-cover" src={entry.data.image} basePath={postImageBase(entry)} class="cover onload-animation"/>
@@ -112,7 +112,7 @@ const jsonLd = {
                 <Content />
             </Markdown>
 
-            {licenseConfig.enable && <License title={entry.data.title} slug={entry.id} pubDate={entry.data.published} class="section license onload-animation"></License>}
+            <License title={entry.data.title} slug={entry.id} pubDate={entry.data.published} class="section license onload-animation"></License>
 
             <Share title={entry.data.title} class="section onload-animation"></Share>
 
@@ -121,7 +121,7 @@ const jsonLd = {
         </div>
     </div>
 
-    <!-- 前後の記事 -->
+    {/* 前後の記事 */}
     <div class="neighbors">
         <a href={entry.data.nextSlug ? getPostUrlBySlug(entry.data.nextSlug, lang) : undefined}
            class:list={["neighbor", {"empty": !entry.data.nextSlug}]}>

@@ -1,21 +1,21 @@
 ---
 import Icon from "@components/misc/Icon.astro";
-import { profileConfig } from "../../config";
+import { profileConfig, siteText } from "../../config";
 import I18nKey from "../../i18n/i18nKey";
-import { i18n, langFromPath, siteText } from "../../i18n/translation";
+import { i18n, langFromPath } from "../../i18n/translation";
 import { localeUrl } from "../../utils/url-utils";
 import ImageWrapper from "../misc/ImageWrapper.astro";
 
 const config = profileConfig;
 const lang = langFromPath(Astro.url.pathname);
-const text = siteText(lang);
+const text = siteText[lang];
 ---
 <div class="card-base profile">
     <a aria-label={i18n(I18nKey.goToAbout, lang)} href={localeUrl('/about/', lang)} class="avatar-link">
         <div class="avatar-overlay">
             <Icon name="lucide:id-card" class="avatar-icon"></Icon>
         </div>
-        <ImageWrapper src={config.avatar || ""} alt={i18n(I18nKey.authorImage, lang)} class="avatar"></ImageWrapper>
+        <ImageWrapper src={config.avatar} alt={i18n(I18nKey.authorImage, lang)} class="avatar"></ImageWrapper>
     </a>
     <div class="info">
         <div class="name text-xl">{text.profileName}</div>
