@@ -61,6 +61,8 @@ bun run images
 
 を実行すると、記事から参照されている PNG / JPEG を WebP に変換して参照も書き換える(スクリーンショットはロスレス、写真は非可逆で軽く)。特定のファイルだけなら `bun run images public/static/images/blog/xxx.png`。
 
+このディレクトリの画像(カバーと本文)は、ビルドのときに幅 400 / 800 / 1600px に縮めた WebP(`xxx-400w.webp` など。元より小さい幅で、ファイルも小さくなるものだけ)を `dist` に書き出し、`<img>` に `srcset`・`sizes`・`width`・`height` を付けて画面に合う大きさを読ませる(`src/utils/responsive-images.ts`)。縮めた版はリポジトリには置かない。元の画像の URL はそのままで、拡大表示・RSS・Zenn はそれを使う。
+
 ### 注意書きブロック
 
 GitHub と同じ書き方。種類は `NOTE` / `TIP` / `IMPORTANT` / `WARNING` / `CAUTION`(大文字)。

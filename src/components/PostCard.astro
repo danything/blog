@@ -8,6 +8,7 @@ import {
 	postImageBase,
 	readingStats,
 } from "../utils/content-utils";
+import { SIZES } from "../utils/responsive-images";
 import { getPostUrlBySlug } from "../utils/url-utils";
 import ImageWrapper from "./misc/ImageWrapper.astro";
 import PostMetadata from "./PostMeta.astro";
@@ -61,7 +62,7 @@ const stats = readingStats(remarkPluginFrontmatter, lang);
             </Icon>
         </div>
         <ImageWrapper src={image} basePath={postImageBase(entry)} alt={i18n(I18nKey.coverImage, lang)}
-                  class="cover-image">
+                  sizes={SIZES.card} class="cover-image">
         </ImageWrapper>
     </a>}
 
