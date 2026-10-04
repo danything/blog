@@ -5,7 +5,6 @@ import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
 import TOC from "../components/widget/TOC.astro";
-import { siteConfig } from "../config";
 import Layout from "./Layout.astro";
 
 interface Props {
@@ -69,7 +68,7 @@ const {
 <div class="toc-layer">
     <div class="toc-column">
         {/* TOC component */}
-        {siteConfig.toc.enable && <div id="toc-wrapper">
+        <div id="toc-wrapper">
             <div id="toc-inner-wrapper">
                 <div id="toc">
                     <div class="toc-spacer"></div>
@@ -77,7 +76,7 @@ const {
                     <div class="toc-spacer"></div>
                 </div>
             </div>
-        </div>}
+        </div>
 
     </div>
 </div>

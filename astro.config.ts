@@ -7,7 +7,6 @@ import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 import { parsePost } from "./scripts/frontmatter";
-import { expressiveCodeConfig } from "./src/config";
 import { CONTENT_DIR } from "./src/constants/content-dir";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button";
 import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge";
@@ -48,7 +47,9 @@ export default defineConfig({
 	// Speculation Rules(layouts/Layout.astro の <script type="speculationrules">)に任せる
 	integrations: [
 		expressiveCode({
-			themes: [expressiveCodeConfig.theme],
+			// 背景などの色は下の styleOverrides でサイトの変数に置き換える。コードブロックは
+			// ライト・ダークのどちらでも暗い背景(--codeblock-bg)なので、暗いテーマを選ぶ
+			themes: ["github-dark"],
 			plugins: [
 				pluginCollapsibleSections(),
 				pluginLineNumbers(),

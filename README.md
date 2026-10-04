@@ -112,6 +112,7 @@ lychee src/content/posts/*.md
 ページは日本語版と英語版で 1 つのファイル(`src/pages/[...lang]/`。日本語版は言語の部分の無いパス、英語版は `/en/` 以下)で作る。
 出力の形が違う 404(日本語版は `/404.html`、英語版は `/en/404/`)だけは `src/pages/404.astro` と `src/pages/en/404.astro` に分けている。
 UI の文言(読み上げ用の `aria-label`・`alt` も)は `src/i18n/languages/` の `ja.ts`・`en.ts` に書く。
+サイトの副題・説明・作者名・プロフィールの紹介文・Ko-fi の欄の文言は `src/config.ts` の `siteText` に日本語・英語を並べて書く。
 英訳のある記事は日本語版と `hreflang` で結ばれ、ナビゲーションバーのボタンで行き来できる(英訳が無ければもう一方の言語のトップへ)。
 Zenn への同期とニュースレターは日本語版だけ。
 

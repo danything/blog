@@ -9,7 +9,7 @@ import Share from "@components/misc/Share.astro";
 import PostMetadata from "@components/PostMeta.astro";
 import Kofi from "@components/widget/Kofi.astro";
 import I18nKey from "@i18n/i18nKey";
-import { i18n, type Lang, langPaths, siteText } from "@i18n/translation";
+import { i18n, type Lang, langPaths } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import {
 	getSortedPosts,
@@ -19,7 +19,7 @@ import {
 } from "@utils/content-utils";
 import { formatDateToYYYYMMDD } from "@utils/date-utils";
 import { getPostUrlBySlug } from "@utils/url-utils";
-import { licenseConfig } from "@/config";
+import { siteText } from "@/config";
 
 // 記事のページ(/posts/<記事>/ と、英訳の /en/posts/<記事>/)
 export async function getStaticPaths() {
@@ -47,7 +47,7 @@ const jsonLd = {
 	keywords: entry.data.tags,
 	author: {
 		"@type": "Person",
-		name: siteText(lang).profileName,
+		name: siteText[lang].profileName,
 		url: Astro.site,
 	},
 	datePublished: formatDateToYYYYMMDD(entry.data.published),
@@ -112,7 +112,7 @@ const jsonLd = {
                 <Content />
             </Markdown>
 
-            {licenseConfig.enable && <License title={entry.data.title} slug={entry.id} pubDate={entry.data.published} class="section license onload-animation"></License>}
+            <License title={entry.data.title} slug={entry.id} pubDate={entry.data.published} class="section license onload-animation"></License>
 
             <Share title={entry.data.title} class="section onload-animation"></Share>
 

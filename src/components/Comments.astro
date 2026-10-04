@@ -2,13 +2,11 @@
 import "@/styles/yosegaki.css";
 import { commentConfig } from "@/config";
 ---
-{commentConfig.enable && (
-    <div class="comments">
-        <div class="card-base comments-card">
-            <div id="yosegaki" data-server={commentConfig.yosegaki.server}></div>
-        </div>
+<div class="comments">
+    <div class="card-base comments-card">
+        <div id="yosegaki" data-server={commentConfig.server}></div>
     </div>
-)}
+</div>
 
 <style>
     .comments {

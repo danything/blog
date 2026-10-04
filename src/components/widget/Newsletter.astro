@@ -13,7 +13,6 @@ const style = Astro.props.style;
 const action = `https://buttondown.com/api/emails/embed-subscribe/${newsletterConfig.username}`;
 const profileUrl = `https://buttondown.com/${newsletterConfig.username}`;
 ---
-{newsletterConfig.enable && newsletterConfig.username && (
 <WidgetLayout name={newsletterConfig.title} id="newsletter" class={className} style={style}>
     <div class="widget-description">
         {newsletterConfig.description}
@@ -38,7 +37,6 @@ const profileUrl = `https://buttondown.com/${newsletterConfig.username}`;
         </button>
     </form>
 </WidgetLayout>
-)}
 
 <style>
     form {

@@ -1,7 +1,7 @@
 ---
 import Icon from "@components/misc/Icon.astro";
-import { kofiConfig } from "@/config";
-import { langFromPath, siteText } from "../../i18n/translation";
+import { kofiConfig, siteText } from "@/config";
+import { langFromPath } from "../../i18n/translation";
 import WidgetLayout from "./WidgetLayout.astro";
 
 // 応援(Ko-fi)の欄。外部のスクリプトは読み込まず、Ko-fi のページへリンクするだけにして、
@@ -16,11 +16,9 @@ interface Props {
 // 呼び出し元の <style> が効くよう、残りの属性(data-astro-cid-*)も外側の要素に付ける
 const { variant, class: className, ...rest } = Astro.props;
 const url = `https://ko-fi.com/${kofiConfig.username}`;
-const text = siteText(langFromPath(Astro.url.pathname)).kofi;
-
-const enabled = kofiConfig.enable && kofiConfig.username;
+const text = siteText[langFromPath(Astro.url.pathname)].kofi;
 ---
-{enabled && variant === "widget" && (
+{variant === "widget" && (
 <WidgetLayout name={text.title} id="kofi" class={className} {...rest}>
     <div class="widget-description">{text.description}</div>
     <a href={url} target="_blank" rel="noopener noreferrer" class="btn-regular kofi-button widget text-sm">
@@ -29,7 +27,7 @@ const enabled = kofiConfig.enable && kofiConfig.username;
     </a>
 </WidgetLayout>
 )}
-{enabled && variant === "post-end" && (
+{variant === "post-end" && (
 <div class:list={["post-end", className]} {...rest}>
     <div class="widget-description">{text.description}</div>
     <a href={url} target="_blank" rel="noopener noreferrer" class="btn-regular kofi-button post-end-button text-sm">

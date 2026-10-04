@@ -1,7 +1,7 @@
 ---
 
 import Icon from "@components/misc/Icon.astro";
-import { siteConfig } from "@/config";
+import { siteConfig, siteText } from "@/config";
 import {
 	AUTO_MODE,
 	DARK_MODE,
@@ -10,7 +10,7 @@ import {
 	LIGHT_MODE,
 } from "../constants/constants";
 import I18nKey from "../i18n/i18nKey";
-import { i18n, langFromPath, siteText } from "../i18n/translation";
+import { i18n, langFromPath } from "../i18n/translation";
 import { getAlternates } from "../utils/content-utils";
 import { localeUrl, stripLang, url } from "../utils/url-utils";
 import "../styles/main.css";
@@ -37,7 +37,7 @@ const {
 
 // ページの言語(/en/ 以下なら英語)。UI の文言・RSS・hreflang はこれで決める
 const pageLang = langFromPath(Astro.url.pathname);
-const text = siteText(pageLang);
+const text = siteText[pageLang];
 // 日本語版と英語版の両方があるページなら、互いを hreflang で示す
 const alternates = await getAlternates(Astro.url.pathname);
 
@@ -144,12 +144,9 @@ const speculationRules = {
 		     サイドバーの SNS アイコンにも rel="me" は付いているが、サイドバーの
 		     無いページでも検証が通るよう head に置く */}
 		<link rel="me" href="https://www.threads.com/@5yuim" />
-		{siteConfig.favicon.map(favicon => (
-			<link rel="icon"
-				  href={favicon.src.startsWith('/') ? url(favicon.src) : favicon.src}
-				  sizes={favicon.sizes}
-			/>
-		))}
+		<link rel="icon" href={url("/static/favicons/favicon-32x32.png")} sizes="32x32">
+		<link rel="icon" href={url("/static/favicons/favicon-16x16.png")} sizes="16x16">
+		<link rel="icon" href={url("/static/favicons/apple-touch-icon.png")} sizes="180x180">
 
 		{/* Set the theme before the page is rendered to avoid a flash */}
 		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, DEFAULT_HUE}}>
