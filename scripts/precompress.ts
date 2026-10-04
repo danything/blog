@@ -7,11 +7,22 @@
 //
 // 画像や Pagefind の索引 (.pf_*・.pagefind) は既に圧縮されているので対象にしない。
 // 圧縮しても元より小さくならないものは書き出さない(Caddy は元のファイルを配信する)。
+//
+// 先に、Pagefind が索引と一緒に書き出す既製の UI(pagefind-ui・component-ui・modular-ui・highlight の
+// .js・.css)を消す。検索欄は自前(components/Search.astro)で、読み込むのは pagefind.js
+// (とそれが使う pagefind-worker.js・pagefind-entry.json・wasm・索引)だけ。Pagefind に書き出さない設定は無い
 import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
 
 const dir = process.argv[2] ?? "dist";
+
+const pagefindDir = path.join(dir, "pagefind");
+const UNUSED_PAGEFIND =
+	/^pagefind-(?:ui|component-ui|modular-ui|highlight)\.(?:js|css)$/;
+for (const f of fs.existsSync(pagefindDir) ? fs.readdirSync(pagefindDir) : []) {
+	if (UNUSED_PAGEFIND.test(f)) fs.rmSync(path.join(pagefindDir, f));
+}
 const COMPRESSIBLE =
 	/\.(?:html|css|js|mjs|json|xml|svg|txt|webmanifest|map|ico)$/i;
 
