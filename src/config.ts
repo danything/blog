@@ -62,7 +62,7 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "/static/images/avatar.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+	avatar: "/static/images/avatar.png", // public 配下の絶対パス
 	links: [
 		{
 			name: "GitHub",
