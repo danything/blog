@@ -28,7 +28,7 @@ const style = Astro.props.style;
         <ButtonLink
             url={c.url}
             badge={String(c.count)}
-            label={i18n(I18nKey.viewCategory, lang).replace("{name}", c.name.trim())}
+            badgeSuffix={i18n(c.count === 1 ? I18nKey.postCount : I18nKey.postsCount, lang)}
         >
             {c.name.trim()}
         </ButtonLink>

@@ -44,7 +44,6 @@ const lang = langFromPath(Astro.url.pathname);
             {posts.map((post) => (
                 <a
                         href={getPostUrlBySlug(post.id, lang)}
-                        aria-label={post.data.title}
                         class="btn-plain post"
                         data-tags={JSON.stringify(post.data.tags)}
                         data-category={post.data.category ?? ""}

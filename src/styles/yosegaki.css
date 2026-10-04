@@ -9,7 +9,9 @@
 	--ysg-radius: 0.75rem;
 	--ysg-line: var(--line-divider);
 	--ysg-surface: var(--btn-regular-bg);
-	color: var(--deep-text);
+	/* 本文と同じく、ライトでは黒・ダークでは白を透かした色にする。--deep-text は
+	   テーマ色の上に載せる暗い文字の色で、ダークでも暗いまま(背景と見分けられなくなる) */
+	color: var(--text-90);
 }
 
 /* Turnstile のチャレンジが出たときにカードからはみ出さないように */

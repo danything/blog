@@ -26,6 +26,15 @@ import { commentConfig } from "@/config";
             padding-inline: 2.25rem;
         }
     }
+    /* 埋め込みを読むまでは、コメントの無いときの高さ(デスクトップで約 360px、スマホで約 400px)を
+       空けておき、読み込んだときに下のフッターが動かないようにする。読み込めなかったときは空けない */
+    #yosegaki:empty:not([data-failed]) {
+        min-height: 25rem;
+
+        @media (width >= 48rem) {
+            min-height: 22.5rem;
+        }
+    }
 </style>
 
 <script>
@@ -40,9 +49,15 @@ declare global {
 	}
 }
 
+// 読み込めなかったときは、空けておいた高さを戻す
+function fail(target: HTMLElement, server: string) {
+	target.dataset.failed = "";
+	console.error(`[comments] yosegaki を読み込めませんでした (${server}/embed.js)`);
+}
+
 function mount(target: HTMLElement, server: string) {
 	if (!window.Yosegaki) {
-		console.error(`[comments] yosegaki を読み込めませんでした (${server}/embed.js)`);
+		fail(target, server);
 		return;
 	}
 
@@ -57,13 +72,16 @@ function mount(target: HTMLElement, server: string) {
 }
 
 // コメント欄のあるページでだけ埋め込みスクリプトを読む。data-auto="false" で自動描画は止め、
-// こちらから init する
+// こちらから init する。embed.js は小さな読み込み役で、本体はコメント欄が画面に近づいてから、
+// Turnstile は入力を始めてから読むので、こちらで遅らせることはしない(優先度だけ下げる)
 // 裏で描画している(Speculation Rules の prerender)間は読まず、実際に開かれてから読む
 function load(target: HTMLElement, server: string) {
 	const script = document.createElement("script");
 	script.src = `${server}/embed.js`;
 	script.dataset.auto = "false";
+	script.fetchPriority = "low";
 	script.onload = () => mount(target, server);
+	script.onerror = () => fail(target, server);
 	document.head.appendChild(script);
 }
 
