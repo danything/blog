@@ -1,8 +1,8 @@
 ---
 import Icon from "@components/misc/Icon.astro";
+import { DEFAULT_HUE } from "@constants/constants";
 import I18nKey from "@i18n/i18nKey";
 import { i18n, type Lang } from "@i18n/translation";
-import { siteConfig } from "@/config";
 
 interface Props {
 	lang: Lang;
@@ -10,7 +10,7 @@ interface Props {
 
 const title = i18n(I18nKey.themeColor, Astro.props.lang);
 // 保存された色相はスクリプトで反映する。ここでは既定の色相で描いておく
-const hue = siteConfig.themeColor.hue;
+const hue = DEFAULT_HUE;
 ---
 <div id="display-setting" class="float-panel float-panel-closed" role="group"
      aria-label={title}>
@@ -159,7 +159,8 @@ const hue = siteConfig.themeColor.hue;
 
 <script>
 import { onActivatedFromPrerender } from "@utils/prerender";
-import { DEFAULT_HUE, getHue, setHue } from "@utils/setting-utils";
+import { DEFAULT_HUE } from "@constants/constants";
+import { getHue, setHue } from "@utils/setting-utils";
 
 function setup(panel: HTMLElement) {
 	const slider = panel.querySelector<HTMLInputElement>("#colorSlider");

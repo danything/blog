@@ -17,14 +17,6 @@ export const siteConfig: SiteConfig = {
 		"Linux やネットワーク、Web アプリ開発から、車のコーディングや登録手続きまで、実際に試して分かったことを書き留めている備忘録です。",
 	ogImage: "/static/images/x-card.png",
 	lang: "ja",
-	themeColor: {
-		// テーマ色の色相 (0-360)。Fuwari の既定は 250 だが、この配色は
-		// oklch(0.70 0.14 H) を使うため、170-230 と 250-290 は sRGB の色域から
-		// はみ出してクリップされる (既定の 250 もその一つ)。
-		// 色域に収まり、かつボタン文字のコントラストが最大に近い暖色域から選んだ。
-		hue: 40,
-		fixed: false, // Hide the theme color picker for visitors
-	},
 	toc: {
 		enable: true, // Display the table of contents on the right side of the post
 		depth: 2, // Maximum heading depth to show in the table, from 1 to 3

@@ -53,11 +53,9 @@ const links: NavBarLink[] = navBarConfig.links.map((link) =>
                 <Icon name="lucide:languages" class="nav-icon"></Icon>
                 <span class="lang-label">{i18n(I18nKey.otherLanguage, lang)}</span>
             </a>
-            {!siteConfig.themeColor.fixed && (
-                    <button aria-label={i18n(I18nKey.displaySettings, lang)} class="btn-plain scale-animation nav-button" id="display-settings-switch">
-                        <Icon name="lucide:palette" class="nav-icon"></Icon>
-                    </button>
-            )}
+            <button aria-label={i18n(I18nKey.displaySettings, lang)} class="btn-plain scale-animation nav-button" id="display-settings-switch">
+                <Icon name="lucide:palette" class="nav-icon"></Icon>
+            </button>
             <LightDarkSwitch lang={lang} />
             <button aria-label={i18n(I18nKey.menu, lang)} class="btn-plain scale-animation nav-button" id="nav-menu-switch">
                 <Icon name="lucide:menu" class="nav-icon"></Icon>

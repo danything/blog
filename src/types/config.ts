@@ -13,10 +13,6 @@ export type SiteConfig = {
 	/** 既定の言語。英語版は /en/ 以下に置く(src/i18n/translation.ts) */
 	lang: "ja" | "en";
 
-	themeColor: {
-		hue: number;
-		fixed: boolean;
-	};
 	toc: {
 		enable: boolean;
 		depth: 1 | 2 | 3;

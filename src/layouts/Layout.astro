@@ -5,6 +5,7 @@ import { siteConfig } from "@/config";
 import {
 	AUTO_MODE,
 	DARK_MODE,
+	DEFAULT_HUE,
 	DEFAULT_THEME,
 	LIGHT_MODE,
 } from "../constants/constants";
@@ -51,8 +52,6 @@ const ogImage = new URL(
 	cover?.startsWith("/") ? cover : (ogImagePath ?? siteConfig.ogImage),
 	Astro.site,
 ).href;
-
-const configHue = siteConfig.themeColor.hue;
 
 let pageTitle: string;
 if (title) {
@@ -153,7 +152,7 @@ const speculationRules = {
 		))}
 
 		{/* Set the theme before the page is rendered to avoid a flash */}
-		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, configHue}}>
+		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, DEFAULT_HUE}}>
 			// Load the theme from local storage
 			const theme = localStorage.getItem('theme') || DEFAULT_THEME;
 			switch (theme) {
@@ -172,7 +171,7 @@ const speculationRules = {
 			}
 
 			// Load the hue from local storage
-			const hue = localStorage.getItem('hue') || configHue;
+			const hue = localStorage.getItem('hue') || DEFAULT_HUE;
 			document.documentElement.style.setProperty('--hue', hue);
 
 			// 本文の出現を遅らせるのは最初の表示だけ。サイトの中でページを移ってきたとき(再読み込みは除く)は遅らせない。

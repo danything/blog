@@ -5,7 +5,7 @@ import { commentConfig } from "@/config";
 {commentConfig.enable && (
     <div class="comments">
         <div class="card-base comments-card">
-            <div id="yosegaki"></div>
+            <div id="yosegaki" data-server={commentConfig.yosegaki.server}></div>
         </div>
     </div>
 )}
@@ -31,10 +31,8 @@ import { commentConfig } from "@/config";
 </style>
 
 <script>
-import { commentConfig } from "@/config";
+// サーバの URL は設定(config.ts)をクライアントの JS に入れないよう、data-server で受け取る
 import { whenActivated } from "@/utils/prerender";
-
-const { yosegaki: conf } = commentConfig;
 
 declare global {
 	interface Window {
@@ -44,15 +42,15 @@ declare global {
 	}
 }
 
-function mount(target: HTMLElement) {
+function mount(target: HTMLElement, server: string) {
 	if (!window.Yosegaki) {
-		console.error(`[comments] yosegaki を読み込めませんでした (${conf.server}/embed.js)`);
+		console.error(`[comments] yosegaki を読み込めませんでした (${server}/embed.js)`);
 		return;
 	}
 
 	window.Yosegaki.init({
 		target,
-		server: conf.server,
+		server,
 		lang: document.documentElement.lang === "en" ? "en" : "ja",
 		// クエリ文字列でスレッドが分かれないよう URL を明示する
 		page: location.origin + location.pathname,
@@ -63,16 +61,17 @@ function mount(target: HTMLElement) {
 // コメント欄のあるページでだけ埋め込みスクリプトを読む。data-auto="false" で自動描画は止め、
 // こちらから init する
 // 裏で描画している(Speculation Rules の prerender)間は読まず、実際に開かれてから読む
-function load(target: HTMLElement) {
+function load(target: HTMLElement, server: string) {
 	const script = document.createElement("script");
-	script.src = `${conf.server}/embed.js`;
+	script.src = `${server}/embed.js`;
 	script.dataset.auto = "false";
-	script.onload = () => mount(target);
+	script.onload = () => mount(target, server);
 	document.head.appendChild(script);
 }
 
 const target = document.getElementById("yosegaki");
-if (target) {
-	whenActivated(() => load(target));
+const server = target?.dataset.server;
+if (target && server) {
+	whenActivated(() => load(target, server));
 }
 </script>
