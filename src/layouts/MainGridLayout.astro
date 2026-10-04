@@ -41,8 +41,9 @@ const {
     {/* The pointer-events: none here prevent blocking the click event of the TOC */}
     <div class="main-column">
         <div id="main-grid">
-            <SideBar class="sidebar onload-animation"></SideBar>
-
+            {/* 本文をサイドバーより前に置く。HTML が分かれて届くと届いた分から描かれるので、
+                サイドバーが先だと狭い画面ではまず上に描かれ、あとから来た本文に下へ押し出されて
+                レイアウトが大きくずれる。読み上げの順も本文が先になる。広い画面では grid で左に置く */}
             <main id="main-content">
                 <div id="content-wrapper" class="onload-animation">
                     {/* the overflow: hidden here prevent long text break the layout*/}
@@ -52,6 +53,8 @@ const {
                     </div>
                 </div>
             </main>
+
+            <SideBar class="sidebar onload-animation"></SideBar>
 
             <div class="footer footer-narrow onload-animation">
                 <Footer></Footer>
@@ -141,17 +144,21 @@ const {
         margin-bottom: 1rem;
 
         @media (width >= 64rem) {
-            grid-column: span 1 / span 1;
+            grid-column: 1 / 2;
             grid-row: 1 / 2;
             max-width: 17.5rem;
         }
     }
     #main-content {
+        /* 重なりの順(描く順)は本文をサイドバーより上のままにする。HTML の順だけで描くと、
+           サイドバーの sticky の層より前に描かれて文字のアンチエイリアスが変わる */
+        z-index: 1;
         grid-column: span 2 / span 2;
+        grid-row: 1 / 2;
         overflow: hidden;
 
         @media (width >= 64rem) {
-            grid-column: span 1 / span 1;
+            grid-column: 2 / 3;
         }
     }
     /* フッターは広い画面では本文の下、狭い画面ではサイドバーの下 */
