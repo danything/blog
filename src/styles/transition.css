@@ -1,20 +1,23 @@
-/* Fade-in animations for components */
-@keyframes fade-in-up {
-	0% {
+/* 読み込み時に下から入ってくる動き。
+   透明から始めると、Chrome は最初の描画(FCP)と最大の描画(LCP)を記録しない(コンポジタで
+   opacity を 0 から動かしている間は「中身を描いた」と数えない)ので、位置だけを動かして最初から見せる。
+   動きを減らす設定なら動かさない */
+@keyframes slide-in-up {
+	from {
 		transform: translateY(2rem);
-		opacity: 0;
-	}
-	100% {
-		transform: translateY(0);
-		opacity: 1;
 	}
 }
 
 /* Main components */
 .onload-animation {
-	opacity: 0;
-	animation: 300ms fade-in-up;
-	animation-fill-mode: forwards;
+	/* 動き終わった後も transform を残す。中の position: fixed のパネル(ナビバーのメニューや
+	   表示設定)は、これで包んでいる要素を基準に置いている */
+	transform: translateY(0);
+
+	@media (prefers-reduced-motion: no-preference) {
+		/* 遅れて動き出すものも、それまでは下にずらしておく */
+		animation: 300ms backwards slide-in-up;
+	}
 }
 #navbar {
 	animation-delay: 0ms;

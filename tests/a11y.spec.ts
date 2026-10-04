@@ -10,7 +10,7 @@ test.beforeEach(({ context }, info) => setupContext(context, info));
 
 for (const path of a11yPages) {
 	test(path, async ({ page }) => {
-		// 読み込み時のフェードの途中だと文字が薄く測られるので、動きを止めて終わるのを待つ
+		// 読み込み時の動きは止め、ほかに動いているものがあれば終わるのを待ってから測る
 		await page.emulateMedia({ reducedMotion: "reduce" });
 		await page.goto(path);
 		await page.waitForLoadState("networkidle");
