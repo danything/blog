@@ -20,7 +20,7 @@ docker compose up
 ## ビルド
 
 ```shell
-bun run build    # dist/ に出力（pagefind の検索インデックス生成と、配信用の .br・.gz の書き出しまで実行）
+bun run build    # dist/ に出力（pagefind の検索インデックス生成と、配信用の .br の書き出しまで実行）
 bun run preview
 ```
 

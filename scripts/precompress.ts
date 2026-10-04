@@ -1,7 +1,8 @@
-// ビルドした dist/ の圧縮が効くファイルの隣に .br・.gz を書き出す。
-// Caddy の `file_server { precompressed br gzip }` がこれを配信するので、
-// リクエストのたびに圧縮しなくてよくなり、圧縮率も最大にできる(brotli 11・gzip 9)。
-// zstd は作らない。前段の Cloudflare はオリジンに br・gzip しか求めない(ブラウザへの zstd は Cloudflare がする)
+// ビルドした dist/ の圧縮が効くファイルの隣に .br を書き出す。
+// Caddy の `file_server { precompressed br }` がこれを配信するので、
+// リクエストのたびに圧縮しなくてよくなり、圧縮率も最大にできる(brotli 11)。
+// 前段の Cloudflare はオリジンに br・gzip しか求めず、ふだんは br を受け取る(ブラウザへの zstd は Cloudflare がする)。
+// .gz・.zst は作らない。br を受け付けないときは Caddy が `encode gzip` でその場で圧縮する
 //
 //   bun scripts/precompress.ts [dir]   (既定は dist。bun run build の最後に呼ぶ)
 //
@@ -26,20 +27,6 @@ for (const f of fs.existsSync(pagefindDir) ? fs.readdirSync(pagefindDir) : []) {
 const COMPRESSIBLE =
 	/\.(?:html|css|js|mjs|json|xml|svg|txt|webmanifest|map|ico)$/i;
 
-const encoders: [ext: string, (buf: Buffer) => Buffer][] = [
-	[
-		".br",
-		(buf) =>
-			zlib.brotliCompressSync(buf, {
-				params: {
-					[zlib.constants.BROTLI_PARAM_QUALITY]: 11,
-					[zlib.constants.BROTLI_PARAM_SIZE_HINT]: buf.length,
-				},
-			}),
-	],
-	[".gz", (buf) => zlib.gzipSync(buf, { level: 9 })],
-];
-
 const files = fs
 	.readdirSync(dir, { recursive: true, encoding: "utf8" })
 	.map((f) => path.join(dir, f))
@@ -47,21 +34,22 @@ const files = fs
 
 const kb = (n: number) => `${Math.round(n / 1024)}K`;
 let original = 0;
-const written = new Map(encoders.map(([ext]) => [ext, 0]));
+let written = 0;
 
 for (const file of files) {
 	const buf = fs.readFileSync(file);
 	original += buf.length;
-	for (const [ext, encode] of encoders) {
-		const out = encode(buf);
-		if (out.length >= buf.length) continue;
-		fs.writeFileSync(file + ext, out);
-		written.set(ext, (written.get(ext) ?? 0) + out.length);
-	}
+	const out = zlib.brotliCompressSync(buf, {
+		params: {
+			[zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+			[zlib.constants.BROTLI_PARAM_SIZE_HINT]: buf.length,
+		},
+	});
+	if (out.length >= buf.length) continue;
+	fs.writeFileSync(`${file}.br`, out);
+	written += out.length;
 }
 
 console.log(
-	`precompress: ${files.length} ファイル ${kb(original)} → ${[...written]
-		.map(([ext, n]) => `${ext} ${kb(n)}`)
-		.join("・")}`,
+	`precompress: ${files.length} ファイル ${kb(original)} → .br ${kb(written)}`,
 );
