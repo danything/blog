@@ -150,6 +150,9 @@ const {
         }
     }
     #main-content {
+        /* 重なりの順(描く順)は本文をサイドバーより上のままにする。HTML の順だけで描くと、
+           サイドバーの sticky の層より前に描かれて文字のアンチエイリアスが変わる */
+        z-index: 1;
         grid-column: span 2 / span 2;
         grid-row: 1 / 2;
         overflow: hidden;
