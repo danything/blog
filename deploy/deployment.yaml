@@ -28,7 +28,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: blog
-          image: ghcr.io/danything/blog:4eea3a9b8e8f062f4a0a7c79159e9195f3f5259f
+          image: ghcr.io/danything/blog:e4230f803ba2aacc1c6df587a278c8d80ab9dac9
           ports:
             - name: http
               containerPort: 8080
