@@ -11,6 +11,7 @@ import { CONTENT_DIR } from "./src/constants/content-dir";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button";
 import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge";
 import { rehypeHeadingAnchors } from "./src/plugins/rehype-heading-anchors";
+import { rehypeTableRowHeaders } from "./src/plugins/rehype-table-row-headers";
 import { remarkAlerts } from "./src/plugins/remark-alerts";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt";
 import { remarkGithubCard } from "./src/plugins/remark-github-card";
@@ -136,6 +137,7 @@ export default defineConfig({
 				// 見出しにリンクを足すプラグインより前にも同じものを入れておく(id が付いていれば Astro は付け直さない)
 				rehypeHeadingIds,
 				rehypeHeadingAnchors,
+				rehypeTableRowHeaders,
 			],
 		}),
 	},

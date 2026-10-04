@@ -292,8 +292,13 @@
 	:where(tbody tr:last-child) {
 		border-bottom-width: 0;
 	}
-	:where(tbody td) {
+	:where(tbody td, tbody th) {
 		vertical-align: baseline;
+	}
+	/* 行の見出し(左上が空の表の 1 列目。plugins/rehype-table-row-headers.ts)。
+	   読み上げのための印なので、見た目はほかのセルと同じにする */
+	:where(tbody th) {
+		font-weight: inherit;
 	}
 	:where(tfoot) {
 		border-top-width: 1px;
@@ -311,10 +316,10 @@
 	:where(thead th:last-child) {
 		padding-inline-end: 0;
 	}
-	:where(tbody td, tfoot td) {
+	:where(tbody td, tbody th, tfoot td) {
 		padding: 0.571429em;
 	}
-	:where(tbody td:first-child, tfoot td:first-child) {
+	:where(tbody td:first-child, tbody th:first-child, tfoot td:first-child) {
 		padding-inline-start: 0;
 	}
 	:where(tbody td:last-child, tfoot td:last-child) {
