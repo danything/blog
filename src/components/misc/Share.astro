@@ -45,13 +45,14 @@ const hatena = `https://b.hatena.ne.jp/entry/${postUrl.replace(/^https?:\/\//, "
             <Icon name={l.icon} class="icon"></Icon>
         </a>
     ))}
-    <a href={hatena} target="_blank" rel="noopener noreferrer" aria-label={i18n(I18nKey.addToHatena, lang)} title="はてなブックマーク"
+    {/* 見えている「B!」はロゴの代わりなので読み上げず、名前は読み上げ用の文字で付ける */}
+    <a href={hatena} target="_blank" rel="noopener noreferrer" title="はてなブックマーク"
        class="btn-regular square hatena">
-        B!
+        <span aria-hidden="true">B!</span>
+        <span class="sr-only">{i18n(I18nKey.addToHatena, lang)}</span>
     </a>
     <button type="button" class="share-copy btn-regular text-sm"
-            data-url={postUrl} data-copied={i18n(I18nKey.copied, lang)} data-failed={i18n(I18nKey.copyFailed, lang)}
-            aria-label={i18n(I18nKey.copyUrl, lang)}>
+            data-url={postUrl} data-copied={i18n(I18nKey.copied, lang)} data-failed={i18n(I18nKey.copyFailed, lang)}>
         <Icon name="lucide:link" class="copy-icon"></Icon>
         <span class="share-copy-label">{i18n(I18nKey.copyUrl, lang)}</span>
     </button>

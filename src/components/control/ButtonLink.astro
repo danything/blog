@@ -1,12 +1,15 @@
 ---
 interface Props {
 	badge?: string;
+	/** 数の後ろに読み上げだけで足す言葉(「件の投稿」など)。画面には出さない */
+	badgeSuffix?: string;
 	url?: string;
-	label?: string;
 }
-const { badge, url, label } = Astro.props;
+const { badge, badgeSuffix, url } = Astro.props;
 ---
-<a href={url} aria-label={label}>
+{/* 名前は見えている文字(と読み上げ用の単位)から付ける。aria-label で別の言い方にすると、
+    音声操作で見えている文字を言っても押せなくなる */}
+<a href={url}>
     <button>
         <div class="row">
             <div class="label">
@@ -14,7 +17,7 @@ const { badge, url, label } = Astro.props;
             </div>
             { badge !== undefined && badge !== null && badge !== '' &&
                 <div class="badge text-sm">
-                    { badge }
+                    { badge }{ badgeSuffix && <span class="sr-only"> {badgeSuffix}</span> }
                 </div>
             }
         </div>
