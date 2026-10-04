@@ -27,8 +27,8 @@ import { commentConfig } from "@/config";
         }
     }
     /* 埋め込みを読むまでは、コメントの無いときの高さ(デスクトップで約 360px、スマホで約 400px)を
-       空けておき、読み込んだときに下のフッターが動かないようにする */
-    #yosegaki:empty {
+       空けておき、読み込んだときに下のフッターが動かないようにする。読み込めなかったときは空けない */
+    #yosegaki:empty:not([data-failed]) {
         min-height: 25rem;
 
         @media (width >= 48rem) {
@@ -49,9 +49,15 @@ declare global {
 	}
 }
 
+// 読み込めなかったときは、空けておいた高さを戻す
+function fail(target: HTMLElement, server: string) {
+	target.dataset.failed = "";
+	console.error(`[comments] yosegaki を読み込めませんでした (${server}/embed.js)`);
+}
+
 function mount(target: HTMLElement, server: string) {
 	if (!window.Yosegaki) {
-		console.error(`[comments] yosegaki を読み込めませんでした (${server}/embed.js)`);
+		fail(target, server);
 		return;
 	}
 
@@ -75,6 +81,7 @@ function load(target: HTMLElement, server: string) {
 	script.dataset.auto = "false";
 	script.fetchPriority = "low";
 	script.onload = () => mount(target, server);
+	script.onerror = () => fail(target, server);
 	document.head.appendChild(script);
 }
 
