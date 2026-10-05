@@ -65,7 +65,7 @@ spec:
           projectSlug: doa
           path: /yosegaki/yosegaki-secrets
         persistence:
-          storageClass: local-path-retain
+          storageClass: local-path
   syncPolicy:
     automated:
       prune: true
