@@ -14,7 +14,7 @@ RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN bun run build
 # capabilities をすべて落とす (k8s の drop: [ALL] と allowPrivilegeEscalation: false) と
 # exec が operation not permitted で失敗する。8080 で待つのでここで外し、本体だけを取り出す。
 # (公式イメージの上で setcap すると約 50MB の本体がもう 1 層増えてイメージが倍近くになるため)
-FROM caddy:2-alpine@sha256:1a81ac3d1a49b2b385a5bfafb8bd39fb40fa1d717461d825ee0d65df91a6e97b AS caddy
+FROM caddy:2-alpine@sha256:d8542f48d34a9cf4e4c11a478865229840e87e4c96ea3f439101f31a5d35f75f AS caddy
 RUN setcap -r /usr/bin/caddy
 
 # 配信用は素の Alpine に Caddy 本体と MIME の定義だけを置く(preStop の sleep は busybox のもの)。
