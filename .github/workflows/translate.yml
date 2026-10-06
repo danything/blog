@@ -78,7 +78,7 @@ jobs:
           TODO: ${{ steps.status.outputs.todo }}
           # 版を固定する(Renovate が renovate.json の customManagers で上げる)
           # renovate: datasource=npm depName=@anthropic-ai/claude-code
-          CLAUDE_CODE_VERSION: 2.1.289
+          CLAUDE_CODE_VERSION: 2.1.290
         run: |
           # 'EOF' で囲んで中のバッククォートを展開させず、対象だけをあとから差し込む
           prompt=$(cat <<'EOF'
