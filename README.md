@@ -202,7 +202,7 @@ BASE_URL=http://127.0.0.1:4321 bunx playwright test tests/visual.spec.ts        
 
 ## 依存の更新
 
-Renovate(`renovate.json`。共通の設定は [5ym/renovate](https://github.com/5ym/renovate))が PR にする。
+Renovate(`renovate.json`。共通の設定は [5ym/repo-config](https://github.com/5ym/repo-config))が PR にする。
 パッケージは静的なサイトのビルドにしか使わないので、すべて `devDependencies` に置いている。
 
 - Bun の版は `package.json` の `packageManager`(CI の setup-bun が読む)と `Dockerfile` の `oven/bun` の 2 か所にあり、同じ PR で上がる
