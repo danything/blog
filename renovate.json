@@ -16,11 +16,6 @@
   ],
   "packageRules": [
     {
-      "description": "satori は 0.35.1 に留める。0.35.2 で harfbuzzjs を同梱してから、Node.js で読み込むと「ReferenceError: __dirname is not defined」で落ちる(vercel/satori#844、2026-10-07 時点で未解決)。CI の a11y・visual は runner の Node.js で astro build するので落ちる(本番の Dockerfile は bun だけなので通る)。#844 が直った版が出たら外す",
-      "matchPackageNames": ["satori"],
-      "allowedVersions": "<=0.35.1"
-    },
-    {
       "description": "astro check が TypeScript 7 にまだ対応していない(「TypeScript 6 を入れて」とエラーになる)ので、対応するまで 6 までに留める",
       "matchPackageNames": ["typescript"],
       "allowedVersions": "<7"
