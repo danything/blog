@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>5ym/renovate", "helpers:pinGitHubActionDigests"],
+  "extends": ["github>5ym/repo-config", "helpers:pinGitHubActionDigests"],
   "argocd": {
     "managerFilePatterns": ["/^deploy/.+\\.yaml$/"]
   },
