@@ -1,6 +1,6 @@
 import fs from "node:fs";
-import satori from "satori";
-import sharp from "sharp";
+import { render } from "takumi-js";
+import { Renderer } from "takumi-js/node";
 import { siteConfig } from "@/config";
 
 const WIDTH = 1200;
@@ -8,7 +8,8 @@ const HEIGHT = 630;
 const ACCENT = "#f4511e";
 
 // タイトルに使う文字だけを Google Fonts から取る(サイトの表示には使わない。画像を作るときだけ)。
-// 何も指定しないと TrueType の URL が返る(satori は woff2 を読めない)
+// 何も指定しないと TrueType の URL が返る。描画は Takumi(Rust。satori は 0.35.2 から Node.js で
+// `__dirname is not defined` で落ちるようになった。vercel/satori#844)
 async function fetchOk(url: string): Promise<Response> {
 	const r = await fetch(url, { signal: AbortSignal.timeout(15_000) });
 	if (!r.ok) throw new Error(`${r.status} ${url}`);
@@ -36,10 +37,23 @@ export async function renderOgImage(title: string): Promise<Uint8Array> {
 	try {
 		footerFont ??= loadFont(FOOTER, 400);
 		const [titleFont, footer] = await Promise.all([
-			loadFont(title, 700),
+			// 4 行で切ったときの「…」もタイトルの文字と同じフォントで出す
+			loadFont(`${title}…`, 700),
 			footerFont,
 		]);
-		const svg = await satori(
+		// フォントはタイトルの文字だけを含むので、記事ごとに Renderer を作って登録する
+		const renderer = new Renderer();
+		await renderer.registerFont({
+			name: "BIZ UDPGothic",
+			data: titleFont,
+			weight: 700,
+		});
+		await renderer.registerFont({
+			name: "BIZ UDPGothic",
+			data: footer,
+			weight: 400,
+		});
+		return await render(
 			{
 				type: "div",
 				props: {
@@ -64,6 +78,8 @@ export async function renderOgImage(title: string): Promise<Uint8Array> {
 									lineHeight: 1.4,
 									color: "#ffffff",
 									lineClamp: 4,
+									// satori は lineClamp だけで末尾に「…」を付けたが、Takumi は CSS どおり text-overflow が要る
+									textOverflow: "ellipsis",
 								},
 								children: title,
 							},
@@ -78,25 +94,8 @@ export async function renderOgImage(title: string): Promise<Uint8Array> {
 					],
 				},
 			},
-			{
-				width: WIDTH,
-				height: HEIGHT,
-				fonts: [
-					{
-						name: "BIZ UDPGothic",
-						data: titleFont,
-						weight: 700,
-						style: "normal",
-					},
-					{ name: "BIZ UDPGothic", data: footer, weight: 400, style: "normal" },
-				],
-			},
+			{ renderer, width: WIDTH, height: HEIGHT, format: "png" },
 		);
-		// satori は文字をパスにして出すので、SVG → PNG の変換にフォントは要らない。
-		// 色数の少ない絵なので、パレット PNG にして小さくする
-		return await sharp(Buffer.from(svg))
-			.png({ palette: true, compressionLevel: 9, effort: 10 })
-			.toBuffer();
 	} catch (e) {
 		footerFont = undefined;
 		console.warn(
