@@ -37,7 +37,8 @@ export async function renderOgImage(title: string): Promise<Uint8Array> {
 	try {
 		footerFont ??= loadFont(FOOTER, 400);
 		const [titleFont, footer] = await Promise.all([
-			loadFont(title, 700),
+			// 4 行で切ったときの「…」もタイトルの文字と同じフォントで出す
+			loadFont(`${title}…`, 700),
 			footerFont,
 		]);
 		// フォントはタイトルの文字だけを含むので、記事ごとに Renderer を作って登録する
@@ -77,6 +78,8 @@ export async function renderOgImage(title: string): Promise<Uint8Array> {
 									lineHeight: 1.4,
 									color: "#ffffff",
 									lineClamp: 4,
+									// satori は lineClamp だけで末尾に「…」を付けたが、Takumi は CSS どおり text-overflow が要る
+									textOverflow: "ellipsis",
 								},
 								children: title,
 							},
