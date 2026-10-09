@@ -22,7 +22,7 @@
     "@biomejs/biome": "2.5.15",
     "@expressive-code/plugin-collapsible-sections": "^0.44.2",
     "@expressive-code/plugin-line-numbers": "^0.44.2",
-    "@iconify-json/lucide": "^1.2.141",
+    "@iconify-json/lucide": "^1.2.142",
     "@iconify-json/simple-icons": "^1.2.99",
     "@iconify/types": "^2.0.0",
     "@playwright/test": "^1.64.0",
