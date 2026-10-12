@@ -69,7 +69,7 @@ Visa                      | 4                                                   
 
 ### カード番号の特定
 
-BINが特定されたものとして話を進めていきます。この時点で6桁のBIN+下4桁が判明していることになります。ここで全てのLuhnアルゴリズムに当てはまる数字を算出してみました(今回は16桁で)下記サイトでチェックしましたがゆうに100件を超えており特定が不可能でした。[credit card number generator](https://web.archive.org/web/20260906032740/https://www.businer.com/discard_credit_card_generator.php)
+BINが特定されたものとして話を進めていきます。この時点で6桁のBIN+下4桁が判明していることになります。ここで全てのLuhnアルゴリズムに当てはまる数字を算出してみました(今回は16桁で)下記サイトでチェックしましたがゆうに100件を超えており特定が不可能でした。[Luhn Algorithm - dCode](https://www.dcode.fr/luhn-algorithm)
 
 ## まとめ
 
