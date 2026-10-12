@@ -7,7 +7,7 @@ image: ""
 tags: ["Credit Cards", "Security"]
 category: "Payments"
 draft: false
-sourceHash: "5b4cf88aed711165"
+sourceHash: "cf9cf5e9851979fb"
 ---
 
 ## Introduction
@@ -69,7 +69,7 @@ First, I tried identifying the BIN from the card design. BINs aren't officially 
 
 ### Identifying the card number
 
-I'll proceed assuming the BIN has been identified. At this point you know the 6-digit BIN plus the last 4 digits. I then computed every number that satisfies the Luhn algorithm (for 16 digits this time). I checked it on the site below, and there were well over 100 candidates, so identifying the number was impossible. [credit card number generator](https://businer.com/discard_credit_card_generator.php)
+I'll proceed assuming the BIN has been identified. At this point you know the 6-digit BIN plus the last 4 digits. I then computed every number that satisfies the Luhn algorithm (for 16 digits this time). I checked it on the site below, and there were well over 100 candidates, so identifying the number was impossible. The math agrees: of the 16 digits, the unknown ones are the 6 in the middle, and of those 1,000,000 possibilities exactly 1/10, or 100,000, pass the Luhn algorithm. [Luhn Algorithm - dCode](https://www.dcode.fr/luhn-algorithm)
 
 ## Summary
 
