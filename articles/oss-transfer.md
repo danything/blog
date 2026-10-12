@@ -42,7 +42,7 @@ OSSを使うためのブラウザアドオンのインストールが必要で�
 下記からアドオンとchrome用の拡張機能をインストールしてください。  
 自分の場合microsoft edgeを使用しましたが、edgeでも変わりません。  
 [OSSブラウザアドオン](https://www.oss.mlit.go.jp/secure/beginner/jizen-junbi/pc-kankyou/add-on-kankyou-chrome/kyodaku-add-on/index.html)  
-[chrome用拡張機能](https://chrome.google.com/webstore/detail/%E8%87%AA%E5%8B%95%E8%BB%8A%E4%BF%9D%E6%9C%89%E9%96%A2%E4%BF%82%E6%89%8B%E7%B6%9A%E3%83%AF%E3%83%B3%E3%82%B9%E3%83%88%E3%83%83%E3%83%97%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E3%83%97%E3%83%A9/medknhfnoeebjofagappbmbpcgeffpca?hl=ja)
+[chrome用拡張機能](https://chromewebstore.google.com/detail/%E8%87%AA%E5%8B%95%E8%BB%8A%E4%BF%9D%E6%9C%89%E9%96%A2%E4%BF%82%E6%89%8B%E7%B6%9A%E3%83%AF%E3%83%B3%E3%82%B9%E3%83%88%E3%83%83%E3%83%97%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E3%83%97%E3%83%A9/medknhfnoeebjofagappbmbpcgeffpca?hl=ja)
 
 :::message
 2026年9月追記 動作保証はWindows 11(24H2・25H2)のEdgeかChromeだけになっています。Windows 10は対象外です。[動作環境](https://www.oss.mlit.go.jp/portal/beginner/jizen-junbi/pc-kankyou/index.html)
@@ -58,7 +58,7 @@ OSSを使うためのブラウザアドオンのインストールが必要で�
 
 マイナポータルアプリは下記から。  
 [android](https://play.google.com/store/apps/details?id=jp.go.cas.mpa)  
-[iOS](https://apps.apple.com/jp/app/%E3%83%9E%E3%82%A4%E3%83%8A%E3%83%9D%E3%83%BC%E3%82%BF%E3%83%AB/id1476359069)
+[iOS](https://apps.apple.com/jp/app/%E3%83%9E%E3%82%A4%E3%83%8A%E3%82%A2%E3%83%97%E3%83%AA-%E6%97%A7%E3%83%9E%E3%82%A4%E3%83%8A%E3%83%9D%E3%83%BC%E3%82%BF%E3%83%AB%E3%82%A2%E3%83%97%E3%83%AA/id1476359069)
 
 #### キャッシュレス決済登録
 
@@ -68,7 +68,7 @@ OSSを使うためのブラウザアドオンのインストールが必要で�
 #### 電子車検証読み取り
 
 電子車検証を利用して入力を省略できます。  
-[車検証閲覧アプリ](https://apps.microsoft.com/detail/9PFXXK8VGX7N?rtc=1&hl=ja-jp&gl=JP)
+[車検証閲覧アプリ](https://apps.microsoft.com/detail/9pfxxk8vgx7n?rtc=1&hl=ja-JP&gl=JP)
 
 :::message
 2026年9月追記 iPhone・Android版も出ていて、スマホでも車検証情報取込みファイルを出せるようになりました。[閲覧アプリの案内](https://www.jidoushatouroku-portal.mlit.go.jp/etsuran-app)
