@@ -21,12 +21,11 @@
       "allowedVersions": "<7"
     },
     {
-      "description": "deploy/ の Argo CD の Application の Helm チャート(yosegaki)。OCI のチャートは docker の datasource になり、共通の設定の Helm チャートの規則(自動でマージしない)に当たらないので、ここで同じにする",
+      "description": "deploy/ の Argo CD の Application の Helm チャート(yosegaki)。OCI のチャートは docker の datasource になり、共通の設定の Helm チャートの規則に当たらない。yosegaki は自分たちのチャートで中身の変化を把握しているので、共通の設定と違って自動でマージする",
       "matchManagers": ["argocd"],
       "groupName": "helm charts",
       "groupSlug": "helm",
-      "automerge": false,
-      "addLabels": ["needs-review"]
+      "automerge": true
     },
     {
       "description": "Dockerfile のイメージ(oven/bun・caddy)はダイジェストで固定する。caddy:2-alpine のような動くタグでも、ビルドに使うイメージが Renovate の PR を通してしか変わらないようにする",
