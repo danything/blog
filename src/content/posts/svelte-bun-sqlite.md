@@ -122,7 +122,7 @@ CSSは長らくTailwind + daisyUIでした。立ち上げの段階では決め�
 なので一度[Pico CSS](https://picocss.com/)に全部移しました。素の`<button>`や`<table>`にそのまま見た目が付くクラスレスのCSSです。
 
 > [!NOTE]
-> 2026年10月追記 その後Pico CSS本体はやめて、Picoを引き継いでメンテナンスされている[Blades](https://blades.ninja/)(`@anyblades/blades`)に全アプリ切り替えました。素のCSSで配られているのでSassが要らなくなり、`sass-embedded`とVite側の設定を外せました。以下はBladesに移ったあとの形で書いています。
+> 2026年10月追記 その後Pico CSS本体はやめて、Picoを引き継いでメンテナンスされている[Blades](https://blades.dev/)(`@anyblades/blades`)に全アプリ切り替えました。素のCSSで配られているのでSassが要らなくなり、`sass-embedded`とVite側の設定を外せました。以下はBladesに移ったあとの形で書いています。
 
 ```css
 @import "@anyblades/blades/pico" layer(pico);
