@@ -58,47 +58,48 @@ if (title) {
 	pageTitle = `${siteConfig.title} - ${text.subtitle}`;
 }
 
-// サイト内のページへのリンクに 200ms ほどマウスを乗せた(スマホでは押し始めた)時点で、
-// ブラウザの Speculation Rules で裏に描画しておき、押したら待たずに切り替える。
+// ブラウザの Speculation Rules で、サイト内のページを開かれる前に読んでおく。
+// - prefetch(HTML だけを取る。軽い): マウスを少し(10ms ほど)乗せた時点。スマホでは画面に見えているリンク
+// - prerender(裏で描画まで済ませる。重い): 200ms ほど乗せた(スマホでは押し始めた)時点。押したら待たずに切り替わる
+// prerender が間に合わないうちに押しても、HTML は先に取ってあるので通信を待たない(JS・CSS はキャッシュにある)。
 // 先に描画したページでは、閲覧の数え上げのような副作用は開かれるまで遅らせる(document.prerendering)。
 // 対応していないブラウザ(Firefox・Safari)では普通に移る
 // https://developer.chrome.com/docs/web-platform/prerender-pages
-const speculationRules = {
-	prerender: [
-		{
-			source: "document",
-			where: {
-				and: [
-					{ href_matches: "/*" },
-					// ページではないもの(RSS・サイトマップ・画像・検索の索引など)
-					{
-						not: {
-							href_matches: [
-								"/*.xml",
-								"/*.txt",
-								"/og/*",
-								"/static/*",
-								"/pagefind/*",
-								"/_astro/*",
-							],
-						},
-					},
-					// 同じページの中への移動(見出しのリンクや目次)と、新しいタブで開くもの・ダウンロード・nofollow
-					{
-						not: {
-							selector_matches: [
-								'[href^="#"]',
-								"[target]",
-								"[download]",
-								'[rel~="nofollow"]',
-							],
-						},
-					},
-				],
+const speculationTargets = {
+	source: "document",
+	where: {
+		and: [
+			{ href_matches: "/*" },
+			// ページではないもの(RSS・サイトマップ・画像・検索の索引など)
+			{
+				not: {
+					href_matches: [
+						"/*.xml",
+						"/*.txt",
+						"/og/*",
+						"/static/*",
+						"/pagefind/*",
+						"/_astro/*",
+					],
+				},
 			},
-			eagerness: "moderate",
-		},
-	],
+			// 同じページの中への移動(見出しのリンクや目次)と、新しいタブで開くもの・ダウンロード・nofollow
+			{
+				not: {
+					selector_matches: [
+						'[href^="#"]',
+						"[target]",
+						"[download]",
+						'[rel~="nofollow"]',
+					],
+				},
+			},
+		],
+	},
+};
+const speculationRules = {
+	prefetch: [{ ...speculationTargets, eagerness: "eager" }],
+	prerender: [{ ...speculationTargets, eagerness: "moderate" }],
 };
 ---
 
