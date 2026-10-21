@@ -24,6 +24,8 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
+          # 手元の toolcache の古い 22 で済ませず、22 の最新を取りに行く
+          check-latest: true
 
       - run: bun install --frozen-lockfile
       - run: bun run build
