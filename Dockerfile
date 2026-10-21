@@ -20,7 +20,7 @@ RUN setcap -r /usr/bin/caddy
 # 配信用は素の Alpine に Caddy 本体と MIME の定義だけを置く(preStop の sleep は busybox のもの)。
 # root で動かさない。ファイルは root のもののまま(読むだけ)。Caddy が書くのは XDG_DATA_HOME (/data) の
 # instance.uuid などだけで、k8s ではここに emptyDir を付けてルートを読み取り専用にする
-FROM alpine:3.24@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
+FROM alpine:3.24@sha256:c6b073f8e9e58d881f6ffba6ebf3b9ebd60b9e7d6e8337018c0e68bb5c356873
 COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
 COPY --from=caddy /etc/mime.types /etc/mime.types
 ENV XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data
