@@ -12,18 +12,18 @@ CI(`.github/workflows/translate.yml`)も手で訳すときもこの決まりに�
 - `category` と `tags` は下の対応表で置き換える。表に無い日本語は自然な英語にして、この表に足す
 - 最後に `sourceHash` を足す。原文ファイル全体の SHA-256 の先頭 16 文字(`bun scripts/translate-status.ts --hash <原文のパス>` で出る。無ければ `sha256sum <原文> | cut -c1-16`)。原文が変わったかどうかをこれで見る
 
-| 日本語 | 英語 |
-| --- | --- |
-| Web開発 | Web Development |
-| インフラ | Infrastructure |
-| 決済 | Payments |
-| 車 | Cars |
-| 個人開発 | Side Projects |
-| クレジットカード | Credit Cards |
-| セキュリティ | Security |
-| 磁気ストライプ | Magnetic Stripe |
-| 行政 | Government Procedures |
-| 貨物登録 | Cargo Registration |
+| 日本語           | 英語                  |
+| ---------------- | --------------------- |
+| Web開発          | Web Development       |
+| インフラ         | Infrastructure        |
+| 決済             | Payments              |
+| 車               | Cars                  |
+| 個人開発         | Side Projects         |
+| クレジットカード | Credit Cards          |
+| セキュリティ     | Security              |
+| 磁気ストライプ   | Magnetic Stripe       |
+| 行政             | Government Procedures |
+| 貨物登録         | Cargo Registration    |
 
 英語の固有名詞のタグ(Astro・AWS・Slack API など)はそのまま。
 
