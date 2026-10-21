@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**", "!public"]
+		"includes": ["**", "!public", "!tests/fixtures", "!src/content"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -41,6 +41,11 @@
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "double"
+		}
+	},
+	"yaml": {
+		"formatter": {
+			"indentWidth": 2
 		}
 	},
 	"overrides": [
