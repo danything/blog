@@ -21,7 +21,7 @@
       "allowedVersions": "<7"
     },
     {
-      "description": "Dockerfile のイメージ(oven/bun・caddy)はダイジェストで固定する。caddy:2-alpine のような動くタグでも、ビルドに使うイメージが Renovate の PR を通してしか変わらないようにする",
+      "description": "Dockerfile のイメージ(oven/bun・caddy・distroless)はダイジェストで固定する。caddy:2-alpine のような動くタグでも、ビルドに使うイメージが Renovate の PR を通してしか変わらないようにする",
       "matchManagers": ["dockerfile"],
       "pinDigests": true
     },
