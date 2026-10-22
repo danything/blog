@@ -15,16 +15,17 @@ RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN bun run build
 # exec が operation not permitted で失敗する。8080 で待つのでここで外し、本体だけを取り出す。
 # (公式イメージの上で setcap すると約 50MB の本体がもう 1 層増えてイメージが倍近くになるため)
 FROM caddy:2-alpine@sha256:24ec7b05bc532c7bb57f727030c5056e257ff7138b4b50460306819ff79362bd AS caddy
-RUN setcap -r /usr/bin/caddy
+# 配信用のイメージにはシェルが無いので、Caddy が使うディレクトリもここで作っておく
+RUN setcap -r /usr/bin/caddy && mkdir -p /xdg/config /xdg/data
 
-# 配信用は素の Alpine に Caddy 本体と MIME の定義だけを置く(preStop の sleep は busybox のもの)。
-# root で動かさない。ファイルは root のもののまま(読むだけ)。Caddy が書くのは XDG_DATA_HOME (/data) の
+# 配信用はシェルもパッケージマネージャも無い distroless に、Caddy 本体 (静的リンク) と MIME の定義だけを置く。
+# nonroot の版は uid 65532 で動く。ファイルは root のもののまま(読むだけ)。Caddy が書くのは XDG_DATA_HOME (/data) の
 # instance.uuid などだけで、k8s ではここに emptyDir を付けてルートを読み取り専用にする
-FROM alpine:3.24@sha256:71e9b7bae160ba167fa17414401b94cbcdaf3c32feeab9298bd794a2a0614c35
+FROM gcr.io/distroless/static-debian13:nonroot@sha256:d62067879de890a1def9da0e7766b7d20810a5e5555cef8506b752437d7a3e88
 COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
 COPY --from=caddy /etc/mime.types /etc/mime.types
 ENV XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data
-RUN mkdir -p /config /data && chown 65532:65532 /config /data
+COPY --from=caddy --chown=65532:65532 /xdg/ /
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=builder /usr/src/app/dist /srv
 WORKDIR /srv
