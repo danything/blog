@@ -1,9 +1,10 @@
-import { icons as lucide } from "@iconify-json/lucide";
-import { icons as simpleIcons } from "@iconify-json/simple-icons";
 // アイコンは Iconify のアイコンセットのパッケージ(@iconify-json/*)からビルド時に取る。
 // 画面の部品は Lucide(https://icon-sets.iconify.design/lucide/)、
 // サービスのロゴは Simple Icons(https://icon-sets.iconify.design/simple-icons/)から選ぶ。
 // 名前は "lucide:search" の形。無い名前を書くとビルドが止まる
+
+import { icons as lucide } from "@iconify-json/lucide";
+import { icons as simpleIcons } from "@iconify-json/simple-icons";
 import type { IconifyJSON } from "@iconify/types";
 
 const SETS: Record<string, IconifyJSON> = {
