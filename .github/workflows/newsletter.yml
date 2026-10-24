@@ -49,5 +49,5 @@ jobs:
         env:
           BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
           NEWSLETTER_STATUS: draft
-          SITE_URL: https://doany.io
+          SITE_URL: https://b.doany.io
         run: bun scripts/newsletter.ts ${{ steps.collect.outputs.files }}

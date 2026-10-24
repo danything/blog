@@ -1,6 +1,6 @@
 # blog
 
-[doany.io](https://doany.io) — [Fuwari](https://github.com/saicaca/fuwari) をベースにした Astro 製の静的ブログ。
+[b.doany.io](https://b.doany.io) — [Fuwari](https://github.com/saicaca/fuwari) をベースにした Astro 製の静的ブログ。
 
 ## 開発
 

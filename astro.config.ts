@@ -40,7 +40,7 @@ const listLastmod = [...postLastmod.values()]
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://doany.io/",
+	site: "https://b.doany.io/",
 	base: "/",
 	trailingSlash: "always",
 	// Astro 7 の既定("jsx")は要素の前後の改行を空白ごと消し、「Powered by Astro」が

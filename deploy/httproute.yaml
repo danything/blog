@@ -11,8 +11,8 @@ spec:
   parentRefs:
     - name: doany
       namespace: kube-system
-      sectionName: https-apex
-  hostnames: ["doany.io"]
+      sectionName: https
+  hostnames: ["b.doany.io"]
   rules:
     - matches:
         - path:

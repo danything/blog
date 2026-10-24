@@ -54,6 +54,11 @@ export const navBarConfig: NavBarConfig = {
 		{ i18nKey: I18nKey.archive, url: "/archive/" },
 		{ i18nKey: I18nKey.about, url: "/about/" },
 		{
+			name: "Doa",
+			url: "https://doany.io/", // 事業・作ったもの・お問い合わせ(コーポレートサイト)
+			external: true,
+		},
+		{
 			name: "GitHub",
 			url: "https://github.com/DAnything/blog",
 			external: true, // 外部リンクの印を付け、新しいタブで開く
@@ -64,6 +69,11 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "/static/images/avatar.png", // public 配下の絶対パス
 	links: [
+		{
+			name: "Doa",
+			icon: "lucide:briefcase", // 事業のサイト (doany.io)
+			url: "https://doany.io/",
+		},
 		{
 			name: "GitHub",
 			icon: "simple-icons:github", // ロゴは Simple Icons から選ぶ(https://icon-sets.iconify.design/simple-icons/)

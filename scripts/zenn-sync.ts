@@ -22,7 +22,7 @@ import { parsePost } from "./frontmatter";
 
 const POSTS_DIR = "src/content/posts";
 const OUT_DIR = "articles";
-const SITE_URL = (process.env.SITE_URL || "https://doany.io").replace(
+const SITE_URL = (process.env.SITE_URL || "https://b.doany.io").replace(
 	/\/$/,
 	"",
 );

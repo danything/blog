@@ -31,9 +31,10 @@ spec:
         # apps/gateway-routes/blog-yosegaki.yaml にあるので、chart の Ingress は要らない
         ingress:
           enabled: false
-        siteName: doany.io
+        siteName: b.doany.io
+        # ブログは doany.io から b.doany.io に移った。doany.io (コーポレートサイト) にはコメント欄が無い
         allowedOrigins:
-          - https://doany.io
+          - https://b.doany.io
         # 承認なしで公開。bot は Turnstile で止める
         moderation: none
         admin:

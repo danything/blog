@@ -5,9 +5,9 @@
 # http(s) のリンクだけを見る
 scheme = ["https", "http"]
 # /posts/... や /static/... のようなサイト内のリンク (ルート相対) は、解決できないと
-# エラーになるので doany.io を基準に URL にしてから、下の exclude で外す
+# エラーになるので b.doany.io を基準に URL にしてから、下の exclude で外す
 # (サイト内のリンクはビルドとテストで確かめる)
-base_url = "https://doany.io"
+base_url = "https://b.doany.io"
 include_mail = false
 # コードブロックの中の URL (例示やコマンド) は見ない
 include_verbatim = false
@@ -15,8 +15,8 @@ include_verbatim = false
 exclude_all_private = true
 
 exclude = [
-  # サイト内のリンク (サブドメインの別サービスは外部リンクとして調べる)
-  '^https?://(www\.)?doany\.io(/|$)',
+  # サイト内のリンク (doany.io のコーポレートサイトとサブドメインの別サービスは外部リンクとして調べる)
+  '^https?://b\.doany\.io(/|$)',
   # 例示用のドメイン
   '^https?://([^/]+\.)?example\.(com|net|org)',
   '^https?://[^/]+\.(example|invalid|test|localhost)(/|:|$)',
