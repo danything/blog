@@ -55,9 +55,10 @@ spec:
           # Cloudflare ダッシュボード → Turnstile → doany.io のウィジェット。公開値
           siteKey: 0x4AAAAAAEoiKxn884OxoH4h
         smtp:
-          host: smtp.office365.com
+          # 中継(gitops の apps/smtp-relay。Graph の sendMail)。ユーザー名は <テナント ID>@<smtp-relay のクライアント ID>、TLS なし
+          host: smtp-relay.smtp-relay.svc
           port: 587
-          user: info@doany.io
+          user: "22ac977d-b140-4dc8-8150-90d645d3475b@fd45a316-97cc-4480-8da8-487109403520"
           from: info@doany.io
         infisicalSecret:
           enabled: true
