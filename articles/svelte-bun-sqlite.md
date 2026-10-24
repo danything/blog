@@ -15,13 +15,13 @@ published_at: 2026-09-04
 
 現状動かしているものは下記の通りです。
 
-|                                     | 何をするもの                                                | 公開                                         |
-| ----------------------------------- | ----------------------------------------------------------- | -------------------------------------------- |
-| [worklog](https://w.doany.io/)      | SlackやGitHubのログから稼働表を作るやつ                     | サービスのみ                                 |
-| [𝕏ool](https://x.doany.io/)         | 𝕏の1日分の成績を通信簿として自動ポストするやつ              | [ソース](https://github.com/DAnything/xool)  |
-| mogiri                              | QRを使った入場受付と、事前購入・セルフレジ                  | [ソース](https://github.com/5ym/mogiri)      |
-| denpa                               | テレビの番組表、予約、録画、配信                            | [ソース](https://github.com/DAnything/denpa) |
-| [tamasagashi](https://ts.doany.io/) | 公的データから作った車両マスター(型式 → 通称名・諸元)の閲覧 | サービスのみ                                 |
+|                                                   | 何をするもの                                                | 公開                                         |
+| ------------------------------------------------- | ----------------------------------------------------------- | -------------------------------------------- |
+| [worklog](https://w.doany.io/)                    | SlackやGitHubのログから稼働表を作るやつ                     | サービスのみ                                 |
+| [𝕏ool](https://x.doany.io/)                       | 𝕏の1日分の成績を通信簿として自動ポストするやつ              | [ソース](https://github.com/DAnything/xool)  |
+| mogiri (現 [noren](https://github.com/5ym/noren)) | QRを使った入場受付と、事前購入・セルフレジ                  | [ソース](https://github.com/5ym/noren)       |
+| denpa                                             | テレビの番組表、予約、録画、配信                            | [ソース](https://github.com/DAnything/denpa) |
+| [tamasagashi](https://ts.doany.io/)               | 公的データから作った車両マスター(型式 → 通称名・諸元)の閲覧 | サービスのみ                                 |
 
 5つともpackage.jsonの中身がほぼ同じで、SvelteKit 2 + Svelte 5、adapter-node、Blades(Pico CSSの後継)、bun:sqlite、TypeScript 7、起動は`bun build/index.js`という構成になっています。  
 別に最初から揃えようと思っていたわけではなく、1個書き直したら楽だったので以降全部そうなった、というのが正直なところです。
