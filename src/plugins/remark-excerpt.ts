@@ -1,4 +1,5 @@
 import type { RemarkPlugin } from "@astrojs/markdown-remark";
+
 import { mdastText } from "./mdast";
 
 /** 記事の最初の段落を抜粋にする(description が無い記事の一覧表示用) */

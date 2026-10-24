@@ -1,4 +1,5 @@
 import type { RemarkPlugin } from "@astrojs/markdown-remark";
+
 import { VISUAL_FIXTURES } from "../constants/content-dir";
 import { h } from "./hast";
 import { visit } from "./visit";

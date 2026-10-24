@@ -1,6 +1,8 @@
 import fs from "node:fs";
+
 import { render } from "takumi-js";
 import { Renderer } from "takumi-js/node";
+
 import { siteConfig } from "@/config";
 
 const WIDTH = 1200;

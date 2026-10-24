@@ -1,4 +1,5 @@
 import type { RemarkPlugin } from "@astrojs/markdown-remark";
+
 import { mdastText } from "./mdast";
 
 /** 1 分に読める語数(以前使っていた reading-time の既定値) */

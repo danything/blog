@@ -1,5 +1,6 @@
 import type { RehypePlugin } from "@astrojs/markdown-remark";
 import type { Element, ElementContent } from "hast";
+
 import { SKIP, visit } from "./visit";
 
 const isElement = (node: ElementContent): node is Element =>

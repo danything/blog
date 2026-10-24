@@ -7,7 +7,9 @@
 // 開発サーバーを動かしている間に新しく書いたアイコンは、まだ集めていないので、その CSS に足す(起動し直すと main.css に移る)
 import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+
 import type { Plugin } from "vite";
+
 import { iconDataUrl } from "../utils/icons";
 
 const NAME = /var\(--icon-(lucide|simple-icons)-([a-z0-9]+(?:-[a-z0-9]+)*)\)/g;

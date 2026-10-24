@@ -1,5 +1,6 @@
 import type { RemarkPlugin } from "@astrojs/markdown-remark";
 import type { RootContent } from "mdast";
+
 import { visit } from "./visit";
 
 /**

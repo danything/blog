@@ -1,4 +1,5 @@
 import type { RehypePlugin } from "@astrojs/markdown-remark";
+
 import { h } from "./hast";
 import { SKIP, visit } from "./visit";
 

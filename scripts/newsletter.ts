@@ -9,6 +9,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+
 import { parsePost } from "./frontmatter";
 
 const API = "https://api.buttondown.com/v1/emails";
