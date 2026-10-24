@@ -28,7 +28,7 @@ async function loadFont(text: string, weight: 400 | 700): Promise<ArrayBuffer> {
 	return fetchOk(url).then((r) => r.arrayBuffer());
 }
 
-const FOOTER = `${siteConfig.title} · doany.io`;
+const FOOTER = `${siteConfig.title} · b.doany.io`;
 // フッターの文字は全記事で同じなので 1 回だけ取る
 let footerFont: Promise<ArrayBuffer> | undefined;
 

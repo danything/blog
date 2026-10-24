@@ -65,8 +65,12 @@ function mount(target: HTMLElement, server: string) {
 		target,
 		server,
 		lang: document.documentElement.lang === "en" ? "en" : "ja",
-		// クエリ文字列でスレッドが分かれないよう URL を明示する
-		page: location.origin + location.pathname,
+		// スレッドの鍵。クエリ文字列でスレッドが分かれないよう URL を明示する。
+		// ブログは doany.io から b.doany.io に移ったが、鍵は移る前の URL のままにする
+		// (yosegaki の DB のスレッドを引き継ぐため。旧 URL は doany.io が b.doany.io へ 301 で転送する)。
+		// 通知やメールのリンク先 (url) だけ今の URL にする
+		page: `https://doany.io${location.pathname}`,
+		url: location.origin + location.pathname,
 		title: document.title,
 	});
 }

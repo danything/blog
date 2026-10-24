@@ -5,7 +5,7 @@
 // 環境変数:
 //   BUTTONDOWN_API_KEY  必須
 //   NEWSLETTER_STATUS   draft (既定) または about_to_send
-//   SITE_URL            既定 https://doany.io
+//   SITE_URL            既定 https://b.doany.io
 
 import fs from "node:fs";
 import path from "node:path";
@@ -14,7 +14,7 @@ import { parsePost } from "./frontmatter";
 const API = "https://api.buttondown.com/v1/emails";
 const KEY = process.env.BUTTONDOWN_API_KEY;
 const STATUS = process.env.NEWSLETTER_STATUS || "draft";
-const SITE_URL = (process.env.SITE_URL || "https://doany.io").replace(
+const SITE_URL = (process.env.SITE_URL || "https://b.doany.io").replace(
 	/\/$/,
 	"",
 );

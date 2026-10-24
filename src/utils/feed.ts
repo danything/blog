@@ -34,7 +34,7 @@ function stripInvalidXmlChars(str: string): string {
 /** その言語の記事の RSS(/rss.xml と /en/rss.xml) */
 export async function feed(context: APIContext, lang: Lang) {
 	const blog = await getSortedPosts(lang);
-	const site = context.site ?? new URL("https://doany.io/");
+	const site = context.site ?? new URL("https://b.doany.io/");
 
 	return rss({
 		title: siteConfig.title,
