@@ -23,65 +23,65 @@ import { parsePost } from "./frontmatter";
 const POSTS_DIR = "src/content/posts";
 const OUT_DIR = "articles";
 const SITE_URL = (process.env.SITE_URL || "https://b.doany.io").replace(
-	/\/$/,
-	"",
+  /\/$/,
+  "",
 );
 
 // Zenn のスラッグは a-z0-9_- の 12〜50 文字。ブログ側のファイル名は短いものが
 // 多いが、リネームすると doany.io の URL が変わってしまうため、ここでだけ
 // 決定的なハッシュを足して長さを満たす。
 function toZennSlug(slug: string): string {
-	if (slug.length >= 12) return slug.slice(0, 50);
-	const need = Math.max(4, 12 - slug.length - 1);
-	const hash = crypto.createHash("sha256").update(slug).digest("hex");
-	return `${slug}-${hash.slice(0, need)}`;
+  if (slug.length >= 12) return slug.slice(0, 50);
+  const need = Math.max(4, 12 - slug.length - 1);
+  const hash = crypto.createHash("sha256").update(slug).digest("hex");
+  return `${slug}-${hash.slice(0, need)}`;
 }
 
 /** Zenn のトピックは空白を含められないため詰める */
 function toTopics(tags: string | undefined): string[] {
-	if (!tags) return [];
-	let list: unknown[];
-	try {
-		list = JSON.parse(tags);
-	} catch {
-		return [];
-	}
-	return list.map((t) => String(t).replace(/\s+/g, "")).slice(0, 5);
+  if (!tags) return [];
+  let list: unknown[];
+  try {
+    list = JSON.parse(tags);
+  } catch {
+    return [];
+  }
+  return list.map((t) => String(t).replace(/\s+/g, "")).slice(0, 5);
 }
 
 // GitHub 形式のアラートは Zenn では素の引用になってしまうため、
 // Zenn のメッセージ記法に変換する。
 function convertAdmonitions(body: string): string {
-	return body.replace(
-		/^> \[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\r?\n((?:>.*(?:\r?\n|$))+)/gm,
-		(_, kind: string, rest: string) => {
-			const inner = rest
-				.split(/\r?\n/)
-				.filter((l) => l.startsWith(">"))
-				.map((l) => l.replace(/^>\s?/, ""))
-				.join("\n")
-				.trimEnd();
-			const alert = kind === "WARNING" || kind === "CAUTION" ? " alert" : "";
-			return `:::message${alert}\n${inner}\n:::\n`;
-		},
-	);
+  return body.replace(
+    /^> \[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\r?\n((?:>.*(?:\r?\n|$))+)/gm,
+    (_, kind: string, rest: string) => {
+      const inner = rest
+        .split(/\r?\n/)
+        .filter((l) => l.startsWith(">"))
+        .map((l) => l.replace(/^>\s?/, ""))
+        .join("\n")
+        .trimEnd();
+      const alert = kind === "WARNING" || kind === "CAUTION" ? " alert" : "";
+      return `:::message${alert}\n${inner}\n:::\n`;
+    },
+  );
 }
 
 function convertBody(body: string, slug: string): string {
-	return (
-		convertAdmonitions(body)
-			// 画像は doany.io 上の絶対パスなので、Zenn から見えるよう URL にする
-			.replace(/\]\(\/static\//g, `](${SITE_URL}/static/`)
-			// 記事同士の内部リンクも Zenn 上では解決できないので、ブログ側の URL に向ける
-			.replace(/\]\(\/posts\//g, `](${SITE_URL}/posts/`)
-			// Astro のディレクティブは Zenn のカード記法に置き換える
-			.replace(
-				/^::github\{repo="([^"]+)"\}$/gm,
-				"@[card](https://github.com/$1)",
-			)
-			.trimEnd()
-			.concat(`\n\n---\n\n初出: ${SITE_URL}/posts/${slug}/\n`)
-	);
+  return (
+    convertAdmonitions(body)
+      // 画像は doany.io 上の絶対パスなので、Zenn から見えるよう URL にする
+      .replace(/\]\(\/static\//g, `](${SITE_URL}/static/`)
+      // 記事同士の内部リンクも Zenn 上では解決できないので、ブログ側の URL に向ける
+      .replace(/\]\(\/posts\//g, `](${SITE_URL}/posts/`)
+      // Astro のディレクティブは Zenn のカード記法に置き換える
+      .replace(
+        /^::github\{repo="([^"]+)"\}$/gm,
+        "@[card](https://github.com/$1)",
+      )
+      .trimEnd()
+      .concat(`\n\n---\n\n初出: ${SITE_URL}/posts/${slug}/\n`)
+  );
 }
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
@@ -92,58 +92,58 @@ let draft = 0;
 let skipped = 0;
 
 for (const name of fs.readdirSync(POSTS_DIR).sort()) {
-	if (!name.endsWith(".md")) continue;
+  if (!name.endsWith(".md")) continue;
 
-	const slug = path.basename(name, ".md");
-	const parsed = parsePost(path.join(POSTS_DIR, name));
-	if (!parsed?.fm.title) {
-		console.log(`スキップ (title なし): ${name}`);
-		skipped++;
-		continue;
-	}
+  const slug = path.basename(name, ".md");
+  const parsed = parsePost(path.join(POSTS_DIR, name));
+  if (!parsed?.fm.title) {
+    console.log(`スキップ (title なし): ${name}`);
+    skipped++;
+    continue;
+  }
 
-	const { fm, body } = parsed;
-	if (fm.draft === "true") {
-		console.log(`スキップ (draft): ${name}`);
-		skipped++;
-		continue;
-	}
+  const { fm, body } = parsed;
+  if (fm.draft === "true") {
+    console.log(`スキップ (draft): ${name}`);
+    skipped++;
+    continue;
+  }
 
-	const zennSlug = fm.zennSlug || toZennSlug(slug);
-	const isPublished = fm.zennPublished !== "false";
+  const zennSlug = fm.zennSlug || toZennSlug(slug);
+  const isPublished = fm.zennPublished !== "false";
 
-	const front = [
-		"---",
-		`title: ${JSON.stringify(fm.title)}`,
-		`emoji: ${JSON.stringify(fm.zennEmoji || "📝")}`,
-		`type: ${fm.zennType === "idea" ? "idea" : "tech"}`,
-		`topics: ${JSON.stringify(toTopics(fm.tags))}`,
-		`published: ${isPublished}`,
-	];
-	// 移行なので元記事の公開日を引き継ぐ。Zenn 側は後から変更できない
-	if (/^\d{4}-\d{2}-\d{2}$/.test(fm.published || "")) {
-		front.push(`published_at: ${fm.published}`);
-	}
-	front.push("---");
+  const front = [
+    "---",
+    `title: ${JSON.stringify(fm.title)}`,
+    `emoji: ${JSON.stringify(fm.zennEmoji || "📝")}`,
+    `type: ${fm.zennType === "idea" ? "idea" : "tech"}`,
+    `topics: ${JSON.stringify(toTopics(fm.tags))}`,
+    `published: ${isPublished}`,
+  ];
+  // 移行なので元記事の公開日を引き継ぐ。Zenn 側は後から変更できない
+  if (/^\d{4}-\d{2}-\d{2}$/.test(fm.published || "")) {
+    front.push(`published_at: ${fm.published}`);
+  }
+  front.push("---");
 
-	fs.writeFileSync(
-		path.join(OUT_DIR, `${zennSlug}.md`),
-		`${front.join("\n")}\n\n${convertBody(body, slug)}`,
-	);
-	generated.add(`${zennSlug}.md`);
+  fs.writeFileSync(
+    path.join(OUT_DIR, `${zennSlug}.md`),
+    `${front.join("\n")}\n\n${convertBody(body, slug)}`,
+  );
+  generated.add(`${zennSlug}.md`);
 
-	if (isPublished) published++;
-	else draft++;
+  if (isPublished) published++;
+  else draft++;
 }
 
 // 元記事が消えた分の掃除
 for (const name of fs.readdirSync(OUT_DIR)) {
-	if (name.endsWith(".md") && !generated.has(name)) {
-		fs.unlinkSync(path.join(OUT_DIR, name));
-		console.log(`削除: ${name}`);
-	}
+  if (name.endsWith(".md") && !generated.has(name)) {
+    fs.unlinkSync(path.join(OUT_DIR, name));
+    console.log(`削除: ${name}`);
+  }
 }
 
 console.log(
-	`\n公開 ${published} 件 / 下書き ${draft} 件 / スキップ ${skipped} 件`,
+  `\n公開 ${published} 件 / 下書き ${draft} 件 / スキップ ${skipped} 件`,
 );

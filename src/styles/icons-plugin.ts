@@ -16,56 +16,56 @@ const SOURCE = /\.(?:css|astro)$/;
 
 /** CSS に書かれたアイコンの名前("lucide:info" の形) */
 function iconNames(code: string): string[] {
-	return [...code.matchAll(NAME)].map(
-		([, prefix, name]) => `${prefix}:${name}`,
-	);
+  return [...code.matchAll(NAME)].map(
+    ([, prefix, name]) => `${prefix}:${name}`,
+  );
 }
 
 function rootRule(names: Iterable<string>): string {
-	const decls = [...names].map((name) => {
-		const [prefix, id] = name.split(":");
-		return `--icon-${prefix}-${id}: ${iconDataUrl(name)};`;
-	});
-	return `:root { ${decls.join(" ")} }`;
+  const decls = [...names].map((name) => {
+    const [prefix, id] = name.split(":");
+    return `--icon-${prefix}-${id}: ${iconDataUrl(name)};`;
+  });
+  return `:root { ${decls.join(" ")} }`;
 }
 
 export function cssIcons({
-	srcDir = "src",
-	entry = "src/styles/main.css",
+  srcDir = "src",
+  entry = "src/styles/main.css",
 }: {
-	/** 使われているアイコンを探すディレクトリ */
-	srcDir?: string;
-	/** 変数をまとめて足す CSS(どのページでも読み込むもの) */
-	entry?: string;
+  /** 使われているアイコンを探すディレクトリ */
+  srcDir?: string;
+  /** 変数をまとめて足す CSS(どのページでも読み込むもの) */
+  entry?: string;
 } = {}): Plugin {
-	let srcPath = "";
-	let entryPath = "";
-	const known = new Set<string>();
+  let srcPath = "";
+  let entryPath = "";
+  const known = new Set<string>();
 
-	return {
-		name: "css-icons",
-		configResolved(config) {
-			srcPath = resolve(config.root, srcDir);
-			entryPath = resolve(config.root, entry);
-		},
-		buildStart() {
-			known.clear();
-			const files = readdirSync(srcPath, { recursive: true, encoding: "utf8" });
-			for (const file of files.filter((f) => SOURCE.test(f)).sort())
-				for (const name of iconNames(
-					readFileSync(resolve(srcPath, file), "utf8"),
-				))
-					known.add(name);
-		},
-		transform(code, id) {
-			if (!CSS.test(id)) return;
-			const names =
-				id.split("?")[0] === entryPath
-					? [...known].sort()
-					: // 起動した後に書かれたものなど、集めたアイコンに無いものだけ、その CSS に足す
-						iconNames(code).filter((name) => !known.has(name));
-			if (names.length === 0) return;
-			return { code: `${code}\n${rootRule(new Set(names))}\n`, map: null };
-		},
-	};
+  return {
+    name: "css-icons",
+    configResolved(config) {
+      srcPath = resolve(config.root, srcDir);
+      entryPath = resolve(config.root, entry);
+    },
+    buildStart() {
+      known.clear();
+      const files = readdirSync(srcPath, { recursive: true, encoding: "utf8" });
+      for (const file of files.filter((f) => SOURCE.test(f)).sort())
+        for (const name of iconNames(
+          readFileSync(resolve(srcPath, file), "utf8"),
+        ))
+          known.add(name);
+    },
+    transform(code, id) {
+      if (!CSS.test(id)) return;
+      const names =
+        id.split("?")[0] === entryPath
+          ? [...known].sort()
+          : // 起動した後に書かれたものなど、集めたアイコンに無いものだけ、その CSS に足す
+            iconNames(code).filter((name) => !known.has(name));
+      if (names.length === 0) return;
+      return { code: `${code}\n${rootRule(new Set(names))}\n`, map: null };
+    },
+  };
 }

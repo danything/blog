@@ -9,8 +9,8 @@
     "preview": "astro preview",
     "new-post": "bun scripts/new-post.ts",
     "zenn-sync": "bun scripts/zenn-sync.ts",
-    "lint": "biome check . && astro check",
-    "lint:fix": "biome check --write .",
+    "lint": "oxlint && bun fmt --check && astro check",
+    "format": "oxlint --fix && bun fmt",
     "images": "bun scripts/images.ts"
   },
   "devDependencies": {
@@ -19,7 +19,6 @@
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "@axe-core/playwright": "^4.14.0",
-    "@biomejs/biome": "2.6.2",
     "@expressive-code/plugin-collapsible-sections": "^0.44.3",
     "@expressive-code/plugin-line-numbers": "^0.44.3",
     "@iconify-json/lucide": "^1.2.147",
@@ -31,6 +30,7 @@
     "@types/mdast": "^4.0.4",
     "astro": "^7.4.2",
     "astro-expressive-code": "^0.44.3",
+    "oxlint": "^1.89.0",
     "pagefind": "^1.5.2",
     "sharp": "^0.35.5",
     "takumi-js": "^2.17.1",

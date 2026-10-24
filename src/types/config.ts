@@ -2,78 +2,76 @@ import type { AUTO_MODE, DARK_MODE, LIGHT_MODE } from "@constants/constants";
 import type I18nKey from "@i18n/i18nKey";
 
 export type SiteConfig = {
-	title: string;
-	/** OGP 画像の既定値(public 配下の絶対パス)。記事にアイキャッチがあればそちらを使う */
-	ogImage: string;
+  title: string;
+  /** OGP 画像の既定値(public 配下の絶対パス)。記事にアイキャッチがあればそちらを使う */
+  ogImage: string;
 
-	/** 既定の言語。英語版は /en/ 以下に置く(src/i18n/translation.ts) */
-	lang: "ja" | "en";
+  /** 既定の言語。英語版は /en/ 以下に置く(src/i18n/translation.ts) */
+  lang: "ja" | "en";
 
-	toc: {
-		depth: 1 | 2 | 3;
-	};
+  toc: {
+    depth: 1 | 2 | 3;
+  };
 };
 
 /** 言語ごとに変わる、サイトと作者についての文言(config.ts の siteText) */
 export type SiteText = {
-	subtitle: string;
-	/** 記事以外のページの meta description */
-	description: string;
-	profileName: string;
-	bio: string;
-	kofi: {
-		title: string;
-		description: string;
-		buttonLabel: string;
-	};
+  subtitle: string;
+  /** 記事以外のページの meta description */
+  description: string;
+  profileName: string;
+  bio: string;
+  kofi: {
+    title: string;
+    description: string;
+    buttonLabel: string;
+  };
 };
 
 export type NavBarLink = {
-	name: string;
-	/** サイト内のリンクは言語を除いたパス(表示する側で localeUrl を通す) */
-	url: string;
-	external?: boolean;
+  name: string;
+  /** サイト内のリンクは言語を除いたパス(表示する側で localeUrl を通す) */
+  url: string;
+  external?: boolean;
 };
 
 export type NavBarConfig = {
-	/** name の代わりに i18nKey を書くと、ページの言語の文言を出す */
-	links: (NavBarLink | (Omit<NavBarLink, "name"> & { i18nKey: I18nKey }))[];
+  /** name の代わりに i18nKey を書くと、ページの言語の文言を出す */
+  links: (NavBarLink | (Omit<NavBarLink, "name"> & { i18nKey: I18nKey }))[];
 };
 
 export type ProfileConfig = {
-	avatar: string;
-	links: {
-		name: string;
-		url: string;
-		icon: string;
-	}[];
+  avatar: string;
+  links: {
+    name: string;
+    url: string;
+    icon: string;
+  }[];
 };
 
 export type LicenseConfig = {
-	name: string;
-	url: string;
+  name: string;
+  url: string;
 };
 
 export type CommentConfig = {
-	/** yosegaki (https://github.com/DAnything/yosegaki) のサーバ */
-	server: string;
+  /** yosegaki (https://github.com/DAnything/yosegaki) のサーバ */
+  server: string;
 };
 
 export type KofiConfig = {
-	/** Ko-fi のユーザー名 (https://ko-fi.com/<username>) */
-	username: string;
+  /** Ko-fi のユーザー名 (https://ko-fi.com/<username>) */
+  username: string;
 };
 
 export type NewsletterConfig = {
-	/** buttondown のユーザー名 (https://buttondown.com/<username>) */
-	username: string;
-	title: string;
-	description: string;
-	placeholder: string;
-	buttonLabel: string;
+  /** buttondown のユーザー名 (https://buttondown.com/<username>) */
+  username: string;
+  title: string;
+  description: string;
+  placeholder: string;
+  buttonLabel: string;
 };
 
 export type LIGHT_DARK_MODE =
-	| typeof LIGHT_MODE
-	| typeof DARK_MODE
-	| typeof AUTO_MODE;
+  typeof LIGHT_MODE | typeof DARK_MODE | typeof AUTO_MODE;

@@ -1,6 +1,6 @@
 import {
-	definePlugin,
-	type PostprocessRenderedBlockContext,
+  definePlugin,
+  type PostprocessRenderedBlockContext,
 } from "astro-expressive-code";
 import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
@@ -12,77 +12,77 @@ type ElementContent = Element["children"][number];
 
 // Iconify の SVG の中身("<path d=... />" や "<g ...>...</g>" だけでできている)を hast にする
 function parseSvgBody(body: string): ElementContent[] {
-	const root: ElementContent[] = [];
-	const stack: Element[] = [];
-	const add = (node: Element) => (stack.at(-1)?.children ?? root).push(node);
-	for (const [, close, tag, attrs, selfClose] of body.matchAll(
-		/<(\/?)([a-z]+)([^>]*?)(\/?)>/g,
-	)) {
-		if (close) {
-			stack.pop();
-			continue;
-		}
-		const props: Record<string, string> = {};
-		for (const [, k, v] of attrs.matchAll(/([a-z-]+)="([^"]*)"/g)) props[k] = v;
-		const node = h(tag, props);
-		add(node);
-		if (!selfClose) stack.push(node);
-	}
-	return root;
+  const root: ElementContent[] = [];
+  const stack: Element[] = [];
+  const add = (node: Element) => (stack.at(-1)?.children ?? root).push(node);
+  for (const [, close, tag, attrs, selfClose] of body.matchAll(
+    /<(\/?)([a-z]+)([^>]*?)(\/?)>/g,
+  )) {
+    if (close) {
+      stack.pop();
+      continue;
+    }
+    const props: Record<string, string> = {};
+    for (const [, k, v] of attrs.matchAll(/([a-z-]+)="([^"]*)"/g)) props[k] = v;
+    const node = h(tag, props);
+    add(node);
+    if (!selfClose) stack.push(node);
+  }
+  return root;
 }
 
 // アイコンは src/utils/icons.ts(@iconify-json/*)から取る
 const icon = (kind: string, name: string) => {
-	const data = getIcon(name);
-	return h(
-		"svg",
-		{
-			viewBox: data.viewBox,
-			xmlns: "http://www.w3.org/2000/svg",
-			className: ["copy-btn-icon", kind],
-		},
-		parseSvgBody(data.body),
-	);
+  const data = getIcon(name);
+  return h(
+    "svg",
+    {
+      viewBox: data.viewBox,
+      xmlns: "http://www.w3.org/2000/svg",
+      className: ["copy-btn-icon", kind],
+    },
+    parseSvgBody(data.body),
+  );
 };
 
 // コードブロックの右上に出すコピーボタン(押したときの処理は Markdown.astro のスクリプト)。
 // 名前は記事の言語にする(英訳は posts-en/ と about-en.md)
 const copyButton = (sourceFilePath = "") =>
-	h(
-		"button",
-		{
-			className: ["copy-btn"],
-			"aria-label": i18n(
-				I18nKey.copyCode,
-				/(\/posts-en\/|-en\.md$)/.test(sourceFilePath) ? "en" : "ja",
-			),
-		},
-		[
-			h("div", { className: ["copy-btn-icon"] }, [
-				icon("copy-icon", "lucide:copy"),
-				icon("success-icon", "lucide:check"),
-			]),
-		],
-	);
+  h(
+    "button",
+    {
+      className: ["copy-btn"],
+      "aria-label": i18n(
+        I18nKey.copyCode,
+        /(\/posts-en\/|-en\.md$)/.test(sourceFilePath) ? "en" : "ja",
+      ),
+    },
+    [
+      h("div", { className: ["copy-btn-icon"] }, [
+        icon("copy-icon", "lucide:copy"),
+        icon("success-icon", "lucide:check"),
+      ]),
+    ],
+  );
 
 export function pluginCustomCopyButton() {
-	return definePlugin({
-		name: "Custom Copy Button",
-		hooks: {
-			postprocessRenderedBlock: (context) => {
-				const addToPre = (node: Element) => {
-					if (node.tagName === "pre") {
-						node.children.push(
-							copyButton(context.codeBlock.parentDocument?.sourceFilePath),
-						);
-						return;
-					}
-					for (const child of node.children) {
-						if (child.type === "element") addToPre(child);
-					}
-				};
-				addToPre(context.renderData.blockAst);
-			},
-		},
-	});
+  return definePlugin({
+    name: "Custom Copy Button",
+    hooks: {
+      postprocessRenderedBlock: (context) => {
+        const addToPre = (node: Element) => {
+          if (node.tagName === "pre") {
+            node.children.push(
+              copyButton(context.codeBlock.parentDocument?.sourceFilePath),
+            );
+            return;
+          }
+          for (const child of node.children) {
+            if (child.type === "element") addToPre(child);
+          }
+        };
+        addToPre(context.renderData.blockAst);
+      },
+    },
+  });
 }

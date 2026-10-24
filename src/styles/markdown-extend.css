@@ -3,199 +3,199 @@
 
 /* 注意書き(> [!NOTE] など。remark-alerts.ts) */
 .custom-md blockquote.admonition {
-	.bdm-title {
-		display: flex;
-		align-items: center;
-		margin-bottom: -0.9rem;
-		font-weight: bold;
+  .bdm-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: -0.9rem;
+    font-weight: bold;
 
-		&::before {
-			content: " ";
-			display: inline-block;
-			width: 1em;
-			height: 1em;
-			margin-right: 0.6rem;
-			overflow: visible;
-			font-size: inherit;
-			vertical-align: -0.126em;
-			transform: translateY(-0.0625rem);
-			mask-size: contain;
-			mask-position: center;
-			mask-repeat: no-repeat;
-		}
-	}
+    &::before {
+      content: " ";
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      margin-right: 0.6rem;
+      overflow: visible;
+      font-size: inherit;
+      vertical-align: -0.126em;
+      transform: translateY(-0.0625rem);
+      mask-size: contain;
+      mask-position: center;
+      mask-repeat: no-repeat;
+    }
+  }
 
-	/* 種類ごとの色とアイコン(左の線は markdown.css の blockquote::before) */
-	&.bdm-tip {
-		--admonition-color: var(--admonitions-color-tip);
-		--admonition-icon: var(--icon-lucide-lightbulb);
-	}
-	&.bdm-note {
-		--admonition-color: var(--admonitions-color-note);
-		--admonition-icon: var(--icon-lucide-info);
-	}
-	&.bdm-important {
-		--admonition-color: var(--admonitions-color-important);
-		--admonition-icon: var(--icon-lucide-message-square-warning);
-	}
-	&.bdm-warning {
-		--admonition-color: var(--admonitions-color-warning);
-		--admonition-icon: var(--icon-lucide-triangle-alert);
-	}
-	&.bdm-caution {
-		--admonition-color: var(--admonitions-color-caution);
-		--admonition-icon: var(--icon-lucide-octagon-alert);
-	}
-	&:is(.bdm-tip, .bdm-note, .bdm-important, .bdm-warning, .bdm-caution) {
-		&::before {
-			background: var(--admonition-color);
-		}
-		.bdm-title {
-			color: var(--admonition-color);
+  /* 種類ごとの色とアイコン(左の線は markdown.css の blockquote::before) */
+  &.bdm-tip {
+    --admonition-color: var(--admonitions-color-tip);
+    --admonition-icon: var(--icon-lucide-lightbulb);
+  }
+  &.bdm-note {
+    --admonition-color: var(--admonitions-color-note);
+    --admonition-icon: var(--icon-lucide-info);
+  }
+  &.bdm-important {
+    --admonition-color: var(--admonitions-color-important);
+    --admonition-icon: var(--icon-lucide-message-square-warning);
+  }
+  &.bdm-warning {
+    --admonition-color: var(--admonitions-color-warning);
+    --admonition-icon: var(--icon-lucide-triangle-alert);
+  }
+  &.bdm-caution {
+    --admonition-color: var(--admonitions-color-caution);
+    --admonition-icon: var(--icon-lucide-octagon-alert);
+  }
+  &:is(.bdm-tip, .bdm-note, .bdm-important, .bdm-warning, .bdm-caution) {
+    &::before {
+      background: var(--admonition-color);
+    }
+    .bdm-title {
+      color: var(--admonition-color);
 
-			&::before {
-				background: var(--admonition-color);
-				mask-image: var(--admonition-icon);
-			}
-		}
-	}
+      &::before {
+        background: var(--admonition-color);
+        mask-image: var(--admonition-icon);
+      }
+    }
+  }
 }
 
 .custom-md img {
-	border-radius: 0.75rem;
+  border-radius: 0.75rem;
 }
 .custom-md hr {
-	border-color: var(--line-divider);
-	border-style: dashed;
+  border-color: var(--line-divider);
+  border-style: dashed;
 }
 .custom-md iframe {
-	max-width: 100%;
-	margin-inline: auto;
-	border-radius: 0.75rem;
+  max-width: 100%;
+  margin-inline: auto;
+  border-radius: 0.75rem;
 }
 
 /* GitHub のリポジトリのカード(::github{repo="..."}。remark-github-card.ts) */
 a.card-github {
-	position: relative;
-	display: block;
-	margin: 0.5rem 0;
-	padding: 1.1rem 1.5rem;
-	border-radius: var(--radius-large);
-	background: var(--license-block-bg);
-	color: var(--prose-body);
-	text-decoration-line: none;
-	text-decoration-thickness: 0px;
+  position: relative;
+  display: block;
+  margin: 0.5rem 0;
+  padding: 1.1rem 1.5rem;
+  border-radius: var(--radius-large);
+  background: var(--license-block-bg);
+  color: var(--prose-body);
+  text-decoration-line: none;
+  text-decoration-thickness: 0px;
 
-	.gc-titlebar {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 0.5rem;
-		font-size: 1.25rem;
-		font-weight: 500;
-		color: var(--prose-headings);
-	}
-	.gc-titlebar-left {
-		display: flex;
-		gap: 0.5rem;
-	}
-	.gc-repo {
-		font-weight: bold;
-	}
-	.gc-owner {
-		position: relative;
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		font-weight: 300;
-	}
-	.gc-avatar {
-		display: block;
-		width: 1.5rem;
-		height: 1.5rem;
-		margin-top: -0.1rem;
-		overflow: hidden;
-		border-radius: 50%;
-		background-color: var(--primary);
-		background-size: cover;
-	}
-	.gc-description {
-		margin-bottom: 0.7rem;
-		font-size: 1rem;
-		font-weight: 300;
-		line-height: 1.5rem;
-		color: var(--prose-body);
-	}
-	.gc-infobar {
-		display: flex;
-		gap: 1.5rem;
-		width: fit-content;
-		color: var(--prose-body);
-	}
-	.gc-language {
-		display: none;
-	}
-	:is(.gc-stars, .gc-forks, .gc-license, .github-logo) {
-		font-size: 0.875rem;
-		font-weight: 500;
-		opacity: 0.9;
+  .gc-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--prose-headings);
+  }
+  .gc-titlebar-left {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .gc-repo {
+    font-weight: bold;
+  }
+  .gc-owner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 300;
+  }
+  .gc-avatar {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: -0.1rem;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: var(--primary);
+    background-size: cover;
+  }
+  .gc-description {
+    margin-bottom: 0.7rem;
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.5rem;
+    color: var(--prose-body);
+  }
+  .gc-infobar {
+    display: flex;
+    gap: 1.5rem;
+    width: fit-content;
+    color: var(--prose-body);
+  }
+  .gc-language {
+    display: none;
+  }
+  :is(.gc-stars, .gc-forks, .gc-license, .github-logo) {
+    font-size: 0.875rem;
+    font-weight: 500;
+    opacity: 0.9;
 
-		&::before {
-			content: " ";
-			display: inline-block;
-			width: 1.3em;
-			height: 1.3em;
-			margin-right: 0.4rem;
-			overflow: visible;
-			background-color: var(--prose-body);
-			font-size: inherit;
-			vertical-align: -0.24em;
-			mask-size: contain;
-			mask-position: center;
-			mask-repeat: no-repeat;
-			transition:
-				background-color 0.15s var(--ease),
-				background 0.15s var(--ease);
-		}
-	}
-	.gc-stars::before {
-		mask-image: var(--icon-lucide-star);
-	}
-	.gc-license::before {
-		margin-right: 0.5rem;
-		mask-image: var(--icon-lucide-scale);
-	}
-	.gc-forks::before {
-		mask-image: var(--icon-lucide-git-fork);
-	}
-	.github-logo {
-		font-size: 1.25rem;
+    &::before {
+      content: " ";
+      display: inline-block;
+      width: 1.3em;
+      height: 1.3em;
+      margin-right: 0.4rem;
+      overflow: visible;
+      background-color: var(--prose-body);
+      font-size: inherit;
+      vertical-align: -0.24em;
+      mask-size: contain;
+      mask-position: center;
+      mask-repeat: no-repeat;
+      transition:
+        background-color 0.15s var(--ease),
+        background 0.15s var(--ease);
+    }
+  }
+  .gc-stars::before {
+    mask-image: var(--icon-lucide-star);
+  }
+  .gc-license::before {
+    margin-right: 0.5rem;
+    mask-image: var(--icon-lucide-scale);
+  }
+  .gc-forks::before {
+    mask-image: var(--icon-lucide-git-fork);
+  }
+  .github-logo {
+    font-size: 1.25rem;
 
-		&::before {
-			margin-right: 0;
-			background-color: var(--prose-headings);
-			mask-image: var(--icon-simple-icons-github);
-		}
-	}
+    &::before {
+      margin-right: 0;
+      background-color: var(--prose-headings);
+      mask-image: var(--icon-simple-icons-github);
+    }
+  }
 
-	&:hover {
-		background-color: var(--btn-regular-bg-hover);
+  &:hover {
+    background-color: var(--btn-regular-bg-hover);
 
-		.gc-titlebar {
-			color: var(--btn-content);
-		}
-		:is(.gc-stars, .gc-forks, .gc-license, .gc-description) {
-			color: var(--prose-headings);
+    .gc-titlebar {
+      color: var(--btn-content);
+    }
+    :is(.gc-stars, .gc-forks, .gc-license, .gc-description) {
+      color: var(--prose-headings);
 
-			&::before {
-				background-color: var(--prose-headings);
-			}
-		}
-	}
-	&:active {
-		scale: 0.98;
-		background-color: var(--btn-regular-bg-active);
-	}
+      &::before {
+        background-color: var(--prose-headings);
+      }
+    }
+  }
+  &:active {
+    scale: 0.98;
+    background-color: var(--btn-regular-bg-active);
+  }
 }
 .card-github,
 .gc-description,
@@ -205,5 +205,5 @@ a.card-github {
 .gc-license,
 .gc-avatar,
 .github-logo {
-	transition: all 0.15s var(--ease);
+  transition: all 0.15s var(--ease);
 }

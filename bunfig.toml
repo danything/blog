@@ -1,0 +1,9 @@
+[fmt]
+ignorePatterns = [
+  "public/",
+  "deploy/",
+  "renovate.json",
+  # 記事の本文 (書いたまま残す。英訳の鮮度は原文のハッシュで見る)
+  "src/content/",
+  "tests/fixtures/",
+]

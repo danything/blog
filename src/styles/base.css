@@ -1,17 +1,17 @@
 /* ページ全体の土台(main.css で base の層に入れる) */
 html {
-	font-size: 14px;
-	background-color: var(--page-bg);
-	transition: var(--transition);
+  font-size: 14px;
+  background-color: var(--page-bg);
+  transition: var(--transition);
 
-	@media (width >= 768px) {
-		font-size: 16px;
-	}
+  @media (width >= 768px) {
+    font-size: 16px;
+  }
 }
 
 body {
-	min-height: 100vh;
-	transition: var(--transition);
+  min-height: 100vh;
+  transition: var(--transition);
 }
 
 /* 文字の色はテーマの切り替えでなめらかに変える */
@@ -34,9 +34,9 @@ table,
 th,
 td,
 strong {
-	transition: var(--transition);
+  transition: var(--transition);
 }
 
 ::selection {
-	background-color: var(--selection-bg);
+  background-color: var(--selection-bg);
 }

@@ -12,25 +12,25 @@ export const SKIP = "skip";
  * 別の節に置き換えたとき(remark-sectionize)は、置き換えた節の次の兄弟へ進む
  */
 export function visit<T extends Node, K extends string>(
-	tree: T,
-	type: K,
-	visitor: (
-		node: Extract<Child<T>, { type: K }>,
-		index: number,
-		parent: { children: Child<T>[] },
-	) => typeof SKIP | undefined,
+  tree: T,
+  type: K,
+  visitor: (
+    node: Extract<Child<T>, { type: K }>,
+    index: number,
+    parent: { children: Child<T>[] },
+  ) => typeof SKIP | undefined,
 ): void {
-	const walk = (parent: Node) => {
-		if (!parent.children) return;
-		for (let i = 0; i < parent.children.length; i++) {
-			const node = parent.children[i];
-			if (
-				node.type === type &&
-				visitor(node as never, i, parent as never) === SKIP
-			)
-				continue;
-			walk(node);
-		}
-	};
-	walk(tree);
+  const walk = (parent: Node) => {
+    if (!parent.children) return;
+    for (let i = 0; i < parent.children.length; i++) {
+      const node = parent.children[i];
+      if (
+        node.type === type &&
+        visitor(node as never, i, parent as never) === SKIP
+      )
+        continue;
+      walk(node);
+    }
+  };
+  walk(tree);
 }

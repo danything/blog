@@ -8,21 +8,21 @@ import { visit } from "./visit";
  * TOC.astro はこの section を見て、いま読んでいる見出しを判断する
  */
 export const remarkSectionize: RemarkPlugin = () => (tree) => {
-	for (let depth = 6; depth > 0; depth--) {
-		visit(tree, "heading", (node, index, parent) => {
-			if (node.depth !== depth) return;
-			const siblings = parent.children;
-			const end = siblings.findIndex(
-				(n, i) => i > index && n.type === "heading" && n.depth <= depth,
-			);
-			const children = siblings.slice(index, end === -1 ? undefined : end);
-			// mdast に section は無いので、HTML にするときの要素名だけを指定する
-			const section = {
-				type: "section",
-				children,
-				data: { hName: "section" },
-			} as unknown as RootContent;
-			siblings.splice(index, children.length, section);
-		});
-	}
+  for (let depth = 6; depth > 0; depth--) {
+    visit(tree, "heading", (node, index, parent) => {
+      if (node.depth !== depth) return;
+      const siblings = parent.children;
+      const end = siblings.findIndex(
+        (n, i) => i > index && n.type === "heading" && n.depth <= depth,
+      );
+      const children = siblings.slice(index, end === -1 ? undefined : end);
+      // mdast に section は無いので、HTML にするときの要素名だけを指定する
+      const section = {
+        type: "section",
+        children,
+        data: { hName: "section" },
+      } as unknown as RootContent;
+      siblings.splice(index, children.length, section);
+    });
+  }
 };

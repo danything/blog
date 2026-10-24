@@ -3,11 +3,11 @@
 
 /** 開かれてから fn を呼ぶ(裏で描画しているなら開かれるまで待つ)。外部への読み込みなど副作用のある処理に使う */
 export function whenActivated(fn: () => void): void {
-	if (document.prerendering) {
-		document.addEventListener("prerenderingchange", () => fn(), { once: true });
-	} else {
-		fn();
-	}
+  if (document.prerendering) {
+    document.addEventListener("prerenderingchange", () => fn(), { once: true });
+  } else {
+    fn();
+  }
 }
 
 /**
@@ -15,6 +15,6 @@ export function whenActivated(fn: () => void): void {
  * 別のページでテーマや色相を変えていることがあるので、表示を合わせ直すのに使う
  */
 export function onActivatedFromPrerender(fn: () => void): void {
-	if (!document.prerendering) return;
-	document.addEventListener("prerenderingchange", () => fn(), { once: true });
+  if (!document.prerendering) return;
+  document.addEventListener("prerenderingchange", () => fn(), { once: true });
 }
