@@ -159,4 +159,4 @@ AIに任せられるのは作る作業で、何を作るかを間違えないこ
 
 ---
 
-初出: https://doany.io/posts/slack-search-read/
+初出: https://b.doany.io/posts/slack-search-read/

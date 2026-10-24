@@ -153,7 +153,7 @@ iframeではなくホストページのDOMに描画するのでCSSを当てる�
 
 ### yosegakiに関して
 
-それなら自分で書いたほうが早い、となって作ったのが[yosegaki](https://github.com/DAnything/yosegaki)です。SvelteKit + Bun + SQLiteで、構成は[別の記事](https://doany.io/posts/svelte-bun-sqlite/)に書いた通りいつものやつです。
+それなら自分で書いたほうが早い、となって作ったのが[yosegaki](https://github.com/DAnything/yosegaki)です。SvelteKit + Bun + SQLiteで、構成は[別の記事](https://b.doany.io/posts/svelte-bun-sqlite/)に書いた通りいつものやつです。
 
 @[card](https://github.com/DAnything/yosegaki)
 
@@ -219,4 +219,4 @@ GitHub上のフォーク表示にはなりませんが、フォークにした�
 
 ---
 
-初出: https://doany.io/posts/renewal/
+初出: https://b.doany.io/posts/renewal/

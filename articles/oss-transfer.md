@@ -149,4 +149,4 @@ OSSでの申請完了後陸運局に行って提出する必要があります�
 
 ---
 
-初出: https://doany.io/posts/oss-transfer/
+初出: https://b.doany.io/posts/oss-transfer/

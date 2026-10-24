@@ -22,4 +22,4 @@ windowsで利用できるusb, sataなどに対応したsmart編集用ツール�
 
 ---
 
-初出: https://doany.io/posts/ntg-ssd/
+初出: https://b.doany.io/posts/ntg-ssd/

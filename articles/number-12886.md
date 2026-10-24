@@ -80,4 +80,4 @@ BINが特定されたものとして話を進めていきます。この時点�
 
 ---
 
-初出: https://doany.io/posts/number/
+初出: https://b.doany.io/posts/number/

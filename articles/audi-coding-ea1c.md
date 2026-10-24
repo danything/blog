@@ -92,4 +92,4 @@ MMIにてCAR->ACC内に表示されると思います。
 
 ---
 
-初出: https://doany.io/posts/audi-coding/
+初出: https://b.doany.io/posts/audi-coding/

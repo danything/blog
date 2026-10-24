@@ -18,4 +18,4 @@ network:
 
 ---
 
-初出: https://doany.io/posts/guiubuntunet/
+初出: https://b.doany.io/posts/guiubuntunet/

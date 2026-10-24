@@ -254,4 +254,4 @@ published_at: 2025-08-06
 
 ---
 
-初出: https://doany.io/posts/truck/
+初出: https://b.doany.io/posts/truck/

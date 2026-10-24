@@ -42,4 +42,4 @@ val()で取得した値は非明示的に文字になったり数字になった
 
 ---
 
-初出: https://doany.io/posts/hlsrate/
+初出: https://b.doany.io/posts/hlsrate/

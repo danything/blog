@@ -148,7 +148,7 @@ bunのままだと何が困ったかというと、まずチューナーを取�
 正直に書くとmogiriの書き直しはほぼClaudeに書かせています。Django + Nuxtを読んで同じ画面フローをSvelteKitで作り直す、という作業です。人間がやったのは上に書いた判断と、出てきたものを触って直すことでした。
 
 1言語1プロセスで生成コードが読みやすい、という選択はこの前提があるから効いています。読めないものを大量に生成されても困るので、書く量が少なく構造が素直なSvelteを選んだのはAIに任せる範囲を広げるための判断でもあります。  
-この辺りの実感は[Slackの記事](https://doany.io/posts/slack-search-read/)の後半に書いています。
+この辺りの実感は[Slackの記事](https://b.doany.io/posts/slack-search-read/)の後半に書いています。
 
 ## まとめ
 
@@ -162,4 +162,4 @@ bunのままだと何が困ったかというと、まずチューナーを取�
 
 ---
 
-初出: https://doany.io/posts/svelte-bun-sqlite/
+初出: https://b.doany.io/posts/svelte-bun-sqlite/
