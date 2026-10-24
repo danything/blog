@@ -7,6 +7,7 @@ import {
   DEFAULT_THEME,
   LIGHT_MODE,
 } from "@constants/constants.ts";
+
 import type { LIGHT_DARK_MODE } from "@/types/config";
 
 export function getHue(): number {

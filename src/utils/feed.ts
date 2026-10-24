@@ -3,6 +3,7 @@ import type { Lang } from "@i18n/translation";
 import { getSortedPosts } from "@utils/content-utils";
 import { getPostUrlBySlug } from "@utils/url-utils";
 import type { APIContext } from "astro";
+
 import { siteConfig, siteText } from "@/config";
 
 // 記事ページと同じ描画結果を使う。コードブロックや GitHub カードの script / style は

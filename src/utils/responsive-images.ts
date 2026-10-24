@@ -9,7 +9,9 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+
 import sharp from "sharp";
+
 import { toWebp } from "../../scripts/webp";
 
 /** 縮めた版を作る画像のディレクトリ(サイト上のパス) */

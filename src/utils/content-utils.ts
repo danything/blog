@@ -1,14 +1,15 @@
-import { type CollectionEntry, getCollection } from "astro:content";
 import path from "node:path";
+
 import { PAGE_SIZE } from "@constants/constants";
 import I18nKey from "@i18n/i18nKey";
-import { i18n, LANGS, type Lang } from "@i18n/translation";
+import { i18n, type Lang, LANGS } from "@i18n/translation";
 import {
   getCategoryUrl,
   getDir,
   localeUrl,
   stripLang,
 } from "@utils/url-utils.ts";
+import { type CollectionEntry, getCollection } from "astro:content";
 
 /** 言語ごとの記事のコレクション。英語版は src/content/posts-en/ に同じ名前で置く */
 export type PostCollection = "posts" | "postsEn";

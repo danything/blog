@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+
 import { a11yPages, setupContext } from "./setup";
 
 // アクセシビリティの検査(.github/workflows/a11y.yml)。axe で WCAG 2.1 A/AA の規則を調べ、

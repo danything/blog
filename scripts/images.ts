@@ -8,7 +8,9 @@
 // 記事中の参照(本文の画像とフロントマターの image)を .webp に書き換える。
 import fs from "node:fs";
 import path from "node:path";
+
 import sharp from "sharp";
+
 import { toWebp } from "./webp";
 
 const POSTS_DIR = "src/content/posts";

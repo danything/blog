@@ -1,11 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
+
 import { rehypeHeadingIds, unified } from "@astrojs/markdown-remark";
 import sitemap from "@astrojs/sitemap";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
-import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
+import { defineConfig } from "astro/config";
+
 import { parsePost } from "./scripts/frontmatter";
 import { CONTENT_DIR } from "./src/constants/content-dir";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button";

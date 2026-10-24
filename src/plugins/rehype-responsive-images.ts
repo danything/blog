@@ -1,5 +1,6 @@
 import type { RehypePlugin } from "@astrojs/markdown-remark";
 import type { Element } from "hast";
+
 import { responsiveImage, SIZES } from "../utils/responsive-images";
 import { visit } from "./visit";
 
