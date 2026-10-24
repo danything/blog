@@ -6,7 +6,7 @@ image: ""
 tags: ["HLS", "JavaScript", "jQuery"]
 category: "Web Development"
 draft: false
-sourceHash: "b6e55007efbfc2c7"
+sourceHash: "3a77be038ea85a77"
 ---
 
 ## Overview
@@ -18,8 +18,8 @@ The reason is pretty embarrassing, but I got stuck implementing level switching 
 hls.js provides an API called hls.currentLevel, and you switch levels by changing its value. I tried to build it so that when the select changed, the option's value would be assigned to it, but whenever I passed -1, playback stopped.
 
 ```js
-$('.res>select').on('change', function() {
-    hls.currentLevel = $(this).val();
+$(".res>select").on("change", function () {
+  hls.currentLevel = $(this).val();
 });
 ```
 
@@ -28,8 +28,8 @@ $('.res>select').on('change', function() {
 Casting the option's value with Number fixes it.
 
 ```js
-$('.res>select').on('change', function() {
-    hls.currentLevel = Number($(this).val());
+$(".res>select").on("change", function () {
+  hls.currentLevel = Number($(this).val());
 });
 ```
 

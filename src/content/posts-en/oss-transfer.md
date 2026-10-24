@@ -6,7 +6,7 @@ image: ""
 tags: ["Cars", "OSS", "Government Procedures"]
 category: "Cars"
 draft: false
-sourceHash: "ad08d9888d12d505"
+sourceHash: "ab1c39decb9ade9e"
 ---
 
 Another car post, following on from last time.
@@ -14,10 +14,9 @@ Another car post, following on from last time.
 > [!NOTE]
 > Update (September 2026): After writing this post I started a used car dealership, and I still use OSS for transfer registrations where I'm the applicant. I built [Todoroku](https://tk.doany.io/?from=blog-oss), which turns the paperwork from purchase to sale into a ledger. Two things in it are relevant to this post: scanning the QR code on a vehicle inspection certificate with your phone lets you export the vehicle inspection certificate import file mentioned below, and when you apply for a parking space certificate at the same time, you can draw the location map and layout diagram on top of a map. I've added notes at the relevant spots. I also reviewed the steps as of September 2026 and added notes on what has changed (the abolition of the parking space sticker, the supported environment, and link targets).
 
-
 ## What is OSS?
 
-OSS (ワンストップサービス, "One Stop Service") is a service from the Ministry of Land, Infrastructure, Transport and Tourism that lets you handle vehicle registration procedures, such as a transfer of ownership registration (iten toroku), over the internet.  
+OSS (ワンストップサービス, "One Stop Service") is a service from the Ministry of Land, Infrastructure, Transport and Tourism that lets you handle vehicle registration procedures, such as a transfer of ownership registration (iten toroku), over the internet.
 
 ## How it differs from the regular procedure
 
@@ -76,7 +75,7 @@ You can use the electronic vehicle inspection certificate to skip some of the da
 
 ### Creating the attorney information file
 
-You'll be creating an electronic power of attorney, but before that you need to create a file with your own details called the attorney information file (受任者情報ファイル).  
+You'll be creating an electronic power of attorney, but before that you need to create a file with your own details called the attorney information file (受任者情報ファイル).
 
 1. [Create attorney information file](https://www.oss.mlit.go.jp/secure/tetsuduki/principal/kyodaku-junin/index.html#) (Japanese)
 2. Click "Start application" on the page above

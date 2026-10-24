@@ -2,12 +2,12 @@
 title: "I Registered My Station Wagon as a Cargo Vehicle to Cut My Taxes"
 published: 2025-08-06
 updated: 2026-10-03
-description: "The vehicle inspection certificate (shakensho) has a field called \"use\". By changing it from passenger to cargo, you change which tax bracket applies and can pay less tax. Here's how to do it and what the requirements are."
+description: 'The vehicle inspection certificate (shakensho) has a field called "use". By changing it from passenger to cargo, you change which tax bracket applies and can pay less tax. Here''s how to do it and what the requirements are.'
 image: "/static/images/blog/br90.webp"
 tags: ["Cars", "Cargo Registration", "Government Procedures"]
 category: "Cars"
 draft: false
-sourceHash: "c1ef6bfb5ac89cc6"
+sourceHash: "2ee60b617fff3469"
 ---
 
 It's been a while since my last post. Lately, instead of web stuff, I've been completely absorbed in cars.  
@@ -16,38 +16,38 @@ On that note, I recently had my Subaru Legacy (a "3-number" passenger car) regis
 > [!NOTE]
 > Update (September 2026): I got tired of retracing the steps in this article myself every time, so I built a ledger that turns everything from buying the car to selling it into a series of stages. It's called [Todoroku](https://tk.doany.io/?from=blog-truck). I also put the weight distribution Excel sheet I used to work out the maximum payload on the web, so you can use it via the [weight distribution calculator](https://tk.doany.io/tools/weight?from=blog-truck) mentioned later.
 
-
 ## What is cargo registration?
 
 First, what is cargo registration? The vehicle inspection certificate (shakensho) has a field called "use". The idea is to change it from passenger to cargo, which changes the tax bracket that applies to the car.  
-I'll skip the details of the tax system here, but for the vehicle I registered as cargo this time, the taxes changed as follows. (As of October 3, 2026. For the old weight tax and compulsory liability insurance, I've divided the 24-month amounts by 2. The insurance figures are the base rates for policies starting on or after November 1, 2026.)  
-| |Before|After|
-|---|---|---|
-|Automobile tax|51,750|8,800|
-|Weight tax|22,800|8,200|
-|Compulsory liability insurance (jibaiseki)|9,280|17,930|
-|Total|83,830|34,930|
-|Difference|0|-48,900|
+I'll skip the details of the tax system here, but for the vehicle I registered as cargo this time, the taxes changed as follows. (As of October 3, 2026. For the old weight tax and compulsory liability insurance, I've divided the 24-month amounts by 2. The insurance figures are the base rates for policies starting on or after November 1, 2026.)
+
+|                                            | Before | After   |
+| ------------------------------------------ | ------ | ------- |
+| Automobile tax                             | 51,750 | 8,800   |
+| Weight tax                                 | 22,800 | 8,200   |
+| Compulsory liability insurance (jibaiseki) | 9,280  | 17,930  |
+| Total                                      | 83,830 | 34,930  |
+| Difference                                 | 0      | -48,900 |
 
 As you can see, it gets quite a bit cheaper, but there are a few downsides.  
 The big one is that your ETC (electronic toll collection) toll class goes from standard to mid-size, so tolls go up. Let's work out how much driving it takes before the savings are wiped out, using the Shin-Tomei Expressway (standard section). NEXCO tolls are (terminal charge of 150 yen + 24.6 yen × distance) × vehicle class ratio × 1.1 (consumption tax), where mid-size is 1.2 times standard, and the portion beyond 100 km gets cheaper through the long-distance discount. Dividing the 48,900 yen difference above by the difference per km gives the yearly expressway mileage at which the savings are wiped out.
 
-|Distance per trip|Standard|Mid-size|Difference|Difference per km|Yearly distance where savings are wiped out|
-|---|---|---|---|---|---|
-|50 km|1,518 yen|1,822 yen|304 yen|about 6.1 yen|about 8,100 km|
-|100 km|2,871 yen|3,445 yen|574 yen|about 5.7 yen|about 8,500 km|
-|200 km|4,900 yen|5,881 yen|980 yen|about 4.9 yen|about 10,000 km|
-|300 km|6,795 yen|8,154 yen|1,359 yen|about 4.5 yen|about 10,800 km|
+| Distance per trip | Standard  | Mid-size  | Difference | Difference per km | Yearly distance where savings are wiped out |
+| ----------------- | --------- | --------- | ---------- | ----------------- | ------------------------------------------- |
+| 50 km             | 1,518 yen | 1,822 yen | 304 yen    | about 6.1 yen     | about 8,100 km                              |
+| 100 km            | 2,871 yen | 3,445 yen | 574 yen    | about 5.7 yen     | about 8,500 km                              |
+| 200 km            | 4,900 yen | 5,881 yen | 980 yen    | about 4.9 yen     | about 10,000 km                             |
+| 300 km            | 6,795 yen | 8,154 yen | 1,359 yen  | about 4.5 yen     | about 10,800 km                             |
 
 The longer each trip, the more the discount helps and the smaller the gap gets. Unless you drive 8,000 km or more a year on expressways, it's not a problem.  
 That said, the holiday discount (30% off) applies only to standard cars and kei cars, not mid-size, so if you mostly drive on weekends and holidays, the gap widens. (The late-night discount does apply to mid-size.)
 
-|Distance per trip|Standard (holiday discount)|Mid-size|Difference|Difference per km|Yearly distance where savings are wiped out|
-|---|---|---|---|---|---|
-|50 km|1,063 yen|1,822 yen|759 yen|about 15.2 yen|about 3,200 km|
-|100 km|2,010 yen|3,445 yen|1,436 yen|about 14.4 yen|about 3,400 km|
-|200 km|3,430 yen|5,881 yen|2,450 yen|about 12.3 yen|about 4,000 km|
-|300 km|4,756 yen|8,154 yen|3,397 yen|about 11.3 yen|about 4,300 km|
+| Distance per trip | Standard (holiday discount) | Mid-size  | Difference | Difference per km | Yearly distance where savings are wiped out |
+| ----------------- | --------------------------- | --------- | ---------- | ----------------- | ------------------------------------------- |
+| 50 km             | 1,063 yen                   | 1,822 yen | 759 yen    | about 15.2 yen    | about 3,200 km                              |
+| 100 km            | 2,010 yen                   | 3,445 yen | 1,436 yen  | about 14.4 yen    | about 3,400 km                              |
+| 200 km            | 3,430 yen                   | 5,881 yen | 2,450 yen  | about 12.3 yen    | about 4,000 km                              |
+| 300 km            | 4,756 yen                   | 8,154 yen | 3,397 yen  | about 11.3 yen    | about 4,300 km                              |
 
 The other one is that the vehicle inspection (shaken) becomes yearly. That adds an inspection fee once a year, but it's only around 2,600 yen (the fee for bringing a standard-size car in for inspection yourself, after the April 2026 revision). Some of you probably leave your shaken to a dealer or a shop, but if it's a Japanese car, it'll pass the inspection with hardly any maintenance. If you're reading this article, you presumably want to save on running costs, so if you want to keep them down, buy your own tools and at least google the bare-minimum maintenance needed to keep a car going. If you can't do that, just do what the dealer says and pay up. That's what the service fee is for.
 
@@ -164,13 +164,12 @@ I haven't verified whether it actually works yet, but for cars like one with a m
 
 > (1) The maximum payload of a vehicle shall be the largest of the payloads of goods calculated based on the standards in (2) through (11), as the amount that can be loaded within a range that complies with the provisions of this chapter, ensures safe operation, and prevents pollution.
 
-
 ### Pre-screening
 
 As of April 2025, the rules were revised to make it clear that pre-screening is not required for some structural modifications.  
-Even under the previous rules, depending on how you read them, pre-screening didn't seem to be required for things like station wagon -> van, but interpretations probably differed between regional NALTEC offices, and I suspect the revision was meant to keep that from becoming a problem.    
+Even under the previous rules, depending on how you read them, pre-screening didn't seem to be required for things like station wagon -> van, but interpretations probably differed between regional NALTEC offices, and I suspect the revision was meant to keep that from becoming a problem.  
 So this section is no longer needed, but there's always a chance that document screening will be required again in the future, so I'm leaving it here.  
-[Partial revision of the Examination Procedures Regulations (63rd revision)](https://www.naltec.go.jp/news/hbh5ss0000001vvf-att/hbh5ss0000001vvv.pdf) (Japanese)  
+[Partial revision of the Examination Procedures Regulations (63rd revision)](https://www.naltec.go.jp/news/hbh5ss0000001vvf-att/hbh5ss0000001vvv.pdf) (Japanese)
 
 Since October 28, 2024, you can submit the documents online. However, some documents have to be prepared on your end and then uploaded, so you'll apply once you have the full set ready.  
 It takes up to 15 days from submission to get a response. So if you've already had your parking space certificate issued, submit early. (A parking space certificate is valid for about a month.) In my case, when I mentioned upfront that my parking space certificate was close to expiring, they processed it quickly.
@@ -181,38 +180,38 @@ It takes up to 15 days from submission to get a response. So if you've already h
 1. Once you've created an account and logged in, click New Inspection Notification
 1. Click Create Notification
 1. Select and fill in the following, then click Next
-    1. Notification method: `個別届出` (“Individual notification”)
-    1. Supplementary provision: `技術基準等の審査を要する自動車、自動車予備検査証の交付を受けた自動車又は使用の過程にある自動車若しくは特定の大型特殊自動車` (“Vehicles requiring examination against technical standards, etc., vehicles issued a preliminary vehicle inspection certificate, vehicles in use, or certain large special vehicles”)
-    1. Category: `3.2.（1）技術基準等の審査を要する自動車` (“3.2.(1) Vehicles requiring examination against technical standards, etc.”)
-    1. Submit to: select the inspection office where you'll take the inspection
-    1. Make, model and chassis number: fill in exactly as on the vehicle inspection certificate
+   1. Notification method: `個別届出` (“Individual notification”)
+   1. Supplementary provision: `技術基準等の審査を要する自動車、自動車予備検査証の交付を受けた自動車又は使用の過程にある自動車若しくは特定の大型特殊自動車` (“Vehicles requiring examination against technical standards, etc., vehicles issued a preliminary vehicle inspection certificate, vehicles in use, or certain large special vehicles”)
+   1. Category: `3.2.（1）技術基準等の審査を要する自動車` (“3.2.(1) Vehicles requiring examination against technical standards, etc.”)
+   1. Submit to: select the inspection office where you'll take the inspection
+   1. Make, model and chassis number: fill in exactly as on the vehicle inspection certificate
 1. Fill in the New Inspection Notification Form (Form No. 1) (Part 1) as follows
-    1. Classification number or vehicle specification code: select `類別区分番号` (“Classification number”) and enter the classification number shown on the vehicle inspection certificate in the input field
-    1. Structures and equipment changed relative to the designated vehicle of that model and classification number
-        1.  Structure/equipment changed: select `有` (“Yes”)
-        1. Option: select `（記入欄のとおり）` (“(As described in the entry field)”)
-        1. Entry field: enter the following (adjust to match your car's current specs)  
-          ```plaintext
-          乗車定員の変更（5人→3人）2列目右側座席固定  
-          用途変更（乗用→貨物）  
-          車体形状の変更（ステーションワゴン→バン）
-          ```
-          (“Change of seating capacity (5 → 3), right-hand second-row seat fixed / Change of use (passenger → cargo) / Change of body type (station wagon → van)”)
-        1.  Changes to structures/equipment related to the noise prevention device: `無` (“No”)
-        1.  Over-revolution prevention device related to the noise prevention device: `無` (“No”)
+   1. Classification number or vehicle specification code: select `類別区分番号` (“Classification number”) and enter the classification number shown on the vehicle inspection certificate in the input field
+   1. Structures and equipment changed relative to the designated vehicle of that model and classification number
+      1. Structure/equipment changed: select `有` (“Yes”)
+      1. Option: select `（記入欄のとおり）` (“(As described in the entry field)”)
+      1. Entry field: enter the following (adjust to match your car's current specs)
+      ```plaintext
+      乗車定員の変更（5人→3人）2列目右側座席固定  
+      用途変更（乗用→貨物）  
+      車体形状の変更（ステーションワゴン→バン）
+      ```
+      (“Change of seating capacity (5 → 3), right-hand second-row seat fixed / Change of use (passenger → cargo) / Change of body type (station wagon → van)”)
+      1. Changes to structures/equipment related to the noise prevention device: `無` (“No”)
+      1. Over-revolution prevention device related to the noise prevention device: `無` (“No”)
 1. The documents to upload for the New Inspection Notification Form (Form No. 1) (Part 2) can be created with a Windows application that NALTEC distributes. Download the zip file from the link below and run InitPreEntry.exe in the bin folder to launch it.
-    - [New Inspection Notification Form No. 1, Part 2](https://www.naltec.go.jp/hbh5ss0000000tvb-att/a1743469302713.zip)
-    - You can fill in the values by actually measuring the car or by asking the manufacturer for its spec sheet.
-    - For the parts that need calculations, some NALTEC offices may give you something called a weight distribution calculation sheet, but this seems to vary from office to office. Just copy over the numbers from the [weight distribution calculator](https://tk.doany.io/tools/weight?from=blog-truck) mentioned earlier.
+   - [New Inspection Notification Form No. 1, Part 2](https://www.naltec.go.jp/hbh5ss0000000tvb-att/a1743469302713.zip)
+   - You can fill in the values by actually measuring the car or by asking the manufacturer for its spec sheet.
+   - For the parts that need calculations, some NALTEC offices may give you something called a weight distribution calculation sheet, but this seems to vary from office to office. Just copy over the numbers from the [weight distribution calculator](https://tk.doany.io/tools/weight?from=blog-truck) mentioned earlier.
 1. For the document identifying the vehicle, upload a scan of the Registration Identification Information Notice (toroku shikibetsu joho-to tsuchisho)
 1. For the spec sheet or vehicle specification table, upload the specs you got from the manufacturer and the four-view exterior drawing
 1. For the document certifying compliance with technical standards, upload the "Document on Compliance with the Technical Requirements of Each Provision of the Safety Standards". Fill it in with calculations that fit your own car.
-    - ※ Update (October 2026): I've stopped publishing the Word file with sample inputs that I used to distribute here. Now, on the structural modification screen in [Todoroku](https://tk.doany.io/?from=blog-truck), you can generate this document and the four-view exterior drawing from the vehicle values you've entered in the ledger.
+   - ※ Update (October 2026): I've stopped publishing the Word file with sample inputs that I used to distribute here. Now, on the structural modification screen in [Todoroku](https://tk.doany.io/?from=blog-truck), you can generate this document and the four-view exterior drawing from the vehicle values you've entered in the ledger.
 1. Under other documents, upload the following
-    - A side-view photo annotated with the overall length
-    - A front-view photo annotated with the overall width
-    - A rear-view photo annotated with the overall height, the cargo area height and the opening height
-    - Photos showing the fixed seat cushion and the partition between the seats and the cargo area
+   - A side-view photo annotated with the overall length
+   - A front-view photo annotated with the overall width
+   - A rear-view photo annotated with the overall height, the cargo area height and the opening height
+   - Photos showing the fixed seat cushion and the partition between the seats and the cargo area
 
 ### Registering for cashless payment
 
@@ -230,7 +229,7 @@ Also, the license plate fee at the plate center and the hole-punching fee for ke
 Before inspection day, you need to book through the site below. When booking, the inspection type is `構造等変更検査` (“structural modification inspection”) even if the car has already been temporarily deregistered.  
 That said, at some locations it can be very hard to get a booking.  
 That's because some businesses grab booking slots for multiple cars and cancel only the ones for cars that don't show up on the day. There's no particular penalty for doing this, so slots can fill up.  
-On the other hand, businesses that operate like this often cancel bookings on the day, so slots sometimes open up the same day. It's worth checking early in the morning or during the first round of inspections.    
+On the other hand, businesses that operate like this often cancel bookings on the day, so slots sometimes open up the same day. It's worth checking early in the morning or during the first round of inspections.  
 [Vehicle inspection online booking system](https://www.reserve.naltec.go.jp/) (Japanese)
 
 Here's roughly how the day goes. The finer details probably differ between transport bureaus, so I'll leave them out.  
@@ -248,7 +247,6 @@ Also, if you didn't register for cashless payment, you'll have two or three extr
 
 ## Wrap-up
 
-  
 I'm not a pro at administrative procedures, politics or law, so there may be mistakes in this post or in my thinking. If you spot any, I'd really appreciate your comments.
 As I mentioned at the top, I've turned the flow in this article, plus buying the car beforehand and selling it afterwards, into an 8-stage ledger in [Todoroku](https://tk.doany.io/?from=blog-truck). If you're the next person to go through this, starting from the ledger keeps what to bring, where you need cash and what you spent all in one place, which should make things easier.
 I did cargo registration this time to save on taxes, but I'm left with some questions: isn't the current tax system barely based on the beneficiary-pays principle in the first place? And aren't these regulations driven mostly by the agendas of NALTEC and the police, rather than actually contributing to safer roads? What do you all think?

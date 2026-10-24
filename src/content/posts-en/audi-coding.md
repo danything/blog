@@ -1,7 +1,7 @@
 ---
 title: "Audi Coding Notes"
 published: 2020-07-08
-description: "I used VCDS to customize how the electrical systems on my Audi behave (apparently this is commonly called \"coding\"), so here are the steps and the things you can customize."
+description: 'I used VCDS to customize how the electrical systems on my Audi behave (apparently this is commonly called "coding"), so here are the steps and the things you can customize.'
 image: ""
 tags: ["Cars", "Audi", "VCDS"]
 category: "Cars"

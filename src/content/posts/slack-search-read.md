@@ -57,12 +57,12 @@ Slackの投稿時刻から稼働表(勤務時間の一覧)を自動生成した�
 
 こちらは掲載できます。ただし利用条件が4つあり、用途によっては全部刺さります。
 
-| 条件 | 内容 |
-| --- | --- |
-| データ保存の禁止 | "You must not store or copy any of the data retrieved from this API." |
-| ゲスト利用不可 | "Workspace guests are not permitted to access apps using platform AI features" |
-| プラン制限 | semantic searchはBusiness+ / Enterprise+ |
-| AI features限定 | "exclusively in your app using AI features" |
+| 条件             | 内容                                                                           |
+| ---------------- | ------------------------------------------------------------------------------ |
+| データ保存の禁止 | "You must not store or copy any of the data retrieved from this API."          |
+| ゲスト利用不可   | "Workspace guests are not permitted to access apps using platform AI features" |
+| プラン制限       | semantic searchはBusiness+ / Enterprise+                                       |
+| AI features限定  | "exclusively in your app using AI features"                                    |
 
 > 参考: [Using the Real-time Search API](https://docs.slack.dev/apis/web-api/real-time-search-api/)
 
@@ -78,11 +78,11 @@ Slackの投稿時刻から稼働表(勤務時間の一覧)を自動生成した�
 
 デフォルトは承認不要です。そのうえで設定を厳しくした場合の挙動が下記の通りです。
 
-| ワークスペースの設定 | Marketplace掲載アプリ | 自作の内部アプリ |
-| --- | --- | --- |
-| 制限なし(デフォルト) | 通る | 通る |
-| Marketplaceのアプリのみ許可 | 通る | 通る |
-| 全アプリ承認必須 | 承認待ち | 承認待ち |
+| ワークスペースの設定        | Marketplace掲載アプリ | 自作の内部アプリ |
+| --------------------------- | --------------------- | ---------------- |
+| 制限なし(デフォルト)        | 通る                  | 通る             |
+| Marketplaceのアプリのみ許可 | 通る                  | 通る             |
+| 全アプリ承認必須            | 承認待ち              | 承認待ち         |
 
 2行目についてはSlackが明言しています。
 

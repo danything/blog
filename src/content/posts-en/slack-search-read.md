@@ -6,7 +6,7 @@ image: ""
 tags: ["Slack", "Slack API", "OAuth", "Side Projects"]
 category: "Web Development"
 draft: false
-sourceHash: "8dd02956a214b268"
+sourceHash: "812b90402e5443c1"
 ---
 
 I set out to build a Slack app that pulls every message I've posted across a workspace, and found out it can't be listed on the Slack Marketplace. The scope it needs, `search:read`, is called out by name in the guidelines as a rejected scope.  
@@ -57,12 +57,12 @@ In February 2026 Slack released the Real-time Search API as a replacement for `s
 
 This one can be listed. But it comes with four conditions of use, and depending on your use case, every one of them can bite.
 
-| Condition | Details |
-| --- | --- |
-| No data storage | "You must not store or copy any of the data retrieved from this API." |
-| No guest access | "Workspace guests are not permitted to access apps using platform AI features" |
-| Plan restrictions | Semantic search requires Business+ / Enterprise+ |
-| AI features only | "exclusively in your app using AI features" |
+| Condition         | Details                                                                        |
+| ----------------- | ------------------------------------------------------------------------------ |
+| No data storage   | "You must not store or copy any of the data retrieved from this API."          |
+| No guest access   | "Workspace guests are not permitted to access apps using platform AI features" |
+| Plan restrictions | Semantic search requires Business+ / Enterprise+                               |
+| AI features only  | "exclusively in your app using AI features"                                    |
 
 > Source: [Using the Real-time Search API](https://docs.slack.dev/apis/web-api/real-time-search-api/)
 
@@ -78,11 +78,11 @@ This was the biggest takeaway. I'd assumed an internal app would just get blocke
 
 By default, no approval is needed. Here's how things behave when the settings are tightened.
 
-| Workspace setting | Marketplace-listed app | Self-built internal app |
-| --- | --- | --- |
-| No restrictions (default) | Allowed | Allowed |
-| Only allow apps from the Marketplace | Allowed | Allowed |
-| Approval required for all apps | Pending approval | Pending approval |
+| Workspace setting                    | Marketplace-listed app | Self-built internal app |
+| ------------------------------------ | ---------------------- | ----------------------- |
+| No restrictions (default)            | Allowed                | Allowed                 |
+| Only allow apps from the Marketplace | Allowed                | Allowed                 |
+| Approval required for all apps       | Pending approval       | Pending approval        |
 
 Slack states the second row explicitly.
 

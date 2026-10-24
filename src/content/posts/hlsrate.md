@@ -18,8 +18,8 @@ draft: false
 hls.jsにはhls.currentLevelというapiが用意されていてこちらの値を変更することでレベルの変更ができるようになっているのだがこちらにslectを変更した際にoptionの値を導入するという仕様で作成を試みたのだが-1を与えてると再生が止まる状況に陥ってしまった。
 
 ```js
-$('.res>select').on('change', function() {
-    hls.currentLevel = $(this).val();
+$(".res>select").on("change", function () {
+  hls.currentLevel = $(this).val();
 });
 ```
 
@@ -28,8 +28,8 @@ $('.res>select').on('change', function() {
 optionのvalueをNumberでキャストすれば治ります。
 
 ```js
-$('.res>select').on('change', function() {
-    hls.currentLevel = Number($(this).val());
+$(".res>select").on("change", function () {
+  hls.currentLevel = Number($(this).val());
 });
 ```
 

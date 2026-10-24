@@ -7,7 +7,7 @@ image: ""
 tags: ["Credit Cards", "Security", "Magnetic Stripe"]
 category: "Payments"
 draft: false
-sourceHash: "3147b44e91a33779"
+sourceHash: "e3d154f5b16bb2b1"
 ---
 
 ## What is a magnetic stripe card?
@@ -43,7 +43,7 @@ First digit
 5: Domestic brand  
 6: Domestic brand & IC chip  
 7: Private use  
-9: Test use  
+9: Test use
 
 Second digit  
 0: Decided by the payment terminal  

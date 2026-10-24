@@ -5,7 +5,8 @@ published: 2026-07-29
 updated: 2026-10-03
 description: "Next.jsで動かしていたこのブログをAstro製テーマFuwariに全面移行しました。ビルドから配信、コメント、購読まで現在の構成をひととおり書いておきます。コメントはgiscus、remark42、Artalkを経て、結局自分で書きました。"
 image: ""
-tags: ["Astro", "Caddy", "k3s", "Docker", "GitHub Actions", "Artalk", "yosegaki"]
+tags:
+  ["Astro", "Caddy", "k3s", "Docker", "GitHub Actions", "Artalk", "yosegaki"]
 category: "インフラ"
 draft: false
 ---
@@ -127,13 +128,13 @@ Usage of the /common endpoint is not supported for such applications.
 
 匿名コメントに対応していて、かつ見た目に手が届くものを並べました。
 
-| | 実装 / DB | 描画 | スタイル | 管理者認証 |
-| --- | --- | --- | --- | --- |
-| Artalk | Go単一バイナリ / SQLite | ホストDOM | CSS変数・ダークモード | パスワード |
-| Isso | Python / SQLite | ホストDOM | 完全に自由 | パスワード |
-| Comentario | Go / SQLite | Web Component | 全切り・差し替え可 | OIDC可 |
-| Waline | Node.js / 各種 | ホストDOM | CSS変数 | パスワード |
-| remark42 | Go単一バイナリ / BoltDB | iframe | light/darkのみ | OIDC可 |
+|            | 実装 / DB               | 描画          | スタイル              | 管理者認証 |
+| ---------- | ----------------------- | ------------- | --------------------- | ---------- |
+| Artalk     | Go単一バイナリ / SQLite | ホストDOM     | CSS変数・ダークモード | パスワード |
+| Isso       | Python / SQLite         | ホストDOM     | 完全に自由            | パスワード |
+| Comentario | Go / SQLite             | Web Component | 全切り・差し替え可    | OIDC可     |
+| Waline     | Node.js / 各種          | ホストDOM     | CSS変数               | パスワード |
+| remark42   | Go単一バイナリ / BoltDB | iframe        | light/darkのみ        | OIDC可     |
 
 Cusdisはアーカイブ済み、Commentoは2022年で放置(Comentarioが後継)、utterancesとgiscusはGitHubアカウント必須なので落としました。
 

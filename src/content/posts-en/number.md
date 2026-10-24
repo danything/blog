@@ -7,7 +7,7 @@ image: ""
 tags: ["Credit Cards", "Security"]
 category: "Payments"
 draft: false
-sourceHash: "cf9cf5e9851979fb"
+sourceHash: "91ccc3ccafd7feb3"
 ---
 
 ## Introduction
@@ -25,31 +25,31 @@ First, how a credit card number is structured: credit card numbers are defined i
 
 The BIN/IIN is itself made up of multiple parts. The first digit is called the MII (Major Industry Identifier) and indicates the industry the card is used in; the mapping is as follows.
 
-MII value | Industry
----- | -----------------------------
-0    | Reserved by ISO
-1    | Airlines
-2    | Airlines / other future industry assignments
-3    | Travel & entertainment / banking & financial
-4    | Banking & financial
-5    | Banking & financial
-6    | Merchandising / banking & financial
-7    | Petroleum / other future industry assignments
-8    | Healthcare / medical / telecommunications / other future industry assignments
-9    | Assignable by national standards bodies
+| MII value | Industry                                                                      |
+| --------- | ----------------------------------------------------------------------------- |
+| 0         | Reserved by ISO                                                               |
+| 1         | Airlines                                                                      |
+| 2         | Airlines / other future industry assignments                                  |
+| 3         | Travel & entertainment / banking & financial                                  |
+| 4         | Banking & financial                                                           |
+| 5         | Banking & financial                                                           |
+| 6         | Merchandising / banking & financial                                           |
+| 7         | Petroleum / other future industry assignments                                 |
+| 8         | Healthcare / medical / telecommunications / other future industry assignments |
+| 9         | Assignable by national standards bodies                                       |
 
 And below is a list of major BINs, past and present.
 
-Card type                    | Prefix                                                       | Length    | Validation
-------------------------- | ------------------------------------------------------------- | ------ | ----------
-American Express          | 34, 37                                                        | 15     | Luhn algorithm
-China UnionPay     | 622126-622925, 624-626, 6282-6288                             | 16     | None
-Diners Club International | 300-303574, 3095, 36, 38-39                                   | 14     | Luhn algorithm
-Discover Card             | 60110, 60112-60114, 601174-601179, 601186-601199, 644-649, 65 | 16     | Luhn algorithm
-JCB                       | 3528-3589                                                     | 16     | Luhn algorithm
-MasterCard                | 510000 - 559999, 222100 - 272099                              | 16     | Luhn algorithm
-UATP                      | 1                                                             | 15     | Unknown
-Visa                      | 4                                                             | 13, 16 | Luhn algorithm
+| Card type                 | Prefix                                                        | Length | Validation     |
+| ------------------------- | ------------------------------------------------------------- | ------ | -------------- |
+| American Express          | 34, 37                                                        | 15     | Luhn algorithm |
+| China UnionPay            | 622126-622925, 624-626, 6282-6288                             | 16     | None           |
+| Diners Club International | 300-303574, 3095, 36, 38-39                                   | 14     | Luhn algorithm |
+| Discover Card             | 60110, 60112-60114, 601174-601179, 601186-601199, 644-649, 65 | 16     | Luhn algorithm |
+| JCB                       | 3528-3589                                                     | 16     | Luhn algorithm |
+| MasterCard                | 510000 - 559999, 222100 - 272099                              | 16     | Luhn algorithm |
+| UATP                      | 1                                                             | 15     | Unknown        |
+| Visa                      | 4                                                             | 13, 16 | Luhn algorithm |
 
 ## About the check digit
 
