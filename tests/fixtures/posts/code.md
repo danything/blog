@@ -16,13 +16,13 @@ draft: false
 type User = { id: number; name: string };
 
 export function greet(user: User): string {
-	return `こんにちは、${user.name} さん`;
+  return `こんにちは、${user.name} さん`;
 }
 ```
 
 ```css
 :root {
-	--primary: oklch(0.7 0.14 40);
+  --primary: oklch(0.7 0.14 40);
 }
 ```
 

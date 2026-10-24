@@ -107,6 +107,12 @@ jobs:
           bunx "@anthropic-ai/claude-code@$CLAUDE_CODE_VERSION" -p "$prompt" \
             --allowedTools "Read,Write,Edit,Glob,Grep,Bash(bun scripts/translate-status.ts:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*)"
 
+      # 記事も bun fmt の対象なので、Check (bun fmt --check) で落ちないよう英訳を整形する。
+      # sourceHash は原文のハッシュなので、英訳を整形しても変わらない
+      - name: Format
+        if: steps.status.outputs.todo != '{"missing":[],"outdated":[]}'
+        run: bun fmt src/content/posts-en src/content/spec/about-en.md
+
       # 訳が残っていないか、フロントマターや Markdown が壊れていないかを確かめる
       - name: Verify
         if: steps.status.outputs.count != '0'

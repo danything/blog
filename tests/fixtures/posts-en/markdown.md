@@ -9,7 +9,7 @@ category: "Rendering Check"
 draft: false
 ---
 
-This is a fixed post for the visual comparison (`tests/visual.spec.ts`). The paragraph contains **bold**, *italic*, ~~strikethrough~~, a [link](https://example.com/), and inline `const answer = 42;`.  
+This is a fixed post for the visual comparison (`tests/visual.spec.ts`). The paragraph contains **bold**, _italic_, ~~strikethrough~~, a [link](https://example.com/), and inline `const answer = 42;`.  
 This second line comes after a line break made with two trailing spaces. It also checks how long English sentences wrap across the width of the card. A very long URL https://example.com/very/long/path/that/should/wrap/somewhere/in/the/middle/of/the/line is included too.
 
 ## Heading 2
@@ -40,11 +40,11 @@ A body paragraph.
 
 ## Table
 
-| Item | Description | Number |
-| :--- | :---: | ---: |
-| Left-aligned | Centered | 1 |
-| `inline code` | **bold** | 1,234 |
-| A longer string to check wrapping inside a cell | - | 56.78 |
+| Item                                            | Description | Number |
+| :---------------------------------------------- | :---------: | -----: |
+| Left-aligned                                    |  Centered   |      1 |
+| `inline code`                                   |  **bold**   |  1,234 |
+| A longer string to check wrapping inside a cell |      -      |  56.78 |
 
 ## Quote
 

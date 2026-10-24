@@ -4,10 +4,11 @@ published: 2026-07-29
 updated: 2026-10-03
 description: "I fully migrated this blog from Next.js to Fuwari, an Astro-based theme. Here's a full rundown of the current setup, from build and delivery to comments and subscriptions. For comments, I went through giscus, remark42, and Artalk, and in the end wrote my own."
 image: ""
-tags: ["Astro", "Caddy", "k3s", "Docker", "GitHub Actions", "Artalk", "yosegaki"]
+tags:
+  ["Astro", "Caddy", "k3s", "Docker", "GitHub Actions", "Artalk", "yosegaki"]
 category: "Infrastructure"
 draft: false
-sourceHash: "6b0d47dae980e3f4"
+sourceHash: "5c23030f4d251a2c"
 ---
 
 This site was originally built with HUGO and later ran on Next.js (tailwind-nextjs-starter-blog), but I've now fully migrated it to [Fuwari](https://github.com/saicaca/fuwari), an Astro-based theme.  
@@ -127,13 +128,13 @@ When I tried to fix it, I found out that remark42 is embedded in an iframe. The 
 
 I lined up the options that support anonymous comments and whose look I could actually control.
 
-| | Implementation / DB | Rendering | Styling | Admin auth |
-| --- | --- | --- | --- | --- |
-| Artalk | Single Go binary / SQLite | Host DOM | CSS variables, dark mode | Password |
-| Isso | Python / SQLite | Host DOM | Completely free | Password |
-| Comentario | Go / SQLite | Web Component | Can be fully disabled and replaced | OIDC supported |
-| Waline | Node.js / various | Host DOM | CSS variables | Password |
-| remark42 | Single Go binary / BoltDB | iframe | light/dark only | OIDC supported |
+|            | Implementation / DB       | Rendering     | Styling                            | Admin auth     |
+| ---------- | ------------------------- | ------------- | ---------------------------------- | -------------- |
+| Artalk     | Single Go binary / SQLite | Host DOM      | CSS variables, dark mode           | Password       |
+| Isso       | Python / SQLite           | Host DOM      | Completely free                    | Password       |
+| Comentario | Go / SQLite               | Web Component | Can be fully disabled and replaced | OIDC supported |
+| Waline     | Node.js / various         | Host DOM      | CSS variables                      | Password       |
+| remark42   | Single Go binary / BoltDB | iframe        | light/dark only                    | OIDC supported |
 
 I ruled out Cusdis because it's archived, Commento because it's been abandoned since 2022 (Comentario is its successor), and utterances and giscus because they require a GitHub account.
 

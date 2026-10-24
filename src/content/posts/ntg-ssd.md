@@ -9,7 +9,7 @@ category: "車"
 draft: false
 ---
 
-下記で紹介されているxboxhdmを使う有名な方法があるがxboxhdm v1.9はsata接続に対応していないため4.5のsata接続以降では利用できない    
+下記で紹介されているxboxhdmを使う有名な方法があるがxboxhdm v1.9はsata接続に対応していないため4.5のsata接続以降では利用できない  
 [NTG4.5 / 4.7 HDD imaging project](https://mhhauto.com/Thread-NTG4-5-4-7-HDD-imaging-project)  
 fujtoolを利用する方法等が紹介されているがそもそもwindows用のsmart編集ツールなどで解除できないか調べた  
 windowsで利用できるusb, sataなどに対応したsmart編集用ツールとしてsmartctlがある、またxboxhdmの最新版v.2.3においてはunlockhdコマンドにsmartctlが利用されている
