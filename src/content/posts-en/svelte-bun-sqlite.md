@@ -7,7 +7,7 @@ image: ""
 tags: ["Svelte", "SvelteKit", "Bun", "SQLite", "Side Projects"]
 category: "Web Development"
 draft: false
-sourceHash: "56aa0f2107270c3a"
+sourceHash: "0df1e4755bfecb62"
 ---
 
 It's been a while since I wrote about something web-related.  
@@ -17,13 +17,13 @@ For about the past year, every web app I've built on my own has used SvelteKit +
 
 Here's what I currently have running.
 
-|                                     | What it does                                                                                      | Public                                       |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| [worklog](https://w.doany.io/)      | Builds timesheets from Slack and GitHub logs                                                      | Service only                                 |
-| [𝕏ool](https://x.doany.io/)         | Automatically posts a "report card" of your day on 𝕏                                              | [Source](https://github.com/DAnything/xool)  |
-| mogiri                              | QR-based admission, pre-ordering and self-checkout                                                | [Source](https://github.com/5ym/mogiri)      |
-| denpa                               | TV program guide, scheduling, recording, and streaming                                            | [Source](https://github.com/DAnything/denpa) |
-| [tamasagashi](https://ts.doany.io/) | Browser for a vehicle master database (model code → common name and specs) built from public data | Service only                                 |
+|                                                    | What it does                                                                                      | Public                                       |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| [worklog](https://w.doany.io/)                     | Builds timesheets from Slack and GitHub logs                                                      | Service only                                 |
+| [𝕏ool](https://x.doany.io/)                        | Automatically posts a "report card" of your day on 𝕏                                              | [Source](https://github.com/DAnything/xool)  |
+| mogiri (now [noren](https://github.com/5ym/noren)) | QR-based admission, pre-ordering and self-checkout                                                | [Source](https://github.com/5ym/noren)       |
+| denpa                                              | TV program guide, scheduling, recording, and streaming                                            | [Source](https://github.com/DAnything/denpa) |
+| [tamasagashi](https://ts.doany.io/)                | Browser for a vehicle master database (model code → common name and specs) built from public data | Service only                                 |
 
 All five have nearly identical package.json files: SvelteKit 2 + Svelte 5, adapter-node, Blades (the successor to Pico CSS), bun:sqlite, TypeScript 7, and they all start with `bun build/index.js`.  
 I didn't set out to standardize them. Honestly, I rewrote one, it was pleasant, and everything after that just followed suit.
