@@ -45,8 +45,7 @@ const responsive = isPublic ? await responsiveImage(src, url) : undefined;
 
 // TODO temporary workaround for images dynamic import
 // https://github.com/withastro/astro/issues/3373
-// biome-ignore lint/suspicious/noImplicitAnyLet: <check later>
-let img;
+let img: ImageMetadata | undefined;
 if (isLocal) {
 	// 画像だけに絞る。"../../**" だと src 以下の CSS なども全部モジュールとして取り込んでいた
 	const files = import.meta.glob<ImageMetadata>(

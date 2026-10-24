@@ -9,36 +9,36 @@ import { a11yPages, setupContext } from "./setup";
 test.beforeEach(({ context }, info) => setupContext(context, info));
 
 for (const path of a11yPages) {
-	test(path, async ({ page }) => {
-		// 読み込み時の動きは止め、ほかに動いているものがあれば終わるのを待ってから測る
-		await page.emulateMedia({ reducedMotion: "reduce" });
-		await page.goto(path);
-		await page.waitForLoadState("networkidle");
-		await page.evaluate(() =>
-			Promise.all(document.getAnimations().map((a) => a.finished)),
-		);
-		const { violations } = await new AxeBuilder({ page })
-			.withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-			.analyze();
-		const failures = violations.filter(
-			(v) => v.impact === "serious" || v.impact === "critical",
-		);
-		// 失敗したときに、どの規則がどの要素で引っかかったかを読める形で出す
-		const summary = failures
-			.map((v) => {
-				const nodes = v.nodes
-					.map(
-						(n) =>
-							`    - ${n.target.join(" ")}\n      ${n.failureSummary?.replaceAll("\n", "\n      ")}`,
-					)
-					.join("\n");
-				return `[${v.impact}] ${v.id}: ${v.help}\n  ${v.helpUrl}\n${nodes}`;
-			})
-			.join("\n\n");
-		// 差分には規則の名前だけを出す(違反の中身をそのまま比べると出力が長すぎて読めない)
-		expect(
-			failures.map((v) => v.id),
-			`アクセシビリティの違反:\n\n${summary}`,
-		).toEqual([]);
-	});
+  test(path, async ({ page }) => {
+    // 読み込み時の動きは止め、ほかに動いているものがあれば終わるのを待ってから測る
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(path);
+    await page.waitForLoadState("networkidle");
+    await page.evaluate(() =>
+      Promise.all(document.getAnimations().map((a) => a.finished)),
+    );
+    const { violations } = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+    const failures = violations.filter(
+      (v) => v.impact === "serious" || v.impact === "critical",
+    );
+    // 失敗したときに、どの規則がどの要素で引っかかったかを読める形で出す
+    const summary = failures
+      .map((v) => {
+        const nodes = v.nodes
+          .map(
+            (n) =>
+              `    - ${n.target.join(" ")}\n      ${n.failureSummary?.replaceAll("\n", "\n      ")}`,
+          )
+          .join("\n");
+        return `[${v.impact}] ${v.id}: ${v.help}\n  ${v.helpUrl}\n${nodes}`;
+      })
+      .join("\n\n");
+    // 差分には規則の名前だけを出す(違反の中身をそのまま比べると出力が長すぎて読めない)
+    expect(
+      failures.map((v) => v.id),
+      `アクセシビリティの違反:\n\n${summary}`,
+    ).toEqual([]);
+  });
 }

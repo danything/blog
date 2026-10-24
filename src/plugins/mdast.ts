@@ -1,8 +1,8 @@
 interface TextNode {
-	type: string;
-	value?: string;
-	alt?: string | null;
-	children?: TextNode[];
+  type: string;
+  value?: string;
+  alt?: string | null;
+  children?: TextNode[];
 }
 
 /**
@@ -10,6 +10,6 @@ interface TextNode {
  * 値を持つ節(テキスト・コード・HTML など)はその値、画像は alt、それ以外は子をつなげたもの
  */
 export const mdastText = (node: TextNode): string =>
-	"value" in node
-		? (node.value ?? "")
-		: node.alt || (node.children?.map(mdastText).join("") ?? "");
+  "value" in node
+    ? (node.value ?? "")
+    : node.alt || (node.children?.map(mdastText).join("") ?? "");

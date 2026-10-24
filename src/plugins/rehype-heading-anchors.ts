@@ -12,19 +12,19 @@ const HEADING = /^h[1-6]$/;
  * id は先に rehypeHeadingIds(astro.config.ts)が付ける。# は検索の索引に入れない
  */
 export const rehypeHeadingAnchors: RehypePlugin = () => (tree) => {
-	visit(tree, "element", (node) => {
-		const id = node.properties.id;
-		if (!HEADING.test(node.tagName) || !id) return;
-		node.children.push(
-			h("a", { className: ["anchor"], href: `#${id}` }, [
-				h(
-					"span",
-					{ className: ["anchor-icon"], "data-pagefind-ignore": true },
-					["#"],
-				),
-			]),
-		);
-		// 足したリンクの中は見ない
-		return SKIP;
-	});
+  visit(tree, "element", (node) => {
+    const id = node.properties.id;
+    if (!HEADING.test(node.tagName) || !id) return;
+    node.children.push(
+      h("a", { className: ["anchor"], href: `#${id}` }, [
+        h(
+          "span",
+          { className: ["anchor-icon"], "data-pagefind-ignore": true },
+          ["#"],
+        ),
+      ]),
+    );
+    // 足したリンクの中は見ない
+    return SKIP;
+  });
 };

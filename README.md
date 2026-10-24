@@ -27,8 +27,8 @@ bun run preview
 検索(Pagefind)の索引はビルドで作られるので、`bun run dev` では検索できない(検索欄にその旨が出る)。検索を試すときは `bun run build` のあと `bun run preview` で開く。
 
 ```shell
-bun run lint       # Biome の検査と型チェック(astro check は .astro と scripts/・src/ などの .ts を調べる)
-bun run lint:fix   # Biome で整形と直せるものを直す
+bun run lint       # oxlint・整形の確かめ (bun fmt --check)・型チェック(astro check は .astro と scripts/・src/ などの .ts を調べる)
+bun run format     # oxlint で直せるものを直し、bun fmt で整形する
 ```
 
 ## 記事の追加
@@ -88,12 +88,13 @@ GitHub と同じ書き方。種類は `NOTE` / `TIP` / `IMPORTANT` / `WARNING` /
 ### 記事の削除
 
 `src/content/posts/` から Markdown を消すだけでは足りない。あわせて次をする:
+
 - [ ] `Caddyfile` の `@gone` の一覧にスラッグ(ファイル名から `.md` を除いたもの)を足し、404 ではなく 410 Gone を返す
 - [ ] `tests/setup.ts` の `a11yPages` に入っていれば外す
 - [ ] Zenn 側の記事を手で削除する。zenn ブランチからファイルが消えても Zenn は記事を消さない。
-  Zenn のスラッグはフロントマターの `zennSlug`、なければ `scripts/zenn-sync.ts` の `toZennSlug` で決まる
-  (12 文字以上ならそのまま(50 文字まで)、短ければハッシュを足したもの)。zenn ブランチの `articles/` にあるファイル名を見るのが早い
-  (同期のあとならその履歴で、削除のコミットで消えたファイルを探す)
+      Zenn のスラッグはフロントマターの `zennSlug`、なければ `scripts/zenn-sync.ts` の `toZennSlug` で決まる
+      (12 文字以上ならそのまま(50 文字まで)、短ければハッシュを足したもの)。zenn ブランチの `articles/` にあるファイル名を見るのが早い
+      (同期のあとならその履歴で、削除のコミットで消えたファイルを探す)
 
 ### リンク切れの確認
 
@@ -140,6 +141,7 @@ bun scripts/translate-status.ts --hash <原文>   # sourceHash に書く値
 
 アイコンは Iconify のアイコンセットのパッケージ(`@iconify-json/lucide`・`@iconify-json/simple-icons`)からビルド時に取り、
 `src/components/misc/Icon.astro` で SVG として埋め込む(`<Icon name="lucide:search" />`)。ページに入るのは使ったアイコンだけ。
+
 - 画面の部品(検索・メニュー・矢印・日付など)は [Lucide](https://lucide.dev/)(`lucide:search` など)
 - サービスのロゴ(GitHub・X・Threads・Bluesky・Ko-fi・Creative Commons など)は [Simple Icons](https://simpleicons.org/)(`simple-icons:github` など)。
   Lucide にはロゴが無い(以前あった GitHub などは非推奨で、新しい版では消えている)ので、ロゴはすべて Simple Icons に揃える
@@ -154,6 +156,7 @@ CSS の `mask-image` などで使うアイコン(注意書きの見出し・GitH
 ## スタイル
 
 CSS フレームワークは使わず、素の CSS(入れ子・変数・`@layer`)で書いている。
+
 - コンポーネントの見た目は、それぞれの `.astro` の `<style>` に書く(Astro がそのコンポーネントの中だけに効くようにする)。
   親の `<style>` で子コンポーネントの外側の要素を調整するときは、子が `class` と残りの属性(`data-astro-cid-*`)を外側の要素に付ける(`ImageWrapper.astro` など)
 - サイト全体のものは `src/styles/` に置き、`main.css`(`Layout.astro` で読み込む)から読む
@@ -199,6 +202,7 @@ BASE_URL=http://127.0.0.1:4321 bunx playwright test tests/visual.spec.ts        
 
 Renovate(`renovate.json`。共通の設定は [5ym/repo-config](https://github.com/5ym/repo-config))が PR にする。
 パッケージは静的なサイトのビルドにしか使わないので、すべて `devDependencies` に置いている。
+
 - Bun の版は `package.json` の `packageManager`(CI の setup-bun が読む)と `Dockerfile` の `oven/bun` の 2 か所にあり、同じ PR で上がる
 - GitHub Actions はコミットのハッシュ、`Dockerfile` のイメージはダイジェストで固定し、Renovate が上げる
 - `translate.yml` の Claude Code の版は、直前の行の `# renovate: datasource=npm depName=...` を Renovate が読んで上げる

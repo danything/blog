@@ -4,7 +4,7 @@ import { en } from "./languages/en";
 import { ja } from "./languages/ja";
 
 export type Translation = {
-	[K in I18nKey]: string;
+  [K in I18nKey]: string;
 };
 
 /** サイトの言語。日本語が既定で、英語版は /en/ 以下に置く */
@@ -19,20 +19,20 @@ const map: Record<Lang, Translation> = { ja, en };
  * パス(/about/)、英語版は /en/ 以下(/en/about/)
  */
 export function langPaths(): {
-	params: { lang?: string };
-	props: { lang: Lang };
+  params: { lang?: string };
+  props: { lang: Lang };
 }[] {
-	return LANGS.map((lang) => ({
-		params: { lang: lang === DEFAULT_LANG ? undefined : lang },
-		props: { lang },
-	}));
+  return LANGS.map((lang) => ({
+    params: { lang: lang === DEFAULT_LANG ? undefined : lang },
+    props: { lang },
+  }));
 }
 
 /** ページの URL のパスから言語を決める(/en/ 以下なら英語) */
 export function langFromPath(pathname: string): Lang {
-	return /^\/en(\/|$)/.test(pathname) ? "en" : DEFAULT_LANG;
+  return /^\/en(\/|$)/.test(pathname) ? "en" : DEFAULT_LANG;
 }
 
 export function i18n(key: I18nKey, lang: Lang): string {
-	return map[lang][key];
+  return map[lang][key];
 }

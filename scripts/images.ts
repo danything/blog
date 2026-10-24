@@ -15,19 +15,19 @@ const POSTS_DIR = "src/content/posts";
 const IMAGE = /\/static\/images\/[^\s)"'<>]+?\.(?:png|jpe?g)/gi;
 
 const posts = fs
-	.readdirSync(POSTS_DIR)
-	.filter((f) => f.endsWith(".md"))
-	.map((f) => path.join(POSTS_DIR, f));
+  .readdirSync(POSTS_DIR)
+  .filter((f) => f.endsWith(".md"))
+  .map((f) => path.join(POSTS_DIR, f));
 
 // 変換する画像(サイト上のパス /static/... で持つ)
 const args = process.argv.slice(2);
 const targets = new Set(
-	args.length > 0
-		? args.map(
-				(f) =>
-					`/${path.relative("public", path.resolve(f)).replaceAll(path.sep, "/")}`,
-			)
-		: posts.flatMap((p) => fs.readFileSync(p, "utf8").match(IMAGE) ?? []),
+  args.length > 0
+    ? args.map(
+        (f) =>
+          `/${path.relative("public", path.resolve(f)).replaceAll(path.sep, "/")}`,
+      )
+    : posts.flatMap((p) => fs.readFileSync(p, "utf8").match(IMAGE) ?? []),
 );
 
 const kb = (n: number) => `${Math.round(n / 1024)}K`;
@@ -36,34 +36,34 @@ let after = 0;
 const converted = new Map<string, string>();
 
 for (const url of [...targets].sort()) {
-	const file = path.join("public", url);
-	if (!fs.existsSync(file)) {
-		console.warn(`見つからない: ${file}`);
-		continue;
-	}
-	const input = fs.readFileSync(file);
-	const { data: output, lossless: useLossless } = await toWebp(sharp(input));
-	const outUrl = url.replace(/\.(png|jpe?g)$/i, ".webp");
+  const file = path.join("public", url);
+  if (!fs.existsSync(file)) {
+    console.warn(`見つからない: ${file}`);
+    continue;
+  }
+  const input = fs.readFileSync(file);
+  const { data: output, lossless: useLossless } = await toWebp(sharp(input));
+  const outUrl = url.replace(/\.(png|jpe?g)$/i, ".webp");
 
-	fs.writeFileSync(path.join("public", outUrl), output);
-	fs.rmSync(file);
-	converted.set(url, outUrl);
-	before += input.length;
-	after += output.length;
-	console.log(
-		`${url} ${kb(input.length)} → ${kb(output.length)} (${useLossless ? "ロスレス" : "非可逆"})`,
-	);
+  fs.writeFileSync(path.join("public", outUrl), output);
+  fs.rmSync(file);
+  converted.set(url, outUrl);
+  before += input.length;
+  after += output.length;
+  console.log(
+    `${url} ${kb(input.length)} → ${kb(output.length)} (${useLossless ? "ロスレス" : "非可逆"})`,
+  );
 }
 
 // 記事の参照を書き換える
 for (const p of posts) {
-	const text = fs.readFileSync(p, "utf8");
-	let next = text;
-	for (const [from, to] of converted) next = next.replaceAll(from, to);
-	if (next !== text) {
-		fs.writeFileSync(p, next);
-		console.log(`参照を更新: ${p}`);
-	}
+  const text = fs.readFileSync(p, "utf8");
+  let next = text;
+  for (const [from, to] of converted) next = next.replaceAll(from, to);
+  if (next !== text) {
+    fs.writeFileSync(p, next);
+    console.log(`参照を更新: ${p}`);
+  }
 }
 
 if (converted.size === 0) console.log("変換する画像はありませんでした");

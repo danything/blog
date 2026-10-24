@@ -6,24 +6,24 @@ import path from "node:path";
 
 const [name] = process.argv.slice(2);
 if (!name) {
-	console.error("Usage: bun run new-post <filename>");
-	process.exit(1);
+  console.error("Usage: bun run new-post <filename>");
+  process.exit(1);
 }
 
 const file = path.join(
-	"src/content/posts",
-	/\.mdx?$/i.test(name) ? name : `${name}.md`,
+  "src/content/posts",
+  /\.mdx?$/i.test(name) ? name : `${name}.md`,
 );
 if (fs.existsSync(file)) {
-	console.error(`${file} は既にあります`);
-	process.exit(1);
+  console.error(`${file} は既にあります`);
+  process.exit(1);
 }
 
 const today = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD
 fs.mkdirSync(path.dirname(file), { recursive: true });
 fs.writeFileSync(
-	file,
-	`---
+  file,
+  `---
 title: ${name}
 published: ${today}
 description: ""

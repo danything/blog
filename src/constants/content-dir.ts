@@ -8,5 +8,5 @@
 export const VISUAL_FIXTURES: boolean = process.env.VISUAL_FIXTURES === "1";
 
 export const CONTENT_DIR: string = VISUAL_FIXTURES
-	? "tests/fixtures"
-	: "src/content";
+  ? "tests/fixtures"
+  : "src/content";

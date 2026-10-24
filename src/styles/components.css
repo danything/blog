@@ -3,89 +3,89 @@
 
 /* 白い箱 */
 .card-base {
-	overflow: hidden;
-	border-radius: var(--radius-large);
-	background-color: var(--card-bg);
-	transition: var(--transition);
+  overflow: hidden;
+  border-radius: var(--radius-large);
+  background-color: var(--card-bg);
+  transition: var(--transition);
 }
 
 /* 押せる部品の共通の形: 中身を中央にそろえる */
 .btn-plain,
 .btn-regular,
 .btn-card {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
 }
 
 /* 背景の無いボタン。マウスを乗せると色が付く */
 .btn-plain {
-	position: relative;
-	background-image: none;
-	color: var(--text-75);
+  position: relative;
+  background-image: none;
+  color: var(--text-75);
 
-	@media (hover: hover) {
-		&:hover {
-			color: var(--primary);
-		}
-		&:not(.scale-animation):hover {
-			background-color: var(--btn-plain-bg-hover);
-		}
-	}
-	&:not(.scale-animation):active {
-		background-color: var(--btn-plain-bg-active);
-	}
+  @media (hover: hover) {
+    &:hover {
+      color: var(--primary);
+    }
+    &:not(.scale-animation):hover {
+      background-color: var(--btn-plain-bg-hover);
+    }
+  }
+  &:not(.scale-animation):active {
+    background-color: var(--btn-plain-bg-active);
+  }
 }
 
 /* 薄い色の付いたボタン */
 .btn-regular {
-	background-color: var(--btn-regular-bg);
-	color: var(--btn-content);
+  background-color: var(--btn-regular-bg);
+  color: var(--btn-content);
 
-	.dark & {
-		color: var(--text-75);
-	}
-	@media (hover: hover) {
-		&:hover {
-			background-color: var(--btn-regular-bg-hover);
-		}
-	}
-	&:active {
-		background-color: var(--btn-regular-bg-active);
-	}
+  .dark & {
+    color: var(--text-75);
+  }
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--btn-regular-bg-hover);
+    }
+  }
+  &:active {
+    background-color: var(--btn-regular-bg-active);
+  }
 }
 
 /* カードと同じ色のボタン(ページ送りなど) */
 .btn-card {
-	background-color: var(--card-bg);
+  background-color: var(--card-bg);
 
-	@media (hover: hover) {
-		&:hover {
-			background-color: var(--btn-card-bg-hover);
-		}
-	}
-	&:active {
-		background-color: var(--btn-card-bg-active);
-	}
-	&.disabled {
-		pointer-events: none;
-		color: var(--fg-10);
-	}
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--btn-card-bg-hover);
+    }
+  }
+  &:active {
+    background-color: var(--btn-card-bg-active);
+  }
+  &.disabled {
+    pointer-events: none;
+    color: var(--fg-10);
+  }
 }
 
 /* 文中のリンク。マウスを乗せると周りに背景が広がる */
 .link {
-	margin: -0.25rem;
-	padding: 0.25rem;
-	border-radius: 0.375rem;
-	transition: var(--transition);
+  margin: -0.25rem;
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  transition: var(--transition);
 }
 .link-lg {
-	margin: -0.375rem;
-	padding: 0.375rem;
-	border-radius: 0.375rem;
-	transition: var(--transition);
+  margin: -0.375rem;
+  padding: 0.375rem;
+  border-radius: 0.375rem;
+  transition: var(--transition);
 }
 
 /* 背景が広がる動き(リンク・記事の本文のリンク・.btn-plain.scale-animation) */
@@ -93,116 +93,116 @@
 .link-lg,
 .custom-md a:not(.no-styling),
 .btn-plain.scale-animation {
-	position: relative;
-	z-index: 0;
+  position: relative;
+  z-index: 0;
 
-	&::before {
-		content: "";
-		position: absolute;
-		inset: 0;
-		z-index: -10;
-		border-radius: inherit;
-		scale: 0.85;
-		transition: var(--transition);
-		transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-	}
-	@media (hover: hover) {
-		&:hover::before {
-			scale: 1;
-			background-color: var(--btn-plain-bg-hover);
-		}
-	}
-	&:active {
-		background-image: none;
-	}
-	&:active::before {
-		background-color: var(--btn-plain-bg-active);
-	}
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -10;
+    border-radius: inherit;
+    scale: 0.85;
+    transition: var(--transition);
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+  @media (hover: hover) {
+    &:hover::before {
+      scale: 1;
+      background-color: var(--btn-plain-bg-hover);
+    }
+  }
+  &:active {
+    background-image: none;
+  }
+  &:active::before {
+    background-color: var(--btn-plain-bg-active);
+  }
 }
 
 /* 選ばれているボタン(テーマの切り替え) */
 .btn-plain.scale-animation.current-theme-btn {
-	color: var(--primary);
+  color: var(--primary);
 
-	&::before {
-		scale: 1;
-		opacity: 1;
-		background-color: var(--btn-plain-bg-hover);
-	}
+  &::before {
+    scale: 1;
+    opacity: 1;
+    background-color: var(--btn-plain-bg-hover);
+  }
 }
 
 /* ナビゲーションバーから開くパネル */
 .float-panel {
-	top: 5.25rem;
-	overflow: hidden;
-	border-radius: var(--radius-large);
-	background-color: var(--float-panel-bg);
-	box-shadow:
-		0 20px 25px -5px rgb(0 0 0 / 0.1),
-		0 8px 10px -6px rgb(0 0 0 / 0.1);
-	transition: var(--transition);
+  top: 5.25rem;
+  overflow: hidden;
+  border-radius: var(--radius-large);
+  background-color: var(--float-panel-bg);
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  transition: var(--transition);
 
-	.dark & {
-		box-shadow: none;
-	}
+  .dark & {
+    box-shadow: none;
+  }
 }
 
 /* 閉じているパネルは visibility: hidden にして、中のボタンや入力欄に Tab で入れないようにする。
    閉じた状態でだけ visibility も遷移させるので、閉じるときは消えきるまで見えたまま、開くときはすぐ見える
    (すぐ中へフォーカスを移せる)。そのためパネルに transition: all は付けない(付けると開くときも遷移する) */
 .float-panel-closed {
-	translate: 0 -0.25rem;
-	opacity: 0;
-	pointer-events: none;
-	visibility: hidden;
-	transition-property: all !important;
+  translate: 0 -0.25rem;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition-property: all !important;
 }
 
 /* 文字の大きさと、それに合う行の高さ(variables.css の --text-*)。各 .astro の <style> で
  * font-size などを書けば、そちらが勝つ(この層より強い) */
 .text-xs {
-	font-size: var(--text-xs);
-	line-height: var(--text-xs-lh);
+  font-size: var(--text-xs);
+  line-height: var(--text-xs-lh);
 }
 .text-sm {
-	font-size: var(--text-sm);
-	line-height: var(--text-sm-lh);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm-lh);
 }
 .text-lg {
-	font-size: var(--text-lg);
-	line-height: var(--text-lg-lh);
+  font-size: var(--text-lg);
+  line-height: var(--text-lg-lh);
 }
 .text-xl {
-	font-size: var(--text-xl);
-	line-height: var(--text-xl-lh);
+  font-size: var(--text-xl);
+  line-height: var(--text-xl-lh);
 }
 .text-2xl {
-	font-size: var(--text-2xl);
-	line-height: var(--text-2xl-lh);
+  font-size: var(--text-2xl);
+  line-height: var(--text-2xl-lh);
 }
 .text-3xl {
-	font-size: var(--text-3xl);
-	line-height: var(--text-3xl-lh);
+  font-size: var(--text-3xl);
+  line-height: var(--text-3xl-lh);
 }
 
 /* サイドバーの部品(ニュースレター・応援)の説明の文 */
 .widget-description {
-	margin-bottom: 0.75rem;
-	font-size: var(--text-sm);
-	line-height: var(--text-sm-lh);
-	color: var(--text-75);
-	transition: var(--transition);
+  margin-bottom: 0.75rem;
+  font-size: var(--text-sm);
+  line-height: var(--text-sm-lh);
+  color: var(--text-75);
+  transition: var(--transition);
 }
 
 /* 読み上げ用で、画面には出さない(記事の脚注の見出しにも付く) */
 .sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	margin: -1px;
-	padding: 0;
-	overflow: hidden;
-	clip-path: inset(50%);
-	white-space: nowrap;
-	border-width: 0;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
 }

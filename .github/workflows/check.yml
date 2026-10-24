@@ -1,6 +1,6 @@
 name: Check
 
-# PR で型チェック(astro check)を通す
+# PR でリント・整形・型チェック(astro check)を通す
 on:
   pull_request:
     branches: [main]
@@ -24,5 +24,5 @@ jobs:
           # 手元の toolcache の古い 22 で済ませず、22 の最新を取りに行く
           check-latest: true
       - run: bun install --frozen-lockfile
-      # Biome の検査と型チェック(biome check . && astro check。astro check は .astro と tsconfig.json の include の .ts を調べる)
+      # リント・整形の確かめ・型チェック(oxlint && bun fmt --check && astro check。astro check は .astro と tsconfig.json の include の .ts を調べる)
       - run: bun run lint
