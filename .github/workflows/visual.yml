@@ -42,22 +42,34 @@ jobs:
       # PR ではビルドしたのは main とのマージコミットなので、その 1 つ目の親(マージに使った main)と比べる。
       # pull_request.base.sha は PR を作ったときの古い main のことがあり、あとで main に入った変更まで差に出てしまう。
       # workflow_dispatch ではマージしたものではなくブランチそのものをビルドしているので、main との分岐点と比べる
-      - name: 基準のコミットを決める
-        id: base
+      #
+      # 基準は main の履歴にあるコミットでなければならない。workflow_dispatch は main でも起こせ、そのときは
+      # main のキャッシュの範囲で動く。ここで main にないコミットを checkout してビルドすると、そのコードが
+      # main のキャッシュを書き換えられてしまう(キャッシュ汚染)。そこで .base には main を checkout し、
+      # 基準のコミットが main の祖先であることを確かめてからそこへ移る
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          path: .base
+          fetch-depth: 0 # 基準のコミットへ移るため。中身は移ったときに取る
+          filter: blob:none
+
+      - name: 基準のコミットへ移る
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
-            BASE_SHA=$(git cat-file -p HEAD | awk '/^parent /{print $2; exit}')
+            base=$(git cat-file -p HEAD | awk '/^parent /{print $2; exit}')
           else
-            BASE_SHA=$(gh api "repos/$GITHUB_REPOSITORY/compare/main...$GITHUB_SHA" --jq .merge_base_commit.sha)
+            base=$(gh api "repos/$GITHUB_REPOSITORY/compare/main...$GITHUB_SHA" --jq .merge_base_commit.sha)
           fi
-          echo "sha=$BASE_SHA" >> "$GITHUB_OUTPUT"
-
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ steps.base.outputs.sha }}
-          path: .base
+          cd .base
+          if ! git merge-base --is-ancestor "$base" HEAD; then
+            echo "::error::基準のコミット $base が main の履歴にありません"
+            exit 1
+          fi
+          git switch --quiet --detach "$base"
+          echo "基準: $base"
 
       - run: bun install --frozen-lockfile && bun run build
         working-directory: .base
