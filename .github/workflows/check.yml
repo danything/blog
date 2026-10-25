@@ -26,3 +26,5 @@ jobs:
       - run: bun install --frozen-lockfile
       # リント・整形の確かめ・型チェック(oxlint && bun fmt --check && astro check。astro check は .astro と tsconfig.json の include の .ts を調べる)
       - run: bun run lint
+      # src/ の単体テスト(bun test。tests/ の Playwright は visual.yml・a11y.yml で動かす)
+      - run: bun run test
