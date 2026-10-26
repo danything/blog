@@ -1,0 +1,56 @@
+name: Feed
+
+# rss.xml を feed ブランチにも置く。b.doany.io は Cloudflare の Bot Fight Mode でデータセンターからのアクセスに
+# チャレンジを出すので、GitHub Actions などからはサイトの rss.xml を読めない (5ym/5ym のプロフィールの metrics)。
+# そうしたものは https://raw.githubusercontent.com/danything/blog/feed/rss.xml を読む。
+# feed ブランチは毎回 rss.xml だけの 1 コミットで作り直す
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/content/**"
+      - "src/pages/**/rss.xml.ts"
+      - ".github/workflows/feed.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: feed
+  cancel-in-progress: true
+
+jobs:
+  feed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: package.json # packageManager の版(Dockerfile の oven/bun と同じ)
+      # astro は Node で動く。ランナーの既定の Node は版が古いことがある
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.22.1
+          check-latest: true
+
+      - run: bun install --frozen-lockfile
+      # 要るのは rss.xml だけなので、検索の索引と圧縮 (build の残り) は飛ばす
+      - run: bunx astro build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub カードの情報を取るため
+
+      - name: feed ブランチに置く
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir /tmp/feed
+          cp dist/rss.xml /tmp/feed/
+          cd /tmp/feed
+          git init -q -b feed
+          git add rss.xml
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "rss.xml (${GITHUB_SHA::7})"
+          git push -q -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" feed
