@@ -33,7 +33,7 @@
     "astro-expressive-code": "^0.44.3",
     "hast-util-from-html": "^2.0.3",
     "hast-util-to-html": "^9.0.5",
-    "oxlint": "^1.89.0",
+    "oxlint": "^1.90.0",
     "pagefind": "^1.5.2",
     "sharp": "^0.35.5",
     "takumi-js": "^2.18.2",
