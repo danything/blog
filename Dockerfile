@@ -14,7 +14,7 @@ RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN bun run build
 # capabilities をすべて落とす (k8s の drop: [ALL] と allowPrivilegeEscalation: false) と
 # exec が operation not permitted で失敗する。8080 で待つのでここで外し、本体だけを取り出す。
 # (公式イメージの上で setcap すると約 50MB の本体がもう 1 層増えてイメージが倍近くになるため)
-FROM caddy:2-alpine@sha256:eb4d35b7452d1ab6171fbdbe8d9275b2301dad6dad92115d91e19fb9b24d510f AS caddy
+FROM caddy:2-alpine@sha256:e70b164da81ef698b3ad19af799ea6086ce6d9e48ed4079eb9fe26f6fbf14ee5 AS caddy
 # 配信用のイメージにはシェルが無いので、Caddy が使うディレクトリもここで作っておく
 RUN setcap -r /usr/bin/caddy && mkdir -p /xdg/config /xdg/data
 
