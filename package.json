@@ -34,7 +34,7 @@
     "hast-util-from-html": "^2.0.3",
     "hast-util-to-html": "^9.0.6",
     "oxlint": "^1.90.0",
-    "pagefind": "^1.5.2",
+    "pagefind": "^1.6.0",
     "sharp": "^0.35.5",
     "takumi-js": "^2.19.0",
     "typescript": "^6.0.3",
