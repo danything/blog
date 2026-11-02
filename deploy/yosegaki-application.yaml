@@ -1,8 +1,9 @@
 # コメントサーバ yosegaki (https://github.com/danything/yosegaki)。
 # チャートは yosegaki 側の CI が OCI で ghcr に push する。version は 0.1.<CI の run 番号>
 # (取り消された run の番号は飛ぶので、連番とは限らない)。
-# 秘密は Infisical の /yosegaki/yosegaki-secrets (secret, oidc-client-secret, smtp-password,
-# turnstile-secret) を純正 operator が Secret yosegaki-secrets にする。
+# 秘密 (secret, oidc-client-secret, smtp-password, turnstile-secret) は Secret yosegaki-secrets にあり、
+# secrets.sops.yaml の SopsSecret が作る。chart は existingSecret の名前で読むだけ。
+# chart の Deployment の注釈は Infisical の auto-reload なので、値を変えても Pod は入れ替わらない (rollout restart する)。
 #
 # **k3s の HelmChart CRD から移した (2026-09-07)。** HelmChart は k3s 固有で Talos には無い。
 # **PVC (yosegaki-db) を持つので、HelmChart CR を消すときは先に helm のリリース Secret を
@@ -42,7 +43,7 @@ spec:
           email: info@doany.io
         # 管理者は Entra ID でログインする。ArgoCD と同じアプリ登録・同じ "admins" グループ
         # (bootstrap/argocd/helmchart.yaml の RBAC と同じ Object ID)。client secret は
-        # Infisical の oidc-client-secret
+        # yosegaki-secrets の oidc-client-secret
         oidc:
           issuer: https://login.microsoftonline.com/22ac977d-b140-4dc8-8150-90d645d3475b/v2.0
           clientId: b0fa498f-7e6a-4fe1-a1c6-16fbbb6f397e
@@ -61,11 +62,10 @@ spec:
           port: 587
           user: "22ac977d-b140-4dc8-8150-90d645d3475b@fd45a316-97cc-4480-8da8-487109403520"
           from: info@doany.io
+        # Secret は secrets.sops.yaml (SopsSecret) が作る。chart に InfisicalSecret を作らせない
+        existingSecret: yosegaki-secrets
         infisicalSecret:
-          enabled: true
-          identityId: f2bc3416-f196-4626-9bf3-c11693b32cc6
-          projectSlug: doa
-          path: /yosegaki/yosegaki-secrets
+          enabled: false
         persistence:
           storageClass: local-path
           # 新しく作るときは VolSync が R2 の最新から中身を埋める (deploy/volsync.yaml の yosegaki-db-dst)。今ある PVC には効かない
