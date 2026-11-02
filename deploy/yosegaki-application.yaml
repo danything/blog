@@ -22,7 +22,7 @@ spec:
   source:
     repoURL: ghcr.io/danything/charts
     chart: yosegaki
-    targetRevision: 0.1.63
+    targetRevision: 0.1.64
     helm:
       releaseName: yosegaki
       valuesObject:
@@ -68,7 +68,22 @@ spec:
           path: /yosegaki/yosegaki-secrets
         persistence:
           storageClass: local-path
+          # 新しく作るときは VolSync が R2 の最新から中身を埋める (deploy/volsync.yaml の yosegaki-db-dst)。今ある PVC には効かない
+          dataSourceRef:
+            {
+              apiGroup: volsync.backube,
+              kind: ReplicationDestination,
+              name: yosegaki-db-dst,
+            }
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      # 下の ignoreDifferences を適用でも触らない (今ある PVC の dataSourceRef は書けない)
+      - RespectIgnoreDifferences=true
+  # PVC の dataSourceRef (VolSync の populator) は作るときにしか書けない。今ある PVC には当てない
+  ignoreDifferences:
+    - group: ""
+      kind: PersistentVolumeClaim
+      jsonPointers: [/spec/dataSourceRef, /spec/dataSource]
