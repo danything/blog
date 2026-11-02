@@ -8,7 +8,7 @@ metadata:
   name: volsync
   namespace: blog
   annotations:
-    argocd.argoproj.io/sync-options: Prune=false,SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-options: Prune=false
 spec:
   hostAPI: http://infisical.infisical.svc:8080/api
   authentication:
@@ -40,8 +40,6 @@ kind: ReplicationSource
 metadata:
   name: yosegaki-db
   namespace: blog
-  annotations:
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   sourcePVC: yosegaki-db
   trigger:
@@ -59,8 +57,6 @@ kind: ReplicationDestination
 metadata:
   name: yosegaki-db-dst
   namespace: blog
-  annotations:
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   trigger:
     manual: restore-once
