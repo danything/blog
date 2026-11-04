@@ -36,6 +36,9 @@ spec:
         # ブログは doany.io から b.doany.io に移った。doany.io (コーポレートサイト) にはコメント欄が無い
         allowedOrigins:
           - https://b.doany.io
+          # スレッドの鍵は移る前の URL (https://doany.io/<パス>) のまま (src/components/Comments.astro)。
+          # yosegaki は鍵の URL も allowedOrigins で確かめるので、これが無いとコメントを読めず送れない (「page はこのサイトの URL ではない」)
+          - https://doany.io
         # 承認なしで公開。bot は Turnstile で止める
         moderation: none
         admin:
