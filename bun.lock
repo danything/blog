@@ -12,7 +12,7 @@
         "@axe-core/playwright": "^4.14.0",
         "@expressive-code/plugin-collapsible-sections": "^0.44.3",
         "@expressive-code/plugin-line-numbers": "^0.44.3",
-        "@iconify-json/lucide": "^1.2.151",
+        "@iconify-json/lucide": "^1.2.152",
         "@iconify-json/simple-icons": "^1.2.101",
         "@iconify/types": "^2.0.0",
         "@playwright/test": "^1.65.0",
@@ -152,7 +152,7 @@
 
     "@expressive-code/plugin-text-markers": ["@expressive-code/plugin-text-markers@0.44.3", "", { "dependencies": { "@expressive-code/core": "^0.44.3" } }, "sha512-4Ae2xRSDV5kdWPsi40xWbOtoihbzM0zLVjQKkDAnD5KzFXl+6/kd+VhuWOlTRVaJ5cqGk++vCbAaf0MR1XbZlw=="],
 
-    "@iconify-json/lucide": ["@iconify-json/lucide@1.2.151", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-OCp+cNzynOlOI7zHq8bFGhBBzmSSWFICvOSTxZrajhFJC4YizvlLiBJMbaLzzlpMaGRidmZmAA8GpovoDKiy/w=="],
+    "@iconify-json/lucide": ["@iconify-json/lucide@1.2.152", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-OQTsOaQ+kD8yhy5EATMD5QHe5O+XJVibExdaRCaXP3hvNPNkn6wVUcTrGA16yU2luqe0ImE4qP74WBK8JuwwNA=="],
 
     "@iconify-json/simple-icons": ["@iconify-json/simple-icons@1.2.101", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-MXJkMZDancJ/9I+Bgdthi9kXvn3AwWStxoTHwEPwAFQ9kMLBASO1BSstg52fNtjXeizm1Wi91R+QnWxNGkWHPQ=="],
 
