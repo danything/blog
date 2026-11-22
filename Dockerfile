@@ -21,7 +21,7 @@ RUN setcap -r /usr/bin/caddy && mkdir -p /xdg/config /xdg/data
 # 配信用はシェルもパッケージマネージャも無い distroless に、Caddy 本体 (静的リンク) と MIME の定義だけを置く。
 # nonroot の版は uid 65532 で動く。ファイルは root のもののまま(読むだけ)。Caddy が書くのは XDG_DATA_HOME (/data) の
 # instance.uuid などだけで、k8s ではここに emptyDir を付けてルートを読み取り専用にする
-FROM gcr.io/distroless/static-debian13:nonroot@sha256:aafe993665bf6200db38a02c11a9351e782a84b6a45e7f33b6695638c88e3931
+FROM gcr.io/distroless/static-debian13:nonroot@sha256:8ce6dd87e9823c5b48dcfb2c8604714ccb351ce59607327bcc4957448da279b5
 COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
 COPY --from=caddy /etc/mime.types /etc/mime.types
 ENV XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data
