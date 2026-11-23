@@ -7,7 +7,7 @@ image: "/static/images/blog/br90.webp"
 tags: ["Cars", "Cargo Registration", "Government Procedures"]
 category: "Cars"
 draft: false
-sourceHash: "2ee60b617fff3469"
+sourceHash: "9d1e848333fda3c0"
 ---
 
 It's been a while since my last post. Lately, instead of web stuff, I've been completely absorbed in cars.  
@@ -146,7 +146,7 @@ If even that doesn't get you anywhere, an inspection decision is, I believe, a f
 #### About the maximum payload
 
 For cargo registration there's a provision like the one below. Earlier, you'll also remember the requirement `the load weight must exceed the occupant weight of the passenger seating`.  
-On top of that, the ordinance defines passenger seating as everything except the front seats, and NALTEC's rules say the payload is calculated in 50 kg increments.  
+On top of that, the ordinance defines passenger seating as everything except the front seats, and NALTEC's rules say the payload is calculated in 50 kg increments ([5-3-9 Passenger Capacity and Maximum Payload (16)](https://www.naltec.go.jp/publication/regulation/hbh5ss0000002mk7-att/gtg5d20000002fo5.pdf) (Japanese); 50 kg steps from 100 kg to 5,000 kg).  
 Putting it all together, the payload has to be at least 100 kg and must not push the car past the maximum gross vehicle weight within the same classification.  
 In my case, I only stowed and fixed the seat, so the car could end up exceeding the maximum gross vehicle weight within the same classification (you can find this out by asking the manufacturer or NALTEC).  
 That means you'll need to remove things like the spare tire. If that's still not enough, try removing the onboard tools, the luggage board, the car navigation system and other interior parts.
