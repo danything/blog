@@ -22,7 +22,7 @@
     "@axe-core/playwright": "^4.14.1",
     "@expressive-code/plugin-collapsible-sections": "^0.44.4",
     "@expressive-code/plugin-line-numbers": "^0.44.4",
-    "@iconify-json/lucide": "^1.2.159",
+    "@iconify-json/lucide": "^1.2.160",
     "@iconify-json/simple-icons": "^1.2.104",
     "@iconify/types": "^2.0.0",
     "@playwright/test": "^1.65.1",
@@ -39,6 +39,6 @@
     "takumi-js": "^2.22.1",
     "typescript": "^6.0.3",
     "unist-util-visit": "^5.2.0",
-    "vite": "^8.3.8"
+    "vite": "^8.4.0"
   }
 }
