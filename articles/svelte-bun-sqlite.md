@@ -121,11 +121,11 @@ CSSは長らくTailwind + daisyUIでした。立ち上げの段階では決め�
 なので一度[Pico CSS](https://picocss.com/)に全部移しました。素の`<button>`や`<table>`にそのまま見た目が付くクラスレスのCSSです。
 
 :::message
-2026年10月追記 その後Pico CSS本体はやめて、Picoを引き継いでメンテナンスされている[Blades](https://blades.dev/)(`@anyblades/blades`)に全アプリ切り替えました。素のCSSで配られているのでSassが要らなくなり、`sass-embedded`とVite側の設定を外せました。以下はBladesに移ったあとの形で書いています。
+2026年10月追記 その後Pico CSS本体はやめて、Picoを引き継いでメンテナンスされている[Blades](https://blades.dev/)(`@sveti/blades`。2026年11月にSveti Foundationへ移り、それまでの名前は`@anyblades/blades`)に全アプリ切り替えました。素のCSSで配られているのでSassが要らなくなり、`sass-embedded`とVite側の設定を外せました。以下はBladesに移ったあとの形で書いています。
 :::
 
 ```css
-@import "@anyblades/blades/pico" layer(pico);
+@import "@sveti/blades/src/pico" layer(pico);
 ```
 
 Bladesは`pico`という名前の層(`@layer`)に入れて読み込みます。層に入れていないこちらの規則は詳細度に関係なく必ず層の中の規則に勝つので、Picoの強いセレクタに合わせて同じ強さで書き直す、という張り合いが要りません。
