@@ -1,7 +1,7 @@
 ---
 title: "Consolidating My Small-to-Medium Web Apps on SvelteKit + Bun + SQLite"
 published: 2026-09-04
-updated: 2026-10-03
+updated: 2026-11-27
 description: "Ever since I rewrote an app built with Django + Nuxt as a single SvelteKit app, everything I build on my own uses the same stack. Drawing on the actual repositories, I go over why I stopped splitting out the backend, why I picked Svelte over React, why I decided SQLite was enough, and the pitfalls I hit with Bun."
 image: ""
 tags: ["Svelte", "SvelteKit", "Bun", "SQLite", "Side Projects"]
@@ -122,10 +122,10 @@ But when I looked back after finishing a pass over all the apps, the components 
 So at one point I moved everything over to [Pico CSS](https://picocss.com/). It's a classless CSS framework that styles plain `<button>` and `<table>` elements as-is.
 
 > [!NOTE]
-> Update (October 2026): I've since dropped Pico CSS itself and switched all the apps to [Blades](https://blades.dev/) (`@anyblades/blades`), which carries on Pico's maintenance. It's distributed as plain CSS, so I no longer need Sass and could remove `sass-embedded` and the related Vite config. What follows describes the setup after moving to Blades.
+> Update (October 2026): I've since dropped Pico CSS itself and switched all the apps to [Blades](https://blades.dev/) (`@sveti/blades`; it moved to the Sveti Foundation in November 2026 and was previously `@anyblades/blades`), which carries on Pico's maintenance. It's distributed as plain CSS, so I no longer need Sass and could remove `sass-embedded` and the related Vite config. What follows describes the setup after moving to Blades.
 
 ```css
-@import "@anyblades/blades/pico" layer(pico);
+@import "@sveti/blades/src/pico" layer(pico);
 ```
 
 Blades is loaded into a layer (`@layer`) named `pico`. My own rules, which aren't in a layer, always win over rules inside the layer regardless of specificity, so there's no need to get into a tug-of-war of rewriting selectors to match Pico's strong ones.
