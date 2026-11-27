@@ -7,7 +7,7 @@ image: "/static/images/blog/br90.webp"
 tags: ["Cars", "Cargo Registration", "Government Procedures"]
 category: "Cars"
 draft: false
-sourceHash: "9d1e848333fda3c0"
+sourceHash: "376022baf139e426"
 ---
 
 It's been a while since my last post. Lately, instead of web stuff, I've been completely absorbed in cars.  
