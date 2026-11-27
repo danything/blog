@@ -7,7 +7,7 @@ image: ""
 tags: ["Svelte", "SvelteKit", "Bun", "SQLite", "Side Projects"]
 category: "Web Development"
 draft: false
-sourceHash: "0df1e4755bfecb62"
+sourceHash: "85c27b90f2e0777c"
 ---
 
 It's been a while since I wrote about something web-related.  
