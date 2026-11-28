@@ -22,7 +22,7 @@
     "@axe-core/playwright": "^4.14.1",
     "@expressive-code/plugin-collapsible-sections": "^0.44.4",
     "@expressive-code/plugin-line-numbers": "^0.44.4",
-    "@iconify-json/lucide": "^1.2.160",
+    "@iconify-json/lucide": "^1.2.161",
     "@iconify-json/simple-icons": "^1.2.104",
     "@iconify/types": "^2.0.0",
     "@playwright/test": "^1.65.1",
